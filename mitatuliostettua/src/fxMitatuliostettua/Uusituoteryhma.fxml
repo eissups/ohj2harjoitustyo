@@ -13,24 +13,23 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.text.Font?>
 
-
-<AnchorPane xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/11.0.1">
+<AnchorPane style="-fx-background-color: #cfa8f0;" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="fxMitatuliostettua.UusituoteryhmaGUIController">
    <children>
-      <BorderPane layoutY="19.0" prefHeight="203.0" prefWidth="282.0">
+      <BorderPane layoutY="19.0" prefHeight="203.0" prefWidth="282.0" style="-fx-background-color: lightyellow;">
          <bottom>
             <HBox prefHeight="34.0" prefWidth="282.0" BorderPane.alignment="CENTER">
                <children>
-                  <Button mnemonicParsing="false" prefHeight="25.0" prefWidth="103.0" text="Poista">
+                  <Button fx:id="buttonPoista" mnemonicParsing="false" onMouseClicked="#poistaCllicked" prefHeight="25.0" prefWidth="103.0" text="Poista">
                      <HBox.margin>
                         <Insets left="20.0" right="20.0" />
                      </HBox.margin>
                   </Button>
-                  <Button mnemonicParsing="false" prefHeight="25.0" prefWidth="113.0" text="Peruuta">
+                  <Button fx:id="buttonPeruuta" mnemonicParsing="false" onMouseClicked="#peruutaClicked" prefHeight="25.0" prefWidth="113.0" text="Peruuta">
                      <HBox.margin>
                         <Insets left="20.0" right="15.0" />
                      </HBox.margin>
                   </Button>
-                  <Button mnemonicParsing="false" prefHeight="25.0" prefWidth="121.0" text="Tallenna">
+                  <Button fx:id="buttonTallenna" mnemonicParsing="false" onMouseClicked="#tallennaClicked" prefHeight="25.0" prefWidth="121.0" text="Tallenna">
                      <HBox.margin>
                         <Insets left="20.0" right="10.0" />
                      </HBox.margin>
@@ -66,7 +65,7 @@
                      </GridPane.margin>
                   </TextField>
                   <Label text="Poista tuoteryhmä" GridPane.rowIndex="1" />
-                  <ComboBoxChooser prefHeight="25.0" prefWidth="110.0" rivit="kahvi/tee" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                  <ComboBoxChooser prefHeight="25.0" prefWidth="110.0" rivit="Valitse tuoteryhmä&#10;alkoholi      &#10;elektroniikka &#10;hedelmät/vihannekset&#10;hygienia  &#10;kuivatuotteet &#10;kahvi ja tee    &#10;liha  &#10;maitotuotteet  &#10;muut&#10;" GridPane.columnIndex="1" GridPane.rowIndex="1">
                      <GridPane.margin>
                         <Insets bottom="5.0" left="5.0" top="5.0" />
                      </GridPane.margin>

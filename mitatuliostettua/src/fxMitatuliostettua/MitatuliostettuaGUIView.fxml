@@ -13,29 +13,33 @@
 <?import javafx.scene.control.MenuItem?>
 <?import javafx.scene.control.SplitPane?>
 <?import javafx.scene.control.TextField?>
+<?import javafx.scene.control.Tooltip?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.text.Font?>
 
-<BorderPane prefHeight="487.0" prefWidth="921.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="fxMitatuliostettua.MitatuliostettuaKerhoGUIController">
+<BorderPane prefHeight="433.0" prefWidth="778.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="fxMitatuliostettua.MitatuliostettuaGUIController">
    <top>
-      <MenuBar prefWidth="750.0" BorderPane.alignment="CENTER">
+      <MenuBar prefWidth="750.0" style="-fx-background-color: #cfa8f0;" BorderPane.alignment="CENTER">
         <menus>
           <Menu mnemonicParsing="false" text="Tiedosto">
             <items>
-              <MenuItem mnemonicParsing="false" text="Close" />
+              <MenuItem fx:id="Menulisaa" mnemonicParsing="false" onAction="#lisaauusi" text="Lisää" />
+                  <MenuItem fx:id="Menulopeta" mnemonicParsing="false" onAction="#lopeta" text="Lopeta" />
             </items>
           </Menu>
           <Menu mnemonicParsing="false" text="Muokkaa">
             <items>
-              <MenuItem mnemonicParsing="false" text="Delete" />
+              <MenuItem fx:id="Menupoista" mnemonicParsing="false" onAction="#poista" text="Poista" />
+                  <MenuItem mnemonicParsing="false" onAction="#lisays" text="Lisää..." />
             </items>
           </Menu>
           <Menu mnemonicParsing="false" text="Apua">
             <items>
-              <MenuItem mnemonicParsing="false" text="About" />
+              <MenuItem fx:id="Menuapua" mnemonicParsing="false" onAction="#Apuatarvitaan" text="Apua" />
+                  <MenuItem fx:id="Menutietoja" mnemonicParsing="false" onAction="#Avaatiedot" text="Tietoja..." />
             </items>
           </Menu>
         </menus>
@@ -50,20 +54,20 @@
                      <center>
                         <SplitPane dividerPositions="0.5" prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
                            <items>
-                              <TextField prefHeight="25.0" prefWidth="189.0" promptText="Etsi hakusanalla" />
-                              <ComboBoxChooser prefHeight="25.0" prefWidth="97.0" rivit="uusin &#10;halvin&#10;kallein" />
+                              <TextField fx:id="texthakukentta" onAction="#aloitahaku" onKeyReleased="#aloitahaku" prefHeight="25.0" prefWidth="189.0" promptText="Etsi hakusanalla" />
+                              <ComboBoxChooser fx:id="chooserhakutapavalinta" onAction="#aloitahaku" prefHeight="25.0" prefWidth="97.0" rivit="uusin &#10;halvin&#10;kallein" />
                            </items>
                         </SplitPane>
                      </center>
                      <top>
-                        <DatePicker prefHeight="25.0" prefWidth="235.0" promptText="Etsi päivän mukaan" BorderPane.alignment="CENTER" />
+                        <DatePicker fx:id="hakupaiva" onAction="#aloitahaku" onKeyReleased="#hakupaivavalittu" onMouseClicked="#hakupaivavalittu" prefHeight="25.0" prefWidth="235.0" promptText="Etsi päivän mukaan" style="-fx-background-color: white;" BorderPane.alignment="CENTER" />
                      </top>
                   </BorderPane>
                </top>
             </BorderPane>
          </top>
          <right>
-            <ListChooser prefHeight="140.0" prefWidth="215.0" rivit="5.1.2020&#10;2.1.2020&#10;31.12.2019&#10;" BorderPane.alignment="CENTER">
+            <ListChooser rivit="5.1.2020&#10;2.1.2020&#10;31.12.2019&#10;" style="-fx-border-color: #cfa8f0;" BorderPane.alignment="CENTER">
                <BorderPane.margin>
                   <Insets />
                </BorderPane.margin>
@@ -74,10 +78,7 @@
    <center>
       <BorderPane prefHeight="199.0" prefWidth="477.0" BorderPane.alignment="CENTER">
          <right>
-            <BorderPane prefHeight="432.0" prefWidth="272.0" BorderPane.alignment="CENTER">
-               <center>
-                  <StringGrid prefWidth="238.0" rivit="Tuoteryhmä| hinta| lkm&#10;hygienia| 10| 3      &#10;kuivatuotteet| 5 |8 &#10;liha|10 |2                             &#10;hedelmät/vihannekset | 7 | 5&#10;elektroniikka  &#10;kahvi ja tee    &#10;maitotuotteet  &#10;alkoholi      &#10;muut" BorderPane.alignment="CENTER" />
-               </center>
+            <BorderPane BorderPane.alignment="CENTER">
                <bottom>
                   <ButtonBar BorderPane.alignment="CENTER">
                      <BorderPane.margin>
@@ -88,7 +89,7 @@
             </BorderPane>
          </right>
          <center>
-            <BorderPane prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+            <BorderPane style="-fx-background-color: lightyellow;" BorderPane.alignment="CENTER">
                <top>
                   <Label prefHeight="53.0" prefWidth="215.0" text="Kauppareissu" underline="true" BorderPane.alignment="CENTER">
                      <font>
@@ -99,8 +100,8 @@
                <center>
                   <GridPane prefWidth="492.0" BorderPane.alignment="CENTER">
                     <columnConstraints>
-                      <ColumnConstraints hgrow="SOMETIMES" maxWidth="238.0" minWidth="10.0" prefWidth="146.0" />
-                      <ColumnConstraints hgrow="SOMETIMES" maxWidth="344.0" minWidth="10.0" prefWidth="340.0" />
+                      <ColumnConstraints hgrow="SOMETIMES" maxWidth="238.0" minWidth="10.0" prefWidth="155.0" />
+                      <ColumnConstraints hgrow="SOMETIMES" maxWidth="344.0" minWidth="10.0" prefWidth="83.0" />
                     </columnConstraints>
                     <rowConstraints>
                       <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
@@ -121,7 +122,7 @@
                         <Label text="Eniten rahaa vieneen hinta" GridPane.rowIndex="4" />
                         <TextField disable="true" editable="false" GridPane.columnIndex="1" GridPane.rowIndex="2" />
                         <TextField disable="true" editable="false" GridPane.columnIndex="1" GridPane.rowIndex="3" />
-                        <DatePicker prefHeight="25.0" prefWidth="349.0" GridPane.columnIndex="1" />
+                        <DatePicker fx:id="datepickertiedot" onAction="#paivavalittu" onMouseDragExited="#paivays" GridPane.columnIndex="1" />
                         <TextField disable="true" text="€" GridPane.columnIndex="1" GridPane.rowIndex="1" />
                         <TextField disable="true" promptText="€" GridPane.columnIndex="1" GridPane.rowIndex="4" />
                      </children>
@@ -135,7 +136,7 @@
       </BorderPane>
    </center>
    <bottom>
-      <GridPane BorderPane.alignment="CENTER">
+      <GridPane style="-fx-background-color: #cfa8f0;" BorderPane.alignment="CENTER">
         <columnConstraints>
           <ColumnConstraints hgrow="SOMETIMES" maxWidth="491.0" minWidth="10.0" prefWidth="124.0" />
             <ColumnConstraints hgrow="SOMETIMES" maxWidth="507.0" minWidth="10.0" prefWidth="348.0" />
@@ -146,19 +147,34 @@
           <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
         </rowConstraints>
          <children>
-            <Button mnemonicParsing="false" text="Lisää uusi" GridPane.columnIndex="1">
+            <Button fx:id="Buttonlisaauusi" mnemonicParsing="false" onAction="#lisaauusi" text="Lisää uusi" GridPane.columnIndex="1">
                <GridPane.margin>
                   <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
                </GridPane.margin>
+               <tooltip>
+                  <Tooltip text="Lisää uusi kauppareissu" />
+               </tooltip>
             </Button>
-            <Button mnemonicParsing="false" prefHeight="25.0" prefWidth="68.0" text="Poista">
+            <Button fx:id="buttonpoista" mnemonicParsing="false" onAction="#poista" prefHeight="25.0" prefWidth="68.0" text="Poista">
                <GridPane.margin>
                   <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
                </GridPane.margin>
+               <tooltip>
+                  <Tooltip text="Poista kauppareissu" />
+               </tooltip>
             </Button>
-          <Button mnemonicParsing="false" text="Muokkaa ostetettuja" textAlignment="CENTER" GridPane.columnIndex="2" />
-            <Button mnemonicParsing="false" text="Uusi tuoteryhmä" GridPane.columnIndex="3" />
+          <Button fx:id="buottonmuokkaa" mnemonicParsing="false" onMouseClicked="#muokkaaostettujaClicked" text="Muokkaa ostetettuja" textAlignment="CENTER" GridPane.columnIndex="2">
+               <tooltip>
+                  <Tooltip text="Muokkaa ostettuja ostoksia ja niiden tietoja" />
+               </tooltip></Button>
+            <Button fx:id="Buttonuusituoteryhma" mnemonicParsing="false" onAction="#uusituoteryhma" text="Uusi tuoteryhmä" GridPane.columnIndex="3">
+               <tooltip>
+                  <Tooltip text="Lisää tai poista tuoteryhmiä" />
+               </tooltip></Button>
          </children>
       </GridPane>
    </bottom>
+   <right>
+      <StringGrid rivit="Tuoteryhmä| hinta| lkm&#10;hygienia| 10| 3      &#10;kuivatuotteet| 5 |8 &#10;liha|10 |2                             &#10;hedelmät/vihannekset | 7 | 5&#10;elektroniikka  &#10;kahvi ja tee    &#10;maitotuotteet  &#10;alkoholi      &#10;muut" style="-fx-background-color: #cfa8f0; -fx-border-width: 2;" BorderPane.alignment="CENTER" />
+   </right>
 </BorderPane>
