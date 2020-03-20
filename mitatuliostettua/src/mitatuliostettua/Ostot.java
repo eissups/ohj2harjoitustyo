@@ -1,6 +1,12 @@
 package mitatuliostettua;
 
+
+
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.List;
 
 /**
  * Pitää yllä ostot-rekisteriä
@@ -8,13 +14,13 @@ import java.util.Arrays;
  * @version 19.3.2020
  *
  */
-public class Ostot {
+public class Ostot implements Iterable<Osto> {
 
     
-    private static final int MAX_OSTOJA = 2;
+    
     private String tiedosto = "";
     private int lkm = 0;
-    private Osto[] alkiot = new Osto[MAX_OSTOJA];
+    private final Collection<Osto> alkiot        = new ArrayList<Osto>();
     
     
     
@@ -45,36 +51,10 @@ public class Ostot {
      * </pre>
      */
     public void lisaa(Osto osto) {
-        if ( lkm >= alkiot.length ) {
-            alkiot = Arrays.copyOf(alkiot, alkiot.length+1);
-        }
-        this.alkiot[lkm] = osto;
-        lkm++;
-        
-        
+        alkiot.add(osto);  
     }
     
     
-    /** Palauttaa oston viitteen
-     * @param i sen oston indeksi, jonka viite halutaan
-     * @return oston viite 
-     * @throws IndexOutOfBoundsException jos i menee alkiot-taulukon ulkopuolelle
-     */
-    public Osto annaViite(int i) throws IndexOutOfBoundsException{
-        if (i < 0 || lkm <= i)
-            throw new IndexOutOfBoundsException("Laiton indeksi" + i);
-        return alkiot[i];
-        
-          
-    }
-    
-    /**Palauttaa ostojen määräm
-     * @return ostojen määrän
-     */
-    public int getLkm() {
-        return lkm;
-        
-    }
     
     
     /**
@@ -93,8 +73,52 @@ public class Ostot {
      * Tulee tallentamaan ostot tiedostoon sitten kun toimii
      * @throws SailoException jos talletus epäonnistuu
      */
-    public void tallennaReissu() throws SailoException {
+    public void tallennaOsto() throws SailoException {
         throw new SailoException("Ei osata vielä tallettaa tiedostoa " + tiedosto);
+    }
+    
+    
+    /**
+     * Palauttaa kerhon harrastusten lukumäärän
+     * @return harrastusten lukumäärä
+     */
+    public int getLkm() {
+        return alkiot.size();
+    }
+    
+    /**
+     * Haetaan kaikki kauppareissun ostot
+     * @param tunnusnro kauppareissun tunnusnumero jolle ostoja haetaan
+     * @return tietorakenne jossa viiteet löydetteyihin ostoihin
+     * @example
+     * <pre name="test">
+     * #import java.util.*;
+     * 
+     *  Ostot ostot = ostot();
+     *  Osto eka = new Osto(2); ostot.lisaa(eka);
+     *  Osto toka = new osto(1); ostot.lisaa(toka);
+     *  Osto kolmas = new Osto(2); ostot.lisaa(kolmas);
+     *  Osto neljas = new Osto(1); ostot.lisaa(neljas);
+     *  Osto viides = new osto(2);ostot.lisaa(viides);
+     *  Osto kuudes = new Osto(5); ostot.lisaa(kuudes);
+     *  
+     *  List<osto> loytyneet;
+     *  loytyneet = ostot.annaOstot(3);
+     *  loytyneet.size() === 0; 
+     *  loytyneet = ostot.annaOstot(1);
+     *  loytyneet.size() === 2; 
+     *  loytyneet.get(0) == toka === true;
+     *  loytyneet.get(1) == neljas === true;
+     *  loytyneet = ostot.annaOstot(5);
+     *  loytyneet.size() === 1; 
+     *  loytyneet.get(0) == kuudes === true;
+     * </pre> 
+     */
+    public List<Osto> annaOstot(int tunnusnro) {
+        List<Osto> loydetyt = new ArrayList<Osto>();
+        for (Osto ost : alkiot)
+            if (ost.getKaupTunnus() == tunnusnro) loydetyt.add(ost);
+        return loydetyt;
     }
 
 
@@ -116,10 +140,9 @@ public class Ostot {
        Osto eka = new Osto();
        Osto toka = new Osto();
   
-       eka.rekisteroi();
-       toka.rekisteroi();
-       eka.annaTiedot(tuoteryhma, 5, 10);
-       toka.annaTiedot(tuoteryhma2, 2, 30);
+
+       eka.annaTiedot(1);
+       toka.annaTiedot(2);
        
        ostot.lisaa(eka);
        ostot.lisaa(toka);
@@ -127,12 +150,21 @@ public class Ostot {
        
        System.out.println("=============== testi ===================");
        
-       for(int i = 0; i < ostot.getLkm(); i++) {
-           Osto ostoo = ostot.annaViite(i);
-           System.out.println("Kauppareissu: " + i);
-           ostoo.tulosta(System.out);
-       }
+       List<Osto> ostot2 = ostot.annaOstot(2);
        
+       for (Osto os : ostot2) {
+           System.out.print(os.getKaupTunnus() + " ");
+           os.tulosta(System.out);
+       }
+
+
+       
+    }
+
+    @Override
+    public Iterator<Osto> iterator() {
+        // TODO Auto-generated method stub
+        return null;
     }
     
 }

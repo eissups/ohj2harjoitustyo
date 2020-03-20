@@ -42,10 +42,8 @@ public class Osto {
     
     /**
      * @param tunnus kauppareissun tunnus
-     * @param tunnus2 tuoteryhman tunnus
      */
-    public Osto(int tunnus, int tunnus2) {
-        this.tuoteryhmaid = tunnus2;
+    public Osto(int tunnus) {
         this.kauppaid = tunnus;
         
     }
@@ -60,15 +58,14 @@ public class Osto {
     
     /**
      * Antaa väliaikaisesti luoduille ostoille tiedot kun niitä ei vielä oikeasti pysty kirjoittamaan
-     * @param tuoteryhma oston tuoteryhma
-     * @param maara ryt
-     * @param hinta yrt
+     * @param nro tunnusnumero
      */
-    public void annaTiedot(Tuoteryhma tuoteryhma, int maara, int hinta) {
+    public void annaTiedot(int nro) {
         
-        this.setMaara(maara);
-        this.setNimi(tuoteryhma);    
-        this.setHinta(hinta);
+        tuote = "tuote";
+        kauppaid = nro;
+        maara = 5;
+        hinta = 30;
        
         
         
@@ -155,6 +152,9 @@ public class Osto {
     }
     
 
+    /**testiohjelma ostolle
+     * @param args eik käytössä
+     */
     public static void main(String[] args) {
         
         Kauppareissu eka = new Kauppareissu();
@@ -173,8 +173,8 @@ public class Osto {
         Osto osto = new Osto(eka, ruoka);
         Osto osto2 = new Osto(toka, juoma);
         
-        osto.annaTiedot(ruoka, 5, 20);
-        osto2.annaTiedot(juoma, 10, 30);
+        osto.annaTiedot(1);
+        osto2.annaTiedot(2);
         
        
         
@@ -182,6 +182,11 @@ public class Osto {
         osto.tulosta(System.out);
         osto2.tulosta(System.out);
 
+    }
+
+
+    public int getKaupTunnus() {
+        return tunnusNro;
     }
   
 

@@ -1,5 +1,7 @@
 package mitatuliostettua;
 
+import java.util.List;
+
 /**
  * Mtatuliostettua-luokka, joka huolehtii Tuoteryhmät ja Kauppareissut - luokista
  * @author elisa
@@ -20,13 +22,6 @@ public class Mitatuliostettua {
     }
     
     
-    /**
-     * Palauttaa ostoje lukumäärän
-     * @return ostojen lukumäärä
-     */
-    public int getOstot() {
-        return ostot.getLkm();
-    }
     
     /** Lisää uuden kauppareissun
      * @param kauppareissu kauppareissu, joka lisätään
@@ -55,9 +50,8 @@ public class Mitatuliostettua {
     
     /**
      * @param osto osto
-     * @throws SailoException os lisäystä ei voida tehdä tai indeksi menee muuten yli
      */
-    public void lisaaTuote(Osto osto) throws SailoException {
+    public void lisaaOsto(Osto osto) {
         ostot.lisaa(osto);   
     }
 
@@ -75,12 +69,13 @@ public class Mitatuliostettua {
     
     /**
      * Palauttaa i:n oston
-     * @param i oston indeksi
+     * @param kauppareissu kauppareissu jonka ostot halutaan
      * @return viite i:nteen ostoon
      */
-    public Osto annaOsto(int i) { 
-        return ostot.annaViite(i);
+    public List<Osto> annaOstot(Kauppareissu kauppareissu) { 
+        return ostot.annaOstot(kauppareissu.getTunnus());
     }
+    
     
     /**
      * Palauttaa i:n kauppareissun
@@ -99,6 +94,7 @@ public class Mitatuliostettua {
      */
     public void lueTiedostosta(String nimi) throws SailoException {
         kauppareissut.lueTiedostosta(nimi);
+        ostot.lueTiedostosta(nimi);
     }
 
 
@@ -108,18 +104,9 @@ public class Mitatuliostettua {
      */
     public void talleta() throws SailoException {
         kauppareissut.tallennaReissu();
-        // TODO: yritä tallettaa toinen vaikka toinen epäonnistuisi
+        ostot.tallennaOsto();
     }
     
-    
-    /**
-    * @param kauppareissu kauppareissu
-    * @param tuoteryhma tuoteryhma
-    * @return osto, jossa kauppareissun ja tuoteryhman id
-    */
-   public Osto luoOsto(Kauppareissu kauppareissu, Tuoteryhma tuoteryhma) {
-       return new Osto(kauppareissu.getTunnus(),tuoteryhma.getTunnus());
-   }
     
    
    
@@ -143,14 +130,26 @@ public class Mitatuliostettua {
             
             mitatuliostettua.lisaa(eka);
             mitatuliostettua.lisaa(toka);
-            mitatuliostettua.poista(0); //tämä ei toimi vielä
+            
+            int id1 = eka.getTunnus();
+            int id2 = toka.getTunnus();
+            
+            Osto ekaosto = new Osto(id1); ekaosto.annaTiedot(id1); mitatuliostettua.lisaaOsto(ekaosto);
+            Osto tokaosto = new Osto(id1); tokaosto.annaTiedot(id1); mitatuliostettua.lisaaOsto(tokaosto);
+            Osto kolmasosto = new Osto(id2); kolmasosto.annaTiedot(id2); mitatuliostettua.lisaaOsto(kolmasosto);
+            Osto neljasosto = new Osto(id2); neljasosto.annaTiedot(id2); mitatuliostettua.lisaaOsto(neljasosto);
+            Osto viidesosto = new Osto(id2);viidesosto.annaTiedot(id2); mitatuliostettua.lisaaOsto(viidesosto);
+            
             
             System.out.println("============= testi =================");
 
             for (int i = 0; i < mitatuliostettua.getMaara(); i++) {
                 Kauppareissu kauppareissu = mitatuliostettua.annaKauppareissu(i);
-                System.out.println("Jäsen paikassa: " + i);
+                System.out.println("Kauppareissu paikassa: " + i);
                 kauppareissu.tulosta(System.out);
+                List<Osto> loytyneet = mitatuliostettua.annaOstot(kauppareissu);
+                for (Osto osto : loytyneet)
+                osto.tulosta(System.out);
             }
 
         } catch (SailoException ex) {

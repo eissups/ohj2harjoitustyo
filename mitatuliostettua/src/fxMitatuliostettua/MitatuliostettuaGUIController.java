@@ -5,6 +5,7 @@ import java.io.PrintStream;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.util.List;
 import java.util.Optional;
 import java.util.ResourceBundle;
 import fi.jyu.mit.fxgui.ComboBoxChooser;
@@ -29,6 +30,7 @@ import javafx.scene.layout.Pane;
 import javafx.scene.text.Font;
 import mitatuliostettua.Kauppareissu;
 import mitatuliostettua.Mitatuliostettua;
+import mitatuliostettua.Osto;
 import mitatuliostettua.SailoException;
 import javafx.scene.control.TextArea;
 
@@ -90,7 +92,7 @@ public class MitatuliostettuaGUIController implements Initializable{
             Dialogs.showMessageDialog("Ongelmia luomisessa" + e.getMessage());
             return;
         }
-        hae(uusi.getTunnus());
+        uusiKauppareissu();
     }
     
 
@@ -122,8 +124,8 @@ public class MitatuliostettuaGUIController implements Initializable{
     
 
     @FXML private void uusituoteryhma() {
-        ModalController.showModal(MitatuliostettuaGUIController.class.getResource("Uusituoteryhma.fxml"), "Uusi tuoteryhmä", null, "");
-        
+        //ModalController.showModal(MitatuliostettuaGUIController.class.getResource("Uusituoteryhma.fxml"), "Uusi tuoteryhmä", null, "");
+        uusiOsto();
        
     }
     
@@ -211,7 +213,7 @@ public class MitatuliostettuaGUIController implements Initializable{
 
         areaKauppareissu.setText("");
         try (PrintStream os = TextAreaOutputStream.getTextPrintStream(areaKauppareissu)) {
-            valittuKauppareissu.tulosta(os);
+            tulosta(os, valittuKauppareissu);
         }
     }
     
@@ -254,14 +256,14 @@ public class MitatuliostettuaGUIController implements Initializable{
            if (kauppareissu.getTunnus() == jnro) index = i; 
            chooserKauppareissut.add(kauppareissu.getPvm(), kauppareissu); 
        } 
-       chooserKauppareissut.getSelectionModel().select(index); // tästä tulee muutosviesti joka näyttää jäsenen 
+       chooserKauppareissut.setSelectedIndex(index); // tästä tulee muutosviesti joka näyttää jäsenen 
    }    
    
    
    /**
     * Luo uuden kuppareissun jota aletaan editoimaan 
     */
-   protected void uusiJKauppareissu() {
+   protected void uusiKauppareissu() {
        Kauppareissu uusi = new Kauppareissu();
        uusi.rekisteroi();
        uusi.annaTiedot();
@@ -274,6 +276,49 @@ public class MitatuliostettuaGUIController implements Initializable{
        hae(uusi.getTunnus());
    }
    
+   /** 
+    * Tekee uuden tyhjän oston editointia varten 
+    */ 
+   public void uusiOsto() { 
+       //if ( valittuKauppareissu == null ) return;  
+       Osto ost = new Osto();  
+       ost.rekisteroi();  
+       ost.annaTiedot(valittuKauppareissu.getTunnus());  
+       mitatuliostettua.lisaaOsto(ost);  
+       hae(valittuKauppareissu.getTunnus());          
+   } 
+
+
+   /**
+    * Tulostaa kauppareissun tiedot
+    * @param os tietovirta johon tulostetaan
+    * @param kauppareissu tulostettava kauppareissu
+    */
+   public void tulosta(PrintStream os, final Kauppareissu kauppareissu) {
+       os.println("----------------------------------------------");
+       kauppareissu.tulosta(os);
+       os.println("----------------------------------------------");
+       List<Osto> ostot = mitatuliostettua.annaOstot(kauppareissu);   
+       for (Osto ost : ostot)
+           ost.tulosta(os);  
+   }
+   
+   
+   /**
+    * Tulostaa listassa olevat kauppareissut tekstialueeseen
+    * @param text alue johon tulostetaan
+    */
+   public void tulostaValitut(TextArea text) {
+       try (PrintStream os = TextAreaOutputStream.getTextPrintStream(text)) {
+           os.println("Tulostetaan kaikki kauppareissut");
+           for (int i = 0; i < mitatuliostettua.getMaara(); i++) {
+               Kauppareissu kauppareissu = mitatuliostettua.annaKauppareissu(i);
+               tulosta(os, kauppareissu);
+               os.println("\n\n");
+           }
+       }
+   }
+
 
    private void muokkaa() {
        ModalController.showModal(MitatuliostettuaGUIController.class.getResource("KauppareissuDialogView.fxml"), "Kauppareissun muokkaus", null, "");
