@@ -11,10 +11,13 @@ import java.util.Arrays;
 public class Tuoteryhmat {
 
     
-    private static final int MAX_TUOTERYHMIA = 2;
+    private static final int MAX_TUOTERYHMIA = 20;
     private String tiedosto = "";
     private int lkm = 0;
     private Tuoteryhma[] alkiot = new Tuoteryhma[MAX_TUOTERYHMIA];
+    
+   
+    
     
     
     /**

@@ -14,6 +14,8 @@ public class Tuoteryhma {
     private int tunnusNro;
     private String tuoteryhmanNimi;
     private static int seuraavaNro    = 1;
+    String[] vaihtoehtoja = { "alkoholi", "elektroniikka", "hygienia" };
+    
     
     
     
@@ -66,8 +68,9 @@ public class Tuoteryhma {
      */
     public void annaTiedot() {
         
-        tuoteryhmanNimi = "ruoka"; ///tee tähän vielä se satunnaisarpominen
         
+       if (tunnusNro < vaihtoehtoja.length) tuoteryhmanNimi = vaihtoehtoja[tunnusNro];
+       else tuoteryhmanNimi = "pitäisi lisätä vaihtoehtoja";     
     }
     
     
@@ -94,6 +97,7 @@ public class Tuoteryhma {
     
     
     public static void main(String[] args) {
+
         Tuoteryhma ruoka = new Tuoteryhma();
         Tuoteryhma juoma = new Tuoteryhma();
         ruoka.rekisteroi();
@@ -106,6 +110,7 @@ public class Tuoteryhma {
         juoma.tulosta(System.out);
     }
 
+    
     public String getNimi() {
         return this.tuoteryhmanNimi;
         

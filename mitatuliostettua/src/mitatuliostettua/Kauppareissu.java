@@ -3,6 +3,8 @@ package mitatuliostettua;
 import java.io.OutputStream;
 import java.io.PrintStream;
 
+import fi.jyu.mit.ohj2.Mjonot;
+
 /**
  * @author elisa
  * @version 17.3.2020
@@ -88,6 +90,76 @@ public class Kauppareissu {
     public void tulosta(OutputStream os) {
         tulosta(new PrintStream(os));
     }
+    
+    
+    
+    /**
+     * Asettaa tunnusnumeron ja samalla varmistaa että
+     * seuraava numero on aina suurempi kuin tähän mennessä suurin.
+     * @param nr asetettava tunnusnumero
+     */
+    private void setTunnusNro(int nr) {
+        tunnusNro = nr;
+        if (tunnusNro >= seuraavaNro) seuraavaNro = tunnusNro + 1;
+    }
+    
+
+    /**
+     * Palauttaa kauppareissub tiedot merkkijonona jonka voi tallentaa tiedostoon.
+     * @return kauppareissu tolppaeroteltuna merkkijonona 
+     * @example
+     * <pre name="test">
+     *   Kauppareissu kauppareissu = new Kauppareissu();
+     *   kauppareissu.parse("   3  |  30.04.2020");
+     *   kauppareissu.toString().startsWith("3|30.04.2020|") === true;
+     * </pre>  
+     */
+    @Override
+    public String toString() {
+        return "" +
+                getTunnus() + "|" +
+                paivamaara;
+                
+    }
+
+
+    /**
+     * Selvitää kauppareissun tiedot | erotellusta merkkijonosta
+     * Pitää huolen että seuraavaNro on suurempi kuin tuleva tunnusNro.
+     * @param rivi josta kauppareissun tiedot otetaan
+     * @example
+     * <pre name="test">
+     *   Kauppareissu kauppareissu = new Kauppareissu();
+     *   kauppareissu.parse("   3  |  30.04.2020");
+     *   kauppareissu.getTunnus() === 3;
+     *   kauppareissu.toString().startsWith("3|30.04.2020|") === true; // on enemmäkin kuin 3 kenttää, siksi loppu |
+     *   kauppareissu.rekisteroi();
+     *   int n = kauppareissu.getTunnus();
+     *   kauppareissu.parse(""+(n+20));       // Otetaan merkkijonosta vain tunnusnumero
+     *   kauppareissu.rekisteroi();           // ja tarkistetaan että seuraavalla kertaa tulee yhtä isompi
+     *   kauppareissu.getTunnus() === n+20+1;
+     *     
+     * </pre>
+     */
+    public void parse(String rivi) {
+        StringBuffer sb = new StringBuffer(rivi);
+        setTunnusNro(Mjonot.erota(sb, '|', getTunnus()));
+        paivamaara = Mjonot.erota(sb, '|', paivamaara);
+    }
+    
+    
+    @Override
+    public boolean equals(Object jasen) {
+        if ( jasen == null ) return false;
+        return this.toString().equals(jasen.toString());
+    }
+
+
+    @Override
+    public int hashCode() {
+        return tunnusNro;
+    }
+
 
     
     /**

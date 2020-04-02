@@ -2,6 +2,7 @@ package mitatuliostettua;
 
 import java.io.OutputStream;
 import java.io.PrintStream;
+import fi.jyu.mit.ohj2.Mjonot;
 
 /**
  * Yhdistää kauppreissun ja tuoteryhmät ostoiksi
@@ -11,7 +12,6 @@ import java.io.PrintStream;
  */
 public class Osto {
     
-    private Kauppareissu kauppareissu;
     private Tuoteryhma tuoteryhma;
     private int kauppaid;
     private int tuoteryhmaid;
@@ -31,11 +31,11 @@ public class Osto {
     
     
     /**
-     * @param kauppareissu kauppareissu
+     * @param kauppaid kauppareissu
      * @param tuoteryhma tuoteryhma
      */
-    public Osto (Kauppareissu kauppareissu, Tuoteryhma tuoteryhma) {
-        this.kauppareissu = kauppareissu;
+    public Osto (int kauppaid, Tuoteryhma tuoteryhma) {
+        this.kauppaid = kauppaid;
         this.tuoteryhma = tuoteryhma;
     }
     
@@ -49,11 +49,27 @@ public class Osto {
     }
     
     /**
-     * @return ostetun tuoteryhmän nimi
+     * @return ostettu tuoteryhmä
      * </pre>
      */
-    public Tuoteryhma getNimi() {
+    public Tuoteryhma getTuoteryhma() {
         return tuoteryhma;
+    }
+    
+    /**
+     * Antaa väliaikaisesti luoduille ostoille tiedot kun niitä ei vielä oikeasti pysty kirjoittamaan
+     * @param nro tunnusnumero
+     * @param tuotee tuoteryhman nimi, jonka osto lisätään
+     */
+    public void annaTiedot(int nro, String tuotee ) {
+        
+        tuote = tuotee;
+        kauppaid = nro;
+        maara = 5;
+        hinta = 30;
+       
+        
+        
     }
     
     /**
@@ -62,7 +78,7 @@ public class Osto {
      */
     public void annaTiedot(int nro) {
         
-        tuote = "tuote";
+        tuote = tuoteryhma.getNimi();
         kauppaid = nro;
         maara = 5;
         hinta = 30;
@@ -151,6 +167,60 @@ public class Osto {
         this.tuote = nimi.getNimi();
     }
     
+    
+    /**
+    * Asettaa tunnusnumeron ja samalla varmistaa että
+    * seuraava numero on aina suurempi kuin tähän mennessä suurin.
+    * @param nr asetettava tunnusnumero
+    */
+   private void setTunnus(int tunnusnumero) {
+       tunnusNro = tunnusnumero;
+       if ( tunnusNro >= seuraavaNro ) seuraavaNro = tunnusNro + 1;
+   }
+
+    
+   /**
+    * Palauttaa oston tiedot merkkijonona jonka voi tallentaa tiedostoon.
+    * @return osto tolppaeroteltuna merkkijonona 
+    * @example
+    * <pre name="test">
+    *   Osto osto = new Osto();
+    *   osto.parse("   1   |  2  |   alkoholi  | 6 | 10 ");
+    *   osto.toString()    === "1|2|alkoholi|6|10";
+    * </pre>
+    */
+   @Override
+   public String toString() {
+       return "" + getTunnus() + "|" + kauppaid + "|" + tuote + "|" + maara + "|" + hinta;
+   }
+
+   
+    /**
+     * @param rivi rivi, jolta tiedot luetaan
+     */
+    public void parse(String rivi) {
+           StringBuffer sb = new StringBuffer(rivi);
+           setTunnus(Mjonot.erota(sb, '|', getTunnus()));
+           kauppaid = Mjonot.erota(sb, '|', kauppaid);
+           tuote = Mjonot.erota(sb, '|', tuote);
+           maara = Mjonot.erota(sb, '|', maara);
+           hinta = Mjonot.erota(sb, '|', hinta);
+       }
+    
+    
+    @Override
+    public boolean equals(Object obj) {
+        if ( obj == null ) return false;
+        return this.toString().equals(obj.toString());
+    }
+    
+    
+    @Override
+    public int hashCode() {
+        return tunnusNro;
+    }
+
+   
 
     /**testiohjelma ostolle
      * @param args eik käytössä
@@ -170,11 +240,11 @@ public class Osto {
         juoma.annaTiedot();
         
         
-        Osto osto = new Osto(eka, ruoka);
-        Osto osto2 = new Osto(toka, juoma);
+        Osto osto = new Osto(eka.getTunnus(), ruoka);
+        Osto osto2 = new Osto(toka.getTunnus(), juoma);
         
-        osto.annaTiedot(1);
-        osto2.annaTiedot(2);
+        osto.annaTiedot(1, ruoka.getNimi());
+        osto2.annaTiedot(2, juoma.getNimi());
         
        
         
@@ -186,7 +256,7 @@ public class Osto {
 
 
     public int getKaupTunnus() {
-        return tunnusNro;
+        return kauppaid;
     }
   
 

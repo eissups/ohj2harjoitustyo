@@ -1,12 +1,20 @@
 package mitatuliostettua;
 
 
-
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
+
+
 
 /**
  * Pitää yllä ostot-rekisteriä
@@ -18,9 +26,11 @@ public class Ostot implements Iterable<Osto> {
 
     
     
-    private String tiedosto = "";
+    private String tiedostonNimi = "ostot";
     private int lkm = 0;
-    private final Collection<Osto> alkiot        = new ArrayList<Osto>();
+    private final Collection<Osto> alkiot = new ArrayList<Osto>();
+    private boolean muutettu = false;
+    
     
     
     
@@ -52,6 +62,8 @@ public class Ostot implements Iterable<Osto> {
      */
     public void lisaa(Osto osto) {
         alkiot.add(osto);  
+        lkm++;
+        muutettu = true;
     }
     
     
@@ -59,32 +71,112 @@ public class Ostot implements Iterable<Osto> {
     
     /**
      * Lukee ostot tiedostosta.  Kesken.
-     * @param hakemisto tiedoston hakemisto
+     * @param tuotutiedosto tiedoston hakemisto
      * @throws SailoException jos lukeminen epäonnistuu
      */
-    public void lueTiedostosta(String hakemisto) throws SailoException {
-        tiedosto = hakemisto + "/ostot.dat";
-        throw new SailoException("Ei osata vielä lukea tiedostoa " + tiedosto);
+    public void lueTiedostosta(String tuotutiedosto) throws SailoException {
+        setTiedostonNimi(tuotutiedosto);
+        
+        try ( BufferedReader fi = new BufferedReader(new FileReader(getTiedostonNimi())) ) {
+
+            String rivi;
+            while ( (rivi = fi.readLine()) != null ) {
+                rivi = rivi.trim();
+                if ( "".equals(rivi) || rivi.charAt(0) == ';' ) continue;
+                Osto osto = new Osto();
+                osto.parse(rivi); // voisi olla virhekäsittely
+                lisaa(osto);
+            }
+            muutettu = false;
+
+            } catch ( FileNotFoundException e ) {
+                throw new SailoException("Tiedosto " + getTiedostonNimi() + " ei aukea");
+            } catch ( IOException e ) {
+                throw new SailoException("Ongelmia tiedoston kanssa: " + e.getMessage());
+            }
     }
     
-    
+    /**
+     * Luetaan aikaisemmin annetun nimisestä tiedostosta
+     * @throws SailoException jos tulee poikkeus
+     */
+    public void lueTiedostosta() throws SailoException {
+        lueTiedostosta(getTiedosto());
+    }
+
     
     /**
-     * Tulee tallentamaan ostot tiedostoon sitten kun toimii
+     * Tallentaa ostot tiedostoon.
      * @throws SailoException jos talletus epäonnistuu
      */
     public void tallennaOsto() throws SailoException {
-        throw new SailoException("Ei osata vielä tallettaa tiedostoa " + tiedosto);
+        if ( !muutettu ) return;
+
+        File fbak = new File(getBakNimi());
+        File ftied = new File(getTiedosto());
+        fbak.delete(); //  if ... System.err.println("Ei voi tuhota");
+        ftied.renameTo(fbak); //  if ... System.err.println("Ei voi nimetä");
+
+        try ( PrintWriter fo = new PrintWriter(new FileWriter(ftied.getCanonicalPath())) ) {
+            for (Osto osto : this) {
+                fo.println(osto.toString());
+            }
+        } catch ( FileNotFoundException ex ) {
+            throw new SailoException("Tiedosto " + ftied.getName() + " ei aukea");
+        } catch ( IOException ex ) {
+            throw new SailoException("Tiedoston " + ftied.getName() + " kirjoittamisessa ongelmia");
+        }
+
+        muutettu = false;
     }
+
+    
+    /**
+     * Asettaa tiedoston nimen ilman tarkenninta
+     * @param tied tallennustiedoston nimi
+     */
+    public void setTiedostonNimi(String tied) {
+        tiedostonNimi = tied;
+    }
+
+
+    /**
+     * Palauttaa tiedoston nimen, jota käytetään tallennukseen
+     * @return tallennustiedoston nimi
+     */
+    public String getTiedostonNimi() {
+        return tiedostonNimi;
+    }
+
+
+    /**
+     * Palauttaa tiedoston nimen, jota käytetään tallennukseen
+     * @return tallennustiedoston nimi
+     */
+    public String getTiedosto() {
+        return tiedostonNimi + ".dat";
+    }
+
+
+    /**
+     * Palauttaa varakopiotiedoston nimen
+     * @return varakopiotiedoston nimi
+     */
+    public String getBakNimi() {
+        return tiedostonNimi + ".bak";
+    }
+
+    
     
     
     /**
-     * Palauttaa kerhon harrastusten lukumäärän
-     * @return harrastusten lukumäärä
+     * Palauttaa ostojen lukumäärän
+     * @return ostojen lukumäärä
      */
     public int getLkm() {
         return alkiot.size();
     }
+    
     
     /**
      * Haetaan kaikki kauppareissun ostot
@@ -128,6 +220,8 @@ public class Ostot implements Iterable<Osto> {
      */
     public static void main(String args[]) {
         
+        Kauppareissu eka = new Kauppareissu();
+        eka.rekisteroi();
         Tuoteryhma tuoteryhma = new Tuoteryhma();
         tuoteryhma.rekisteroi();
         tuoteryhma.annaTiedot(); 
@@ -137,20 +231,22 @@ public class Ostot implements Iterable<Osto> {
         tuoteryhma2.annaTiedot(); 
         
        Ostot ostot = new Ostot();
-       Osto eka = new Osto();
+       Osto osto = new Osto();
        Osto toka = new Osto();
   
 
-       eka.annaTiedot(1);
-       toka.annaTiedot(2);
+       osto.annaTiedot(1, tuoteryhma.getNimi());
+       toka.annaTiedot(2, tuoteryhma2.getNimi());
+       osto.rekisteroi();
+       toka.rekisteroi();
        
-       ostot.lisaa(eka);
-       ostot.lisaa(toka);
-       ostot.getLkm();     
+       ostot.lisaa(osto);
+       ostot.lisaa(toka);   
        
        System.out.println("=============== testi ===================");
        
-       List<Osto> ostot2 = ostot.annaOstot(2);
+       
+       List<Osto> ostot2 = ostot.annaOstot(1);
        
        for (Osto os : ostot2) {
            System.out.print(os.getKaupTunnus() + " ");

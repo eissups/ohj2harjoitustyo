@@ -13,7 +13,7 @@ import javafx.scene.control.DatePicker;
  * @author elisa
  * @version 12.2.2020
  */
-public class TiedotGUIController implements ModalControllerInterface<String>{
+public class TiedotController implements ModalControllerInterface<String>{
    
     @FXML private TextField textTiedot;    
     @FXML private DatePicker paivamaara;
@@ -24,7 +24,7 @@ public class TiedotGUIController implements ModalControllerInterface<String>{
     
 
     @FXML void Lisauusituoteryhmapainettu() {
-        ModalController.showModal(TiedotGUIController.class.getResource("Uusituoteryhma.fxml"), "Uusi tuoteryhmä", null, "");
+        ModalController.showModal(TiedotController.class.getResource("Uusituoteryhma.fxml"), "Uusi tuoteryhmä", null, "");
     }
 
     

@@ -68,7 +68,7 @@
             </BorderPane>
          </top>
          <right>
-            <ListChooser fx:id="chooserKauppareissut" rivit="5.1.2020&#10;2.1.2020&#10;31.12.2019&#10;" style="-fx-border-color: #cfa8f0;" BorderPane.alignment="CENTER">
+            <ListChooser fx:id="chooserKauppareissut" editable="true" nollataanko="true" pickOnBounds="false" rivit="5.1.2020&#10;2.1.2020&#10;31.12.2019&#10;" style="-fx-border-color: #cfa8f0;" BorderPane.alignment="CENTER">
                <BorderPane.margin>
                   <Insets />
                </BorderPane.margin>

@@ -1,5 +1,7 @@
 package mitatuliostettua;
 
+import java.io.File;
+import java.util.Collection;
 import java.util.List;
 
 /**
@@ -10,8 +12,9 @@ import java.util.List;
  */
 public class Mitatuliostettua {
 
-    private final Kauppareissut kauppareissut = new Kauppareissut();
-    private final Ostot ostot = new Ostot();
+    private Kauppareissut kauppareissut = new Kauppareissut();
+    private Ostot ostot = new Ostot();
+    private final Tuoteryhmat tuoteryhmat = new Tuoteryhmat();
     
     /**
      * Palauttaa kauppareissujen lukumäärän
@@ -21,6 +24,15 @@ public class Mitatuliostettua {
         return kauppareissut.getLkm();
     }
     
+    /** 
+     * Palauttaa "taulukossa" hakuehtoon vastaavien jäsenten viitteet 
+     * @param ehto hakuehto  
+     * @param k etsittävän kentän indeksi  
+     * @return tietorakenteen löytyneistä jäsenistä 
+     */ 
+    public Collection<Kauppareissu> etsi(String ehto, int k)  { 
+        return kauppareissut.etsi(ehto, k); 
+    } 
     
     
     /** Lisää uuden kauppareissun
@@ -54,7 +66,17 @@ public class Mitatuliostettua {
     public void lisaaOsto(Osto osto) {
         ostot.lisaa(osto);   
     }
+    
+    
+  
 
+    
+    
+    public void lisaaTuoteryhma(Tuoteryhma tuoteryhma) {
+        tuoteryhmat.lisaa(tuoteryhma);
+        
+    }
+    
 
     /**
      * Tulee poistamaan muista luokista kaikki ne alkiot, joilla on viitenumero nro
@@ -71,8 +93,10 @@ public class Mitatuliostettua {
      * Palauttaa i:n oston
      * @param kauppareissu kauppareissu jonka ostot halutaan
      * @return viite i:nteen ostoon
+     * @throws SailoException v
      */
-    public List<Osto> annaOstot(Kauppareissu kauppareissu) { 
+    public List<Osto> annaOstot(Kauppareissu kauppareissu) throws SailoException{ 
+        
         return ostot.annaOstot(kauppareissu.getTunnus());
     }
     
@@ -88,11 +112,29 @@ public class Mitatuliostettua {
     
     
     /**
+     * Asettaa tiedostojen perusnimet
+     * @param nimi uusi nimi
+     */
+    public void setTiedosto(String nimi) {
+        File dir = new File(nimi);
+        dir.mkdirs();
+        String hakemistonNimi = "";
+        if ( !nimi.isEmpty() ) hakemistonNimi = nimi +"/";
+        kauppareissut.setTiedostonNimi(hakemistonNimi + "kauppareissut");
+        ostot.setTiedostonNimi(hakemistonNimi + "ostot");
+    }
+
+    
+    /**
      * Lukee mitatuliostettua:n tiedot tiedostosta
      * @param nimi jota käyteään lukemisessa
      * @throws SailoException jos lukeminen epäonnistuu
      */
     public void lueTiedostosta(String nimi) throws SailoException {
+        
+        kauppareissut = new Kauppareissut(); // jos luetaan olemassa olevaan niin helpoin tyhjentää näin
+        ostot = new Ostot();
+        setTiedosto(nimi);
         kauppareissut.lueTiedostosta(nimi);
         ostot.lueTiedostosta(nimi);
     }
@@ -103,8 +145,20 @@ public class Mitatuliostettua {
      * @throws SailoException jos tallettamisessa ongelmia
      */
     public void talleta() throws SailoException {
-        kauppareissut.tallennaReissu();
-        ostot.tallennaOsto();
+        String virhe = "";
+        try {
+            kauppareissut.tallennaReissu();
+        } catch ( SailoException ex ) {
+            virhe = ex.getMessage();
+        }
+
+        try {
+
+        } catch ( SailoException ex ) {
+            virhe += ex.getMessage();
+        }
+        if ( !"".equals(virhe) ) throw new SailoException(virhe);
+
     }
     
     
@@ -156,6 +210,17 @@ public class Mitatuliostettua {
             System.out.println(ex.getMessage());
         } 
     }
+
+
+
+
+
+
+
+
+
+
+  
 }
 
 
