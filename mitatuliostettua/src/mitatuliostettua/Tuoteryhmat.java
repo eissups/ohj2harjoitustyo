@@ -1,6 +1,19 @@
 package mitatuliostettua;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.NoSuchElementException;
+
+import mitatuliostettua.Kauppareissut.KauppareissutIterator;
 
 /**
  * pitää yllä tuoteryhmärekisteriä
@@ -8,14 +21,15 @@ import java.util.Arrays;
  * @version 19.3.2020
  *
  */
-public class Tuoteryhmat {
+public class Tuoteryhmat implements Iterable<Tuoteryhma> {
 
     
     private static final int MAX_TUOTERYHMIA = 20;
     private String tiedosto = "";
     private int lkm = 0;
     private Tuoteryhma[] alkiot = new Tuoteryhma[MAX_TUOTERYHMIA];
-    
+    private boolean muutettu = false;
+    private String tiedostonNimi = "tuoteryhmat";
    
     
     
@@ -53,6 +67,7 @@ public class Tuoteryhmat {
         }
         this.alkiot[lkm] = tuoteryhma;
         lkm++;
+        muutettu = true;
     }
     
     
@@ -86,27 +101,180 @@ public class Tuoteryhmat {
     }
     
     
+    
     /**
-     * Lukee tuoteryhmat tiedostosta.  Kesken.
-     * @param hakemisto tiedoston hakemisto
+     * Lukee kauppareissut tiedostosta.  Kesken.
+     * @param tuotutiedosto tiedoston nimi
      * @throws SailoException jos lukeminen epäonnistuu
      */
-    public void lueTiedostosta(String hakemisto) throws SailoException {
-        tiedosto = hakemisto + "/nimet.dat";
-        throw new SailoException("Ei osata vielä lukea tiedostoa " + tiedosto);
+    public void lueTiedostosta(String tuotutiedosto) throws SailoException {
+        setTiedostonNimi(tuotutiedosto);
+        try ( BufferedReader fi = new BufferedReader(new FileReader(getTiedostonNimi())) ) {
+            tiedosto = fi.readLine();
+            String rivi = fi.readLine();
+            if ( rivi == null ) throw new SailoException("Maksimikoko puuttuu");
+            // int maxKoko = Mjonot.erotaInt(rivi,10); // tehdään jotakin
+
+            while ( (rivi = fi.readLine()) != null ) {
+                rivi = rivi.trim();
+                if ( "".equals(rivi) || rivi.charAt(0) == ';' ) continue;
+                Tuoteryhma tuoteryhma = new Tuoteryhma();
+                tuoteryhma.parse(rivi); // voisi olla virhekäsittely
+                lisaa(tuoteryhma);
+            }
+            muutettu = false;
+        } catch ( FileNotFoundException e ) {
+            throw new SailoException("Tiedosto " + getTiedostonNimi() + " ei aukea");
+        } catch ( IOException e ) {
+            throw new SailoException("Ongelmia tiedoston kanssa: " + e.getMessage());
+        }
+
+    }
+    
+    /**
+     * Luetaan aikaisemmin annetun nimisestä tiedostosta
+     * @throws SailoException jos tulee poikkeus
+     */
+    public void lueTiedostosta() throws SailoException {
+        lueTiedostosta(getTiedostonNimi());
     }
     
     
-    
     /**
-     * Tulee tallentamaan kauppareissut tiedostoon sitten kun toimii
+     * Tallentaa kauppareissut tiedostoon sitten kun toimii
      * @throws SailoException jos talletus epäonnistuu
      */
     public void tallennaTuoteryhma() throws SailoException {
-        throw new SailoException("Ei osata vielä tallettaa tiedostoa " + tiedosto);
+
+        if ( !muutettu ) return;
+
+        File fbak = new File("tuoteryhmat.bak");
+        File ftied = new File("tuoteryhmat.dat");
+        fbak.delete(); // if .. System.err.println("Ei voi tuhota");
+        ftied.renameTo(fbak); // if .. System.err.println("Ei voi nimetä");
+
+        try ( PrintWriter fo = new PrintWriter(new FileWriter(ftied.getCanonicalPath())) ) {
+            fo.println(getKokoNimi());
+            fo.println(alkiot.length);
+            for (Tuoteryhma tuoteryhma : this) {
+                fo.println(tuoteryhma.toString());
+            }
+            //} catch ( IOException e ) { // ei heitä poikkeusta
+            //  throw new SailoException("Tallettamisessa ongelmia: " + e.getMessage());
+        } catch ( FileNotFoundException ex ) {
+            throw new SailoException("Tiedosto " + ftied.getName() + " ei aukea");
+        } catch ( IOException ex ) {
+            throw new SailoException("Tiedoston " + ftied.getName() + " kirjoittamisessa ongelmia");
+        }
+
+        muutettu = false;
     }
     
     
+    /**
+     * Palauttaa tiedoston nimen, jota käytetään tallennukseen
+     * @return tallennustiedoston nimi
+     */
+    public String getTiedostonNimi() {
+        return tiedostonNimi;
+    }
+
+
+    /**
+     * Asettaa tiedoston perusnimen ilan tarkenninta
+     * @param nimi tallennustiedoston perusnimi
+     */
+    public void setTiedostonNimi(String nimi) {
+        tiedostonNimi = nimi;
+    }
+
+
+    /**
+     * Palauttaa tiedoston nimen, jota käytetään tallennukseen
+     * @return tallennustiedoston nimi
+     */
+    public String getTiedosto() {
+        return getTiedostonNimi() + ".dat";
+    }
+
+
+    /**
+     * Palauttaa varakopiotiedoston nimen
+     * @return varakopiotiedoston nimi
+     */
+    public String getBakNimi() {
+        return tiedostonNimi + ".bak";
+    }
+
+
+    /**
+     * Palauttaa koko nimen
+     * @return koko nimi merkkijononna
+     */
+    public String getKokoNimi() {
+        return tiedosto;
+
+    }
+    
+    /**
+     * @author elisa
+     * @version 3.4.2020
+     *
+     */
+    public class TuoteryhmatIterator implements Iterator<Tuoteryhma> {
+        private int kohdalla = 0;
+    
+       
+        /**
+         * Onko olemassa vielä seuraavaa tuoteryhmaa
+         * @see java.util.Iterator#hasNext()
+         * @return true jos on vielä tuoteryhmia
+         */
+        @Override
+        public boolean hasNext() {
+            return kohdalla < getLkm();
+        }
+
+
+        /**
+         * Annetaan seuraava tuoteryhma
+         * @return seuraava tuoteryhma
+         * @throws NoSuchElementException jos seuraava alkiota ei enää ole
+         * @see java.util.Iterator#next()
+         */
+        @Override
+        public Tuoteryhma next() throws NoSuchElementException {
+            if ( !hasNext() ) throw new NoSuchElementException("Ei oo");
+            return annaViite(kohdalla++);
+        }
+
+
+        /**
+         * Tuhoamista ei ole toteutettu
+         * @throws UnsupportedOperationException aina
+         * @see java.util.Iterator#remove()
+         */
+        @Override
+        public void remove() throws UnsupportedOperationException {
+            throw new UnsupportedOperationException("Me ei poisteta");
+        }
+
+    }
+    
+    
+    @Override
+    public Iterator<Tuoteryhma> iterator() {
+        return new TuoteryhmatIterator();
+    }
+    
+    @SuppressWarnings("unused")
+    public Collection<Tuoteryhma> etsi(String hakuehto, int k) { 
+        Collection<Tuoteryhma> loytyneet = new ArrayList<Tuoteryhma>(); 
+        for (Tuoteryhma tuoteryhma : this) { 
+            loytyneet.add(tuoteryhma);  
+        } 
+        return loytyneet; 
+    }
     
     /**
      * Testiohjelma tuoteryhmille
@@ -138,4 +306,6 @@ public class Tuoteryhmat {
         //    System.out.println(ex.getMessage());
           //}
     }
+    
 }
+

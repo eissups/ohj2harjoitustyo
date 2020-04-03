@@ -157,6 +157,14 @@ public class Mitatuliostettua {
         } catch ( SailoException ex ) {
             virhe += ex.getMessage();
         }
+        
+        try {
+            tuoteryhmat.tallennaTuoteryhma();
+        } catch ( SailoException ex ) {
+            virhe += ex.getMessage();
+        }
+        
+        
         if ( !"".equals(virhe) ) throw new SailoException(virhe);
 
     }

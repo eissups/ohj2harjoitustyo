@@ -26,7 +26,7 @@ public class Ostot implements Iterable<Osto> {
 
     
     
-    private String tiedostonNimi = "";
+    private String tiedostonNimi = "ostot.dat";
     private int lkm = 0;
     private final Collection<Osto> alkiot = new ArrayList<Osto>();
     private boolean muutettu = false;
@@ -78,7 +78,7 @@ public class Ostot implements Iterable<Osto> {
     public void lueTiedostosta(String tuotutiedosto) throws SailoException {
         setTiedostonNimi(tuotutiedosto);
         
-        try ( BufferedReader fi = new BufferedReader(new FileReader(getTiedosto())) ) {
+        try ( BufferedReader fi = new BufferedReader(new FileReader("ostot.dat")) ) {
 
             String rivi;
             while ( (rivi = fi.readLine()) != null ) {

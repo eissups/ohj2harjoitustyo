@@ -79,6 +79,7 @@ public class Osto {
     public void annaTiedot(int nro) {
         
         tuote = tuoteryhma.getNimi();
+        tuoteryhmaid = tuoteryhma.getTunnus();
         kauppaid = nro;
         maara = 5;
         hinta = 30;
@@ -191,7 +192,7 @@ public class Osto {
     */
    @Override
    public String toString() {
-       return "" + getTunnus() + "|" + kauppaid + "|" + tuote + "|" + maara + "|" + hinta;
+       return "" + getTunnus() + "|" + kauppaid + "|" + tuoteryhmaid + "|" + maara + "|" + hinta;
    }
 
    

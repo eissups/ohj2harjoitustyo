@@ -3,6 +3,8 @@ package mitatuliostettua;
 import java.io.OutputStream;
 import java.io.PrintStream;
 
+import fi.jyu.mit.ohj2.Mjonot;
+
 /**
  * Tietää tuoreyhman kentät
  * Oman tunnusnumeron ylläpito
@@ -54,8 +56,32 @@ public class Tuoteryhma {
         return tunnusNro;
     }
     
+    private void setTunnus(int numero) {
+        tunnusNro = numero;
+        if (tunnusNro >= seuraavaNro) seuraavaNro = tunnusNro + 1; 
+        
+    }
     
-    /**Palauttaa kauppareissun tunnusnumeron
+    
+    /**
+     * Palauttaa tuoteryhman tiedot merkkijonona jonka voi tallentaa tiedostoon.
+     * @return tuoteryhma tolppaeroteltuna merkkijonona 
+     * @example
+     * <pre name="test">
+     *   Tuoteryhma tuoteryhma = new Tuoteryhma;
+     *   tuoteryhma.parse("   1  |  leipä");
+     *   tuoteryhma.toString().startsWith("1|leipä|") === true;
+     * </pre>  
+     */
+    @Override
+    public String toString() {
+        return "" +
+                getTunnus() + "|" +
+                tuoteryhmanNimi;
+    }
+    
+    
+    /**Palauttaa tuotteen tunnusnumeron
      * @return tunnusnumero
      */
     public int getTunnus() {
@@ -68,7 +94,7 @@ public class Tuoteryhma {
      */
     public void annaTiedot() {
         
-        
+       tunnusNro = getTunnus();
        if (tunnusNro < vaihtoehtoja.length) tuoteryhmanNimi = vaihtoehtoja[tunnusNro];
        else tuoteryhmanNimi = "pitäisi lisätä vaihtoehtoja";     
     }
@@ -115,5 +141,14 @@ public class Tuoteryhma {
         return this.tuoteryhmanNimi;
         
     }
+
+    public void parse(String rivi) {
+        StringBuffer sb = new StringBuffer(rivi);
+        setTunnus(Mjonot.erota(sb, '|', getTunnus()));
+        tuoteryhmanNimi = Mjonot.erota(sb, '|', tuoteryhmanNimi);
+        
+    }
+
+   
 }
     

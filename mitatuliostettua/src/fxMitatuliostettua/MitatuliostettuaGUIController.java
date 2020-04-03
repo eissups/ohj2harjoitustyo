@@ -103,12 +103,13 @@ public class MitatuliostettuaGUIController implements Initializable{
     @FXML private void muokkaaostettujaClicked() {
         
         //ModalController.showModal(MitatuliostettuaGUIController.class.getResource("Uusituoteryhma.fxml"), "Uusi tuoteryhmä", null, "");
-        Tuoteryhma tuoteryhma = uusiTuoteryhma();
+        Tuoteryhma tuoteryhma = null;
         try {
+            tuoteryhma = uusiTuoteryhma();
             uusiOsto(tuoteryhma);
-        } catch (SailoException e) {
+        } catch (SailoException e1) {
             // TODO Auto-generated catch block
-            e.printStackTrace();
+            e1.printStackTrace(); 
         }
         
     }
@@ -140,8 +141,12 @@ public class MitatuliostettuaGUIController implements Initializable{
     
 
     @FXML private void uusituoteryhma() {
-       
-        uusiTuoteryhma();
+        try {
+            uusiTuoteryhma();
+        } catch (SailoException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
     }
     
 
@@ -349,14 +354,17 @@ public class MitatuliostettuaGUIController implements Initializable{
    }
    
    
-   public Tuoteryhma uusiTuoteryhma() {
-       Tuoteryhma tuoteryhma = new Tuoteryhma();
-       tuoteryhma.rekisteroi();
-       tuoteryhma.annaTiedot();
-       mitatuliostettua.lisaaTuoteryhma(tuoteryhma);
-       return tuoteryhma;
-       
-   }
+     /**Tekee uuden tyhjän tuoteryhmän oston editointia varten 
+     * @return tuoteryhma
+     * @throws SailoException yt
+     */
+    public Tuoteryhma uusiTuoteryhma() throws SailoException {
+           Tuoteryhma tuoteryhma = new Tuoteryhma();
+           tuoteryhma.rekisteroi();
+           tuoteryhma.annaTiedot();
+           mitatuliostettua.lisaaTuoteryhma(tuoteryhma);
+           return tuoteryhma;          
+       }
    
    
    /** 
