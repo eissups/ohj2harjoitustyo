@@ -153,7 +153,7 @@ public class Mitatuliostettua {
         }
 
         try {
-
+            ostot.tallennaOsto();
         } catch ( SailoException ex ) {
             virhe += ex.getMessage();
         }

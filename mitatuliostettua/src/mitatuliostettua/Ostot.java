@@ -26,7 +26,7 @@ public class Ostot implements Iterable<Osto> {
 
     
     
-    private String tiedostonNimi = "ostot";
+    private String tiedostonNimi = "";
     private int lkm = 0;
     private final Collection<Osto> alkiot = new ArrayList<Osto>();
     private boolean muutettu = false;
@@ -40,6 +40,7 @@ public class Ostot implements Iterable<Osto> {
     public Ostot( ) {
         //
     }
+    
     
     /**
      * Lisää Oston tietorakenteeseen. Tietorakenne omistajaksi.
@@ -77,7 +78,7 @@ public class Ostot implements Iterable<Osto> {
     public void lueTiedostosta(String tuotutiedosto) throws SailoException {
         setTiedostonNimi(tuotutiedosto);
         
-        try ( BufferedReader fi = new BufferedReader(new FileReader(getTiedostonNimi())) ) {
+        try ( BufferedReader fi = new BufferedReader(new FileReader(getTiedosto())) ) {
 
             String rivi;
             while ( (rivi = fi.readLine()) != null ) {
@@ -90,7 +91,7 @@ public class Ostot implements Iterable<Osto> {
             muutettu = false;
 
             } catch ( FileNotFoundException e ) {
-                throw new SailoException("Tiedosto " + getTiedostonNimi() + " ei aukea");
+                throw new SailoException("Tiedosto " + getTiedosto() + " ei aukea");
             } catch ( IOException e ) {
                 throw new SailoException("Ongelmia tiedoston kanssa: " + e.getMessage());
             }
@@ -101,7 +102,7 @@ public class Ostot implements Iterable<Osto> {
      * @throws SailoException jos tulee poikkeus
      */
     public void lueTiedostosta() throws SailoException {
-        lueTiedostosta(getTiedosto());
+        lueTiedostosta(getTiedostonNimi());
     }
 
     
@@ -112,8 +113,8 @@ public class Ostot implements Iterable<Osto> {
     public void tallennaOsto() throws SailoException {
         if ( !muutettu ) return;
 
-        File fbak = new File(getBakNimi());
-        File ftied = new File(getTiedosto());
+        File fbak = new File("ostot.bak");
+        File ftied = new File("ostot.dat");
         fbak.delete(); //  if ... System.err.println("Ei voi tuhota");
         ftied.renameTo(fbak); //  if ... System.err.println("Ei voi nimetä");
 
@@ -259,8 +260,7 @@ public class Ostot implements Iterable<Osto> {
 
     @Override
     public Iterator<Osto> iterator() {
-        // TODO Auto-generated method stub
-        return null;
+        return alkiot.iterator();
     }
     
 }
