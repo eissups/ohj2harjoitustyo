@@ -28,6 +28,7 @@ public class Kauppareissu {
      * </pre>
      */
     public String getPvm() {
+        
         return paivamaara;
     }
     
@@ -48,6 +49,7 @@ public class Kauppareissu {
      * </pre>
      */
     public int rekisteroi() {
+        
         if (tunnusNro != 0) return tunnusNro;
         tunnusNro = seuraavaNro;
         seuraavaNro++;
@@ -60,6 +62,7 @@ public class Kauppareissu {
      * @return tunnusnumero
      */
     public int getTunnus() {
+        
         return tunnusNro; 
     }
     
@@ -68,6 +71,7 @@ public class Kauppareissu {
      * Antaa väliaikaisesti luoduille kauppareissujen tiedot kun niitä ei vielä oikeasti pysty kirjoittamaan
      */
     public void annaTiedot() {
+        
         paivamaara = "20.01.2018";
         
     }
@@ -88,6 +92,7 @@ public class Kauppareissu {
      * @param os tietovirta johon tulostetaan
      */
     public void tulosta(OutputStream os) {
+        
         tulosta(new PrintStream(os));
     }
     
@@ -99,6 +104,7 @@ public class Kauppareissu {
      * @param nr asetettava tunnusnumero
      */
     private void setTunnusNro(int nr) {
+        
         tunnusNro = nr;
         if (tunnusNro >= seuraavaNro) seuraavaNro = tunnusNro + 1;
     }
@@ -116,6 +122,7 @@ public class Kauppareissu {
      */
     @Override
     public String toString() {
+        
         return "" +
                 getTunnus() + "|" +
                 paivamaara;
@@ -142,6 +149,7 @@ public class Kauppareissu {
      * </pre>
      */
     public void parse(String rivi) {
+        
         StringBuffer sb = new StringBuffer(rivi);
         setTunnusNro(Mjonot.erota(sb, '|', getTunnus()));
         paivamaara = Mjonot.erota(sb, '|', paivamaara);
@@ -150,6 +158,7 @@ public class Kauppareissu {
     
     @Override
     public boolean equals(Object jasen) {
+        
         if ( jasen == null ) return false;
         return this.toString().equals(jasen.toString());
     }
@@ -157,6 +166,7 @@ public class Kauppareissu {
 
     @Override
     public int hashCode() {
+        
         return tunnusNro;
     }
 
@@ -167,6 +177,7 @@ public class Kauppareissu {
      * @param args ei käytössä
      */
     public static void main(String args[]) {
+        
         Kauppareissu eka = new Kauppareissu();
         Kauppareissu toka = new Kauppareissu();
         eka.rekisteroi();
@@ -179,7 +190,6 @@ public class Kauppareissu {
         eka.tulosta(System.out);
 
         toka.annaTiedot();
-        toka.tulosta(System.out);
-    
+        toka.tulosta(System.out);   
     }  
 }

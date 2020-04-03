@@ -2,6 +2,7 @@ package mitatuliostettua;
 
 
 import java.io.BufferedReader;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
@@ -22,16 +23,13 @@ import java.util.List;
  * @version 19.3.2020
  *
  */
+@SuppressWarnings("unused")
 public class Ostot implements Iterable<Osto> {
 
-    
-    
     private String tiedostonNimi = "ostot.dat";
     private int lkm = 0;
     private final Collection<Osto> alkiot = new ArrayList<Osto>();
     private boolean muutettu = false;
-    
-    
     
     
     /**
@@ -48,25 +46,23 @@ public class Ostot implements Iterable<Osto> {
      * @example
      * <pre name="test">
      * Ostot ostot = new Ostot();
-     * Osto eka = new Kauppareissu();
+     * Osto eka = new Osto();
      * ostot.lisaa(eka);
      * ostot.getLkm() === 1;
      * Osto toka = new Osto();
      * ostot.lisaa(toka);
      * ostot.getLkm() === 2; 
-     * osoto.annaViite(0) === eka;
-     * ostot.annaViite(1) === toka;
-     * osto juu = new Osto();
+     * Osto juu = new Osto();
      * ostot.lisaa(juu);
      * ostot.getLkm() === 3;  
      * </pre>
      */
     public void lisaa(Osto osto) {
+        
         alkiot.add(osto);  
         lkm++;
         muutettu = true;
     }
-    
     
     
     
@@ -76,6 +72,7 @@ public class Ostot implements Iterable<Osto> {
      * @throws SailoException jos lukeminen epäonnistuu
      */
     public void lueTiedostosta(String tuotutiedosto) throws SailoException {
+        
         setTiedostonNimi(tuotutiedosto);
         
         try ( BufferedReader fi = new BufferedReader(new FileReader("ostot.dat")) ) {
@@ -97,11 +94,13 @@ public class Ostot implements Iterable<Osto> {
             }
     }
     
+    
     /**
      * Luetaan aikaisemmin annetun nimisestä tiedostosta
      * @throws SailoException jos tulee poikkeus
      */
     public void lueTiedostosta() throws SailoException {
+        
         lueTiedostosta(getTiedostonNimi());
     }
 
@@ -111,6 +110,7 @@ public class Ostot implements Iterable<Osto> {
      * @throws SailoException jos talletus epäonnistuu
      */
     public void tallennaOsto() throws SailoException {
+        
         if ( !muutettu ) return;
 
         File fbak = new File("ostot.bak");
@@ -166,9 +166,7 @@ public class Ostot implements Iterable<Osto> {
     public String getBakNimi() {
         return tiedostonNimi + ".bak";
     }
-
-    
-    
+ 
     
     /**
      * Palauttaa ostojen lukumäärän
@@ -187,15 +185,15 @@ public class Ostot implements Iterable<Osto> {
      * <pre name="test">
      * #import java.util.*;
      * 
-     *  Ostot ostot = ostot();
+     *  Ostot ostot = new Ostot();
      *  Osto eka = new Osto(2); ostot.lisaa(eka);
-     *  Osto toka = new osto(1); ostot.lisaa(toka);
+     *  Osto toka = new Osto(1); ostot.lisaa(toka);
      *  Osto kolmas = new Osto(2); ostot.lisaa(kolmas);
      *  Osto neljas = new Osto(1); ostot.lisaa(neljas);
-     *  Osto viides = new osto(2);ostot.lisaa(viides);
+     *  Osto viides = new Osto(2);ostot.lisaa(viides);
      *  Osto kuudes = new Osto(5); ostot.lisaa(kuudes);
      *  
-     *  List<osto> loytyneet;
+     *  List<Osto> loytyneet;
      *  loytyneet = ostot.annaOstot(3);
      *  loytyneet.size() === 0; 
      *  loytyneet = ostot.annaOstot(1);
@@ -252,12 +250,10 @@ public class Ostot implements Iterable<Osto> {
        for (Osto os : ostot2) {
            System.out.print(os.getKaupTunnus() + " ");
            os.tulosta(System.out);
-       }
-
-
-       
+       }     
     }
 
+    
     @Override
     public Iterator<Osto> iterator() {
         return alkiot.iterator();

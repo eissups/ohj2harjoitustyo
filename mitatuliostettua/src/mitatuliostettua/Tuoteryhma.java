@@ -1,6 +1,7 @@
 package mitatuliostettua;
 
 import java.io.OutputStream;
+
 import java.io.PrintStream;
 
 import fi.jyu.mit.ohj2.Mjonot;
@@ -18,28 +19,28 @@ public class Tuoteryhma {
     private static int seuraavaNro    = 1;
     String[] vaihtoehtoja = { "alkoholi", "elektroniikka", "hygienia" };
     
-    
-    
-    
-    
+     
     /**
      * @return tuoteryhman nimi
      * @example
      * <pre name="test">
      *  Tuoteryhma ruoka  = new Tuoteryhma();
      *  ruoka.annaTiedot();
-     *  ruoka.getTuoteryhma() === "ruoka";
+     *  ruoka.getTuoteryhma() === "alkoholi";
      * </pre>
      */
     public String getTuoteryhma() {
         return tuoteryhmanNimi;
     }
     
+    
     /**
      * Antaa tuoteryhmälle seuraavan tunnusnumeron
      *  @return tuoteryhmän uusi tunnusNro
      * @example
      * <pre name="test">
+     * #import mitatuliostettua.Tuoteryhma;
+     * #import static mitatuliostettua.Tuoteryhma.*;
      *   Tuoteryhma ruoka= new Tuoteryhma();
      *   ruoka.getTunnus() === 0;
      *   ruoka.rekisteroi();
@@ -56,10 +57,10 @@ public class Tuoteryhma {
         return tunnusNro;
     }
     
+    
     private void setTunnus(int numero) {
         tunnusNro = numero;
-        if (tunnusNro >= seuraavaNro) seuraavaNro = tunnusNro + 1; 
-        
+        if (tunnusNro >= seuraavaNro) seuraavaNro = tunnusNro + 1;     
     }
     
     
@@ -68,9 +69,10 @@ public class Tuoteryhma {
      * @return tuoteryhma tolppaeroteltuna merkkijonona 
      * @example
      * <pre name="test">
-     *   Tuoteryhma tuoteryhma = new Tuoteryhma;
-     *   tuoteryhma.parse("   1  |  leipä");
-     *   tuoteryhma.toString().startsWith("1|leipä|") === true;
+     *   #STATICIMPORT
+     *   Tuoteryhma tuoteryhma = new Tuoteryhma();
+     *   tuoteryhma.parse("   1  |  kukka");
+     *   tuoteryhma.toString().startsWith("1|kukka") === true;
      * </pre>  
      */
     @Override
@@ -90,7 +92,7 @@ public class Tuoteryhma {
     
     
     /**
-     * Antaa väliaikaisesti luoduille kauppareissujen tiedot kun niitä ei vielä oikeasti pysty kirjoittamaan
+     * Antaa väliaikaisesti luoduille tuoteryhmille tiedot kun niitä ei vielä oikeasti pysty kirjoittamaan
      */
     public void annaTiedot() {
         
@@ -122,6 +124,9 @@ public class Tuoteryhma {
     }
     
     
+    /**Testiohjelma tuoteryhmälle
+     * @param args ei käytösssä
+     */
     public static void main(String[] args) {
 
         Tuoteryhma ruoka = new Tuoteryhma();
@@ -137,11 +142,17 @@ public class Tuoteryhma {
     }
 
     
+    /**
+     * @return tuoteryhmän nimen
+     */
     public String getNimi() {
         return this.tuoteryhmanNimi;
         
     }
 
+    /**
+     * @param rivi rivi joka parsitaan
+     */
     public void parse(String rivi) {
         StringBuffer sb = new StringBuffer(rivi);
         setTunnus(Mjonot.erota(sb, '|', getTunnus()));

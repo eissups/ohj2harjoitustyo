@@ -1,6 +1,7 @@
 package mitatuliostettua;
 
 import java.io.BufferedReader;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
@@ -21,6 +22,7 @@ import mitatuliostettua.Kauppareissut.KauppareissutIterator;
  * @version 19.3.2020
  *
  */
+@SuppressWarnings("unused")
 public class Tuoteryhmat implements Iterable<Tuoteryhma> {
 
     
@@ -29,10 +31,7 @@ public class Tuoteryhmat implements Iterable<Tuoteryhma> {
     private int lkm = 0;
     private Tuoteryhma[] alkiot = new Tuoteryhma[MAX_TUOTERYHMIA];
     private boolean muutettu = false;
-    private String tiedostonNimi = "tuoteryhmat";
-   
-    
-    
+    private String tiedostonNimi = "tuoteryhmat"; 
     
     /**
      * Oletusmuodostaja
@@ -62,6 +61,7 @@ public class Tuoteryhmat implements Iterable<Tuoteryhma> {
      * </pre>
      */
     public void lisaa(Tuoteryhma tuoteryhma) {
+        
         if ( lkm >= alkiot.length ) {
             alkiot = Arrays.copyOf(alkiot, alkiot.length+1);
         }
@@ -86,20 +86,20 @@ public class Tuoteryhmat implements Iterable<Tuoteryhma> {
      * @throws IndexOutOfBoundsException jos i menee alkiot-taulukon ulkopuolelle
      */
     public Tuoteryhma annaViite(int i) throws IndexOutOfBoundsException{
+        
         if (i < 0 || lkm <= i)
             throw new IndexOutOfBoundsException("Laiton indeksi" + i);
-        return alkiot[i];
-        
-          
+        return alkiot[i];             
     }
+    
     
     /**Palauttaa tuoteryhmien määräm
      * @return ktuoteryhmien määrän
      */
     public int getLkm() {
+        
         return lkm;
     }
-    
     
     
     /**
@@ -128,8 +128,8 @@ public class Tuoteryhmat implements Iterable<Tuoteryhma> {
         } catch ( IOException e ) {
             throw new SailoException("Ongelmia tiedoston kanssa: " + e.getMessage());
         }
-
     }
+    
     
     /**
      * Luetaan aikaisemmin annetun nimisestä tiedostosta
@@ -213,8 +213,8 @@ public class Tuoteryhmat implements Iterable<Tuoteryhma> {
      */
     public String getKokoNimi() {
         return tiedosto;
-
     }
+    
     
     /**
      * @author elisa
@@ -267,14 +267,21 @@ public class Tuoteryhmat implements Iterable<Tuoteryhma> {
         return new TuoteryhmatIterator();
     }
     
-    @SuppressWarnings("unused")
+    
+    /**Etsii vastaavat tuoteryhmät
+     * @param hakuehto ehto
+     * @param k tunnusnymero
+     * @return löytyneet tuoteryhmät uutena 
+     */
     public Collection<Tuoteryhma> etsi(String hakuehto, int k) { 
+        
         Collection<Tuoteryhma> loytyneet = new ArrayList<Tuoteryhma>(); 
         for (Tuoteryhma tuoteryhma : this) { 
             loytyneet.add(tuoteryhma);  
         } 
         return loytyneet; 
     }
+    
     
     /**
      * Testiohjelma tuoteryhmille

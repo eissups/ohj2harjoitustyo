@@ -273,7 +273,7 @@ public class Kauppareissut implements Iterable<Kauppareissu>{
      *   // TODO: toistaiseksi palauttaa kaikki kauppareissut 
      * </pre> 
      */ 
-    public Collection<Kauppareissu> etsi(String hakuehto, int k) { 
+    public Collection<Kauppareissu> etsi(@SuppressWarnings("unused") String hakuehto, int k) { 
         Collection<Kauppareissu> loytyneet = new ArrayList<Kauppareissu>(); 
         for (Kauppareissu kauppareissu : this) { 
             loytyneet.add(kauppareissu);  

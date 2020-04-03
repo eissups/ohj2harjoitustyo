@@ -5,7 +5,7 @@ import java.io.PrintStream;
 import fi.jyu.mit.ohj2.Mjonot;
 
 /**
- * Yhdistää kauppreissun ja tuoteryhmät ostoiksi
+ * Yhdistää kauppareissun ja tuoteryhmät ostoiksi
  * @author elisa
  * @version 19.3.2020
  *
@@ -14,6 +14,7 @@ public class Osto {
     
     private Tuoteryhma tuoteryhma;
     private int kauppaid;
+    @SuppressWarnings("unused")
     private int tuoteryhmaid;
     // attribuutit
     private int maara;
@@ -48,13 +49,16 @@ public class Osto {
         
     }
     
+    
     /**
      * @return ostettu tuoteryhmä
      * </pre>
      */
     public Tuoteryhma getTuoteryhma() {
+        
         return tuoteryhma;
     }
+    
     
     /**
      * Antaa väliaikaisesti luoduille ostoille tiedot kun niitä ei vielä oikeasti pysty kirjoittamaan
@@ -66,11 +70,9 @@ public class Osto {
         tuote = tuotee;
         kauppaid = nro;
         maara = 5;
-        hinta = 30;
-       
-        
-        
+        hinta = 30;   
     }
+    
     
     /**
      * Antaa väliaikaisesti luoduille ostoille tiedot kun niitä ei vielä oikeasti pysty kirjoittamaan
@@ -82,10 +84,7 @@ public class Osto {
         tuoteryhmaid = tuoteryhma.getTunnus();
         kauppaid = nro;
         maara = 5;
-        hinta = 30;
-       
-        
-        
+        hinta = 30;    
     }
     
     
@@ -93,7 +92,7 @@ public class Osto {
      * @return oston tunnusnumero
      * @example
      * <pre name="test">
-     * osto eka = new Osto();
+     * Osto eka = new Osto();
      * eka.getTunnus() === 0;
      * eka.rekisteroi();
      * eka.rekisteroi();
@@ -105,11 +104,11 @@ public class Osto {
      * </pre>
      */
     public int rekisteroi() {
+        
         if (tunnusNro != 0) return tunnusNro;
         tunnusNro = seuraavaNro;
         seuraavaNro++;
-        return tunnusNro;
-        
+        return tunnusNro;      
     }
     
     
@@ -117,6 +116,7 @@ public class Osto {
      * @return tunnusnumero
      */
     public int getTunnus() {
+        
         return tunnusNro; 
     }
     
@@ -192,7 +192,9 @@ public class Osto {
     */
    @Override
    public String toString() {
-       return "" + getTunnus() + "|" + kauppaid + "|" + tuoteryhmaid + "|" + maara + "|" + hinta;
+       return "" + getTunnus() + "|" + kauppaid + "|" + tuote + "|" + maara + "|" + hinta;
+       // tuoteryhman paikalla tulee myöhemmin olemaan tuoteryhmäid, mutta nyt siinä ei ole järkeä, koska tuoteryhmiä luodaan
+       // myös oston lisäämiskohdassa vain siksi, että saadaan ruudulle jotakin
    }
 
    
@@ -256,6 +258,9 @@ public class Osto {
     }
 
 
+    /**
+     * @return kauppareissun tunnusnumeron
+     */
     public int getKaupTunnus() {
         return kauppaid;
     }

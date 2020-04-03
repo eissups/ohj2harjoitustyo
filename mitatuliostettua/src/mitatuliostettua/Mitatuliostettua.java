@@ -16,6 +16,7 @@ public class Mitatuliostettua {
     private Ostot ostot = new Ostot();
     private final Tuoteryhmat tuoteryhmat = new Tuoteryhmat();
     
+    
     /**
      * Palauttaa kauppareissujen lukumäärän
      * @return kauppareissujen lukumäärä
@@ -23,6 +24,7 @@ public class Mitatuliostettua {
     public int getMaara() {
         return kauppareissut.getLkm();
     }
+    
     
     /** 
      * Palauttaa "taulukossa" hakuehtoon vastaavien jäsenten viitteet 
@@ -59,7 +61,6 @@ public class Mitatuliostettua {
     }
     
     
-    
     /**
      * @param osto osto
      */
@@ -68,10 +69,9 @@ public class Mitatuliostettua {
     }
     
     
-  
-
-    
-    
+    /**Lisätään tuoteryhmä
+     * @param tuoteryhma tuoteryhmä joka lisätään
+     */
     public void lisaaTuoteryhma(Tuoteryhma tuoteryhma) {
         tuoteryhmat.lisaa(tuoteryhma);
         
@@ -169,8 +169,6 @@ public class Mitatuliostettua {
 
     }
     
-    
-   
    
     /**Testohjelma Mitatuliostettua-luokalle
      * @param args ei käytössä
@@ -217,18 +215,7 @@ public class Mitatuliostettua {
         } catch (SailoException ex) {
             System.out.println(ex.getMessage());
         } 
-    }
-
-
-
-
-
-
-
-
-
-
-  
+    }  
 }
 
 
