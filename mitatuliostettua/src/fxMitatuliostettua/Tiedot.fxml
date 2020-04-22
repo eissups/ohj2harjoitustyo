@@ -50,7 +50,7 @@
                             <RowConstraints maxHeight="75.0" minHeight="10.0" prefHeight="54.0" vgrow="SOMETIMES" />
                           </rowConstraints>
                            <children>
-                              <ComboBoxChooser prefHeight="25.0" prefWidth="152.0" rivit="Valitse tuoteryhmä&#10;alkoholi      &#10;elektroniikka &#10;hedelmät/vihannekset&#10;hygienia  &#10;kuivatuotteet &#10;kahvi ja tee    &#10;liha  &#10;maitotuotteet  &#10;muut&#10;" GridPane.rowIndex="1" />
+                              <ComboBoxChooser fx:id="chooserValitse" prefHeight="25.0" prefWidth="152.0" rivit="Valitse tuoteryhmä&#10;alkoholi      &#10;elektroniikka &#10;hedelmät/vihannekset&#10;hygienia  &#10;kuivatuotteet &#10;kahvi ja tee    &#10;liha  &#10;maitotuotteet  &#10;muut&#10;" GridPane.rowIndex="1" />
                               <Button fx:id="buttonLisaaryhmia" mnemonicParsing="false" onMouseClicked="#lisäätiedoissapainettu" text="Lisää " GridPane.columnIndex="3" GridPane.rowIndex="1">
                                  <GridPane.margin>
                                     <Insets bottom="5.0" right="5.0" top="5.0" />
@@ -96,7 +96,7 @@
                         </GridPane>
                      </bottom>
                      <center>
-                        <StringGrid prefHeight="206.0" prefWidth="437.0" rivit="Tuoteryhmä| Hinta | Lukmäärä &#10;hygienia | 10 | 3&#10;kuivatuotteet| 5 | 8   &#10;liha |10 | 2               &#10;hedelmät/vihannekset | 7 | 5">
+                        <StringGrid fx:id="StringGridTiedot" prefHeight="206.0" prefWidth="437.0" rivit="Tuoteryhmä| Hinta | Lukmäärä &#10;hygienia | 10 | 3&#10;kuivatuotteet| 5 | 8   &#10;liha |10 | 2               &#10;hedelmät/vihannekset | 7 | 5">
                            <columnResizePolicy>
                               <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
                            </columnResizePolicy></StringGrid>

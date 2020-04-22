@@ -102,15 +102,17 @@ public class MitatuliostettuaGUIController implements Initializable{
     
     @FXML private void muokkaaostettujaClicked() {
         
-        //ModalController.showModal(MitatuliostettuaGUIController.class.getResource("Uusituoteryhma.fxml"), "Uusi tuoteryhmä", null, "");
-        Tuoteryhma tuoteryhma = null;
+        muokkaa();
+        //ModalController.showModal(MitatuliostettuaGUIController.class.getResource("Tiedot.fxml"), "Uusi tuoteryhmä", null, "");
+        
+        /**Tuoteryhma tuoteryhma = null;
         try {
             tuoteryhma = uusiTuoteryhma();
             uusiOsto(tuoteryhma);
         } catch (SailoException e1) {
             // TODO Auto-generated catch block
             e1.printStackTrace(); 
-        }
+        }**/
         
     }
     
@@ -205,7 +207,6 @@ public class MitatuliostettuaGUIController implements Initializable{
     private Mitatuliostettua mitatuliostettua;
     private String mitatuli = "mitatuliostettua";
     private Kauppareissu valittuKauppareissu;
-    private TextArea areaKauppareissu = new TextArea();
    
     /**
      * tallennetan
@@ -228,13 +229,7 @@ public class MitatuliostettuaGUIController implements Initializable{
         valittuKauppareissu = chooserKauppareissut.getSelectedObject();
 
         if (valittuKauppareissu == null)  {
-            areaKauppareissu.clear();
             return;
-        }
-
-        areaKauppareissu.setText("");
-        try (PrintStream os = TextAreaOutputStream.getTextPrintStream(areaKauppareissu)) {
-            tulosta(os, valittuKauppareissu);
         }
     }
     
@@ -245,8 +240,7 @@ public class MitatuliostettuaGUIController implements Initializable{
      * Alustetaan myös jäsenlistan kuuntelija 
      */
     protected void alusta() {
-        panelKauppareissu.setContent(areaKauppareissu);
-        areaKauppareissu.setFont(new Font("Courier New", 12));
+
         panelKauppareissu.setFitToHeight(true);
         
         chooserKauppareissut.clear();
@@ -369,14 +363,16 @@ public class MitatuliostettuaGUIController implements Initializable{
    
    /** 
     * Tekee uuden tyhjän oston editointia varten 
-    * @param tuoteryhma .
+ * @param hinta tuotteiden hinta
+ * @param maara tuotteiden määrä
+ * @param tuoteryhma .
     * @throws SailoException gd
     */ 
-   public void uusiOsto(Tuoteryhma tuoteryhma) throws SailoException { 
-       if ( valittuKauppareissu == null ) return;  
+   public void uusiOsto(String tuoteryhma, int maara, int hinta) throws SailoException { 
+       if ( valittuKauppareissu  == null ) return;  
        Osto ost = new Osto();  
        ost.rekisteroi();  
-       ost.annaTiedot(valittuKauppareissu.getTunnus(), tuoteryhma.getNimi());  
+       ost.annaTiedot(valittuKauppareissu.getTunnus(), tuoteryhma, maara, hinta);  
        
        mitatuliostettua.lisaaOsto(ost); 
       
@@ -423,8 +419,9 @@ public class MitatuliostettuaGUIController implements Initializable{
 
 
    @SuppressWarnings("unused")
-private void muokkaa() {
-       ModalController.showModal(MitatuliostettuaGUIController.class.getResource("KauppareissuDialogView.fxml"), "Kauppareissun muokkaus", null, "");
+   private void muokkaa() {
+       TiedotController.kysyTiedot(null, valittuKauppareissu);
+   
    }
 
 }

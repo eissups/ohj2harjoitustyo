@@ -61,6 +61,26 @@ public class Osto {
     
     
     /**
+     * @return ostettu tuoteryhmä
+     * </pre>
+     */
+    public int getMaara() {
+        
+        return maara;
+    }
+    
+    
+    /**
+     * @return ostettu tuoteryhmä
+     * </pre>
+     */
+    public int getHinta() {
+        
+        return hinta;
+    }
+    
+    
+    /**
      * Antaa väliaikaisesti luoduille ostoille tiedot kun niitä ei vielä oikeasti pysty kirjoittamaan
      * @param nro tunnusnumero
      * @param tuotee tuoteryhman nimi, jonka osto lisätään
@@ -73,6 +93,21 @@ public class Osto {
         hinta = 30;   
     }
     
+    
+    /**
+     * Antaa väliaikaisesti luoduille ostoille tiedot kun niitä ei vielä oikeasti pysty kirjoittamaan
+     * @param nro tunnusnumero
+     * @param tuotee tuoteryhman nimi, jonka osto lisätään
+     * @param maara maara
+     * @param hinta hinta
+     */
+    public void annaTiedot(int nro, String tuotee, int maara, int hinta ) {
+        
+        tuote = tuotee;
+        kauppaid = nro;
+        this.maara = maara;
+        this.hinta = hinta;   
+    }
     
     /**
      * Antaa väliaikaisesti luoduille ostoille tiedot kun niitä ei vielä oikeasti pysty kirjoittamaan

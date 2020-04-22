@@ -99,12 +99,12 @@
                   </Label>
                </top>
                <center>
-                  <ScrollPane fx:id="panelKauppareissu">
+                  <ScrollPane fx:id="panelKauppareissu" fitToHeight="true" fitToWidth="true">
                      <content>
-                        <GridPane prefWidth="492.0">
+                        <GridPane prefWidth="492.0" style="-fx-background-color: lightyellow;">
                           <columnConstraints>
-                            <ColumnConstraints hgrow="SOMETIMES" maxWidth="238.0" minWidth="10.0" prefWidth="155.0" />
-                            <ColumnConstraints hgrow="SOMETIMES" maxWidth="344.0" minWidth="10.0" prefWidth="83.0" />
+                            <ColumnConstraints hgrow="SOMETIMES" maxWidth="238.0" minWidth="10.0" prefWidth="156.0" />
+                            <ColumnConstraints hgrow="SOMETIMES" maxWidth="363.0" minWidth="10.0" prefWidth="100.0" />
                           </columnConstraints>
                           <rowConstraints>
                             <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
@@ -129,6 +129,9 @@
                               <TextField disable="true" text="€" GridPane.columnIndex="1" GridPane.rowIndex="1" />
                               <TextField disable="true" promptText="€" GridPane.columnIndex="1" GridPane.rowIndex="4" />
                            </children>
+                           <padding>
+                              <Insets left="5.0" right="5.0" />
+                           </padding>
                         </GridPane>
                      </content>
                   </ScrollPane>
