@@ -6,6 +6,7 @@ import java.io.PrintStream;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.time.LocalDate;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
@@ -124,12 +125,16 @@ public class MitatuliostettuaGUIController implements Initializable{
     
     
     
-    @FXML private void paivavalittu() {
-        tallenna();
+    @FXML private void paivavalittu() throws SailoException {
+        muokkaaKauppareissua();
     }
 
     
     
+   
+
+
+
     @FXML private void paivays() {
         Dialogs.showMessageDialog("Järjestettäisiin haetun päivän mukaan, ei toimi vielä");
     }
@@ -143,17 +148,10 @@ public class MitatuliostettuaGUIController implements Initializable{
     
 
     @FXML private void uusituoteryhma() {
-        try {
-            uusiTuoteryhma();
-        } catch (SailoException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
+        muokkaaaTuoteryhmia();
     }
     
 
-    
-    
     /**
      * Avataan ohjesivu
      */
@@ -360,24 +358,7 @@ public class MitatuliostettuaGUIController implements Initializable{
            return tuoteryhma;          
        }
    
-   
-   /** 
-    * Tekee uuden tyhjän oston editointia varten 
- * @param hinta tuotteiden hinta
- * @param maara tuotteiden määrä
- * @param tuoteryhma .
-    * @throws SailoException gd
-    */ 
-   public void uusiOsto(String tuoteryhma, int maara, int hinta) throws SailoException { 
-       if ( valittuKauppareissu  == null ) return;  
-       Osto ost = new Osto();  
-       ost.rekisteroi();  
-       ost.annaTiedot(valittuKauppareissu.getTunnus(), tuoteryhma, maara, hinta);  
-       
-       mitatuliostettua.lisaaOsto(ost); 
-      
-       hae(valittuKauppareissu.getTunnus()); 
-   } 
+ 
 
 
    /**
@@ -418,10 +399,37 @@ public class MitatuliostettuaGUIController implements Initializable{
    }
 
 
-   @SuppressWarnings("unused")
    private void muokkaa() {
-       TiedotController.kysyTiedot(null, valittuKauppareissu);
+       
+       if (valittuKauppareissu == null) return;    
+       try {
+           Kauppareissu kauppareissu = TiedotController.kysyTiedot(null, valittuKauppareissu.clone());
+           if (kauppareissu == null) return;
+           mitatuliostettua.korvaaTaiLisaa(kauppareissu);
+           hae(kauppareissu.getTunnus());
+       } catch (CloneNotSupportedException e) {
+           //
+       } catch (SailoException e) {
+           Dialogs.showMessageDialog(e.getMessage());
+       }
+   }
    
+   
+   private void muokkaaaTuoteryhmia() {
+       UusituoteryhmaController.kysyTiedot(null, mitatuliostettua);
+       
+   }
+   
+   
+   private void muokkaaKauppareissua() throws SailoException {
+     
+       
+       LocalDate date = datepickertiedot.getValue();
+       String pvm = date.toString();
+       mitatuliostettua.muokkaa(valittuKauppareissu, pvm);
+       valittuKauppareissu.annaTiedot(pvm);
+       hae(valittuKauppareissu.getTunnus());
+       
    }
 
 }

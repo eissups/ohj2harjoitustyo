@@ -15,6 +15,8 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 
+import fxMitatuliostettua.MitatuliostettuaGUIController;
+
 
 
 /**
@@ -258,5 +260,4 @@ public class Ostot implements Iterable<Osto> {
     public Iterator<Osto> iterator() {
         return alkiot.iterator();
     }
-    
 }

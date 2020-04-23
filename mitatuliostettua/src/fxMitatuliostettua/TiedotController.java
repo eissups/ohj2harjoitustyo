@@ -21,6 +21,7 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
 import mitatuliostettua.Kauppareissu;
+import mitatuliostettua.Mitatuliostettua;
 import mitatuliostettua.Osto;
 import mitatuliostettua.Ostot;
 import mitatuliostettua.SailoException;
@@ -47,11 +48,15 @@ public class TiedotController implements ModalControllerInterface<Kauppareissu>,
    
     @FXML private Button ButtonLisaauusituoteryma;
     @FXML private Button buttonValmis;
+    private Mitatuliostettua mitatuliostettua;
    
     
     @FXML void hintaValittu(KeyEvent event) {
         this.hinta = Integer.parseInt(textHinta.getText());
     }
+    
+    
+   
 
 
     @FXML void lkmValittu(KeyEvent event) {
@@ -77,33 +82,38 @@ public class TiedotController implements ModalControllerInterface<Kauppareissu>,
     
     
 
-    @FXML void lisäätiedoissapainettu() {
+    @FXML void lisäätiedoissapainettu() throws SailoException {
         
-        lisaa();
+        uusiOsto();
         //Dialogs.showMessageDialog("Lisätään tuoteryhmä listaan ja tyhjennetään kirjoituskentät, ei toimi vielä");
     }
     
-    
-    /**Lisätään osto, jonka tiedoiksi laitetaan kenttien tiedot
-     * 
-     */
-    public void lisaa() {
-       
-        
-       //mitatuliostettua.uusiOsto(chooserValitse.getSelectedText(), maara, hinta);
-       
-        
-    }
+
 
 
 
     private Kauppareissu valittuKauppareissu;
     private Ostot ostot = new Ostot();
-    private int maara;
-    private Object hinta;
+    private int maara = 0;
+    private int hinta = 0;
     private String tuoteryhma;
    
     
+    /** 
+     * Tekee uuden tyhjän oston editointia varten 
+     * @throws SailoException gd
+     */ 
+    public void uusiOsto() throws SailoException { 
+        if ( valittuKauppareissu  == null ) return;  
+        Osto ost = new Osto();  
+        
+        int hintaa = Integer.parseInt(textMaara.getText());
+        int maaraa = Integer.parseInt(textHinta.getText());
+        ost.annaTiedot(valittuKauppareissu.getTunnus(), chooserValitse.getSelectedText(), maaraa, hintaa);  
+        ost.rekisteroi();  
+        mitatuliostettua.lisaaOsto(ost); 
+       
+    } 
     
     /**
      * Tyhjentään tekstikentät 
@@ -174,7 +184,7 @@ public class TiedotController implements ModalControllerInterface<Kauppareissu>,
 
 
     private LocalDate getPvm(Kauppareissu valittu) {
-        String muodossa = "dd.MM.yyyy";
+        String muodossa = "yyyy-MM-dd";
         DateTimeFormatter dtFormatter = DateTimeFormatter.ofPattern(muodossa);
         String paiva = valittu.getPvm(); 
         LocalDate paiv = LocalDate.parse(paiva, dtFormatter );
@@ -187,6 +197,7 @@ public class TiedotController implements ModalControllerInterface<Kauppareissu>,
      * Tallennetaan
      * @throws SailoException 
      */
+    @SuppressWarnings("unused")
     private void tallenna() throws SailoException {
         ostot.tallennaOsto();
     }

@@ -13,7 +13,7 @@
 <?import javafx.scene.layout.RowConstraints?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane style="-fx-background-color: #cfa8f0;" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="fxMitatuliostettua.UusituoteryhmaGUIController">
+<AnchorPane style="-fx-background-color: #cfa8f0;" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="fxMitatuliostettua.UusituoteryhmaController">
    <children>
       <BorderPane layoutY="19.0" prefHeight="203.0" prefWidth="282.0" style="-fx-background-color: lightyellow;">
          <bottom>
@@ -59,7 +59,7 @@
               </rowConstraints>
                <children>
                   <Label text="Uusi tuoteryhmä" />
-                  <TextField prefHeight="25.0" prefWidth="47.0" promptText="Kirjoita nimi" GridPane.columnIndex="1">
+                  <TextField fx:id="tuoteryhma" prefHeight="25.0" prefWidth="47.0" promptText="Kirjoita nimi" GridPane.columnIndex="1">
                      <GridPane.margin>
                         <Insets bottom="5.0" left="5.0" top="5.0" />
                      </GridPane.margin>

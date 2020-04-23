@@ -61,6 +61,26 @@ public class Mitatuliostettua {
     }
     
     
+    /** 
+     * Korvaa kauppareissun tietorakenteessa.  Ottaa kauppareissun omistukseensa. 
+     * Etsitään samalla tunnusnumerolla oleva kauppareissu.  Jos ei löydy, 
+     * niin lisätään uutena kauppareissun. 
+     * @param kauppareissu etsittävä kauppareissu
+     * @throws SailoException jos tietorakenne on jo täynnä 
+     * @example
+     * <pre name="test">
+     * #THROWS SailoException  
+     *  alustaMitatuliostettua();
+     *  mitatuliostettua.etsi("*",0).size() === 2;
+     *  mitatuliostettua.korvaaTaiLisaa(aku1);
+     *  mitatuliostettua.etsi("*",0).size() === 2;
+     * </pre>
+     */ 
+    public void korvaaTaiLisaa(Kauppareissu kauppareissu) throws SailoException { 
+        kauppareissut.korvaaTaiLisaa(kauppareissu); 
+    } 
+
+    
     /**
      * @param osto osto
      */
@@ -215,6 +235,12 @@ public class Mitatuliostettua {
         } catch (SailoException ex) {
             System.out.println(ex.getMessage());
         } 
+    }
+
+
+    public void muokkaa(Kauppareissu valittuKauppareissu, String pvm) {
+       kauppareissut.muokkaa(valittuKauppareissu, pvm);
+        
     }  
 }
 

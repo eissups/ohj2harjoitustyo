@@ -51,6 +51,34 @@ public class Osto {
     
     
     /**
+     * @param k Minkä kentän sisältö halutaan
+     * @return valitun kentän sisältö
+     * @example
+     * <pre name="test">
+     *   Harrastus har = new Harrastus();
+     *   har.parse("   2   |  10  |   Kalastus  | 1949 | 22 t ");
+     *   har.anna(0) === "2";   
+     *   har.anna(1) === "10";   
+     *   har.anna(2) === "Kalastus";   
+     *   har.anna(3) === "1949";   
+     *   har.anna(4) === "22";   
+     *   
+     * </pre>
+     */
+    public String anna(int k) {
+        switch (k) {
+            case 0:
+                return "" + tuote;
+            case 1:
+                return "" + maara;
+            case 2:
+                return "" + hinta;
+            default:
+                return "???";
+        }
+    }
+    
+    /**
      * @return ostettu tuoteryhmä
      * </pre>
      */

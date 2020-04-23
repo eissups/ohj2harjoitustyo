@@ -11,7 +11,7 @@ import fi.jyu.mit.ohj2.Mjonot;
  * Tietää kauppareissun kentät
  * Tunnusnumeron ylläpito
  */
-public class Kauppareissu {
+public class Kauppareissu implements Cloneable{
 
     private int tunnusNro = 0;
     private String paivamaara = "";    
@@ -72,7 +72,17 @@ public class Kauppareissu {
      */
     public void annaTiedot() {
         
-        paivamaara = "20.01.2018";
+        paivamaara = "Päivämäärä pitää valita";
+        
+    }
+    
+    /**
+     * Antaa väliaikaisesti luoduille kauppareissujen tiedot kun niitä ei vielä oikeasti pysty kirjoittamaan
+     * @param paiva kauppareissun päivämäärä
+     */
+    public void annaTiedot(String paiva) {
+        
+        paivamaara = paiva;
         
     }
     
@@ -171,6 +181,12 @@ public class Kauppareissu {
     }
 
 
+    @Override
+    public Kauppareissu clone() throws CloneNotSupportedException {
+        Kauppareissu uusiKauppareissu;
+        uusiKauppareissu = (Kauppareissu)super.clone();
+        return uusiKauppareissu;
+    }
     
     /**
      * Testiohjelma kauppareissulle.
@@ -191,5 +207,7 @@ public class Kauppareissu {
 
         toka.annaTiedot();
         toka.tulosta(System.out);   
-    }  
+    }
+
+
 }

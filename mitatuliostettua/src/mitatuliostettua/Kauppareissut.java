@@ -66,6 +66,47 @@ public class Kauppareissut implements Iterable<Kauppareissu>{
     }
     
     
+    /**
+     * Korvaa kauppareissun tietorakenteessa.  Ottaa sen omistukseensa.
+     * Etsitään samalla tunnusnumerolla oleva kauppareissu.  Jos ei löydy,
+     * niin lisätään uutena kauppareissuna.
+     * @param kauppareissu korvattava tai lisättävä kauppareissu
+     * @throws SailoException jos tietorakenne on jo täynnä
+     * <pre name="test">
+     * #THROWS SailoException,CloneNotSupportedException
+     * #PACKAGEIMPORT
+     * Kauppareissut kauppareissut = new Kauppareissut();
+     * Kauppareissu eka = new Kauppareissu(), toka = new JKauppareissu();
+     * rka.rekisteroi(); toka.rekisteroi();
+     * kauppareissut.getLkm() === 0;
+     * kauppareissut.korvaaTaiLisaa(eka); kauppareissut.getLkm() === 1;
+     * kauppareissut.korvaaTaiLisaa(toka); kaupparissut.getLkm() === 2;
+     * Kauppareissu kolmas = eka.clone();
+     * kolmas.aseta(3,"kkk");
+     * Iterator<Kauppareissut> it = kauppareissut.iterator();
+     * it.next() == rka === true;
+     * kauppareissut.korvaaTaiLisaa(kolmas); kaupparissut.getLkm() === 2;
+     * it = kauppareissut.iterator();
+     * Kauppareissu j0 = it.next();
+     * j0 === kolmas;
+     * j0 == kolmas === true;
+     * j0 == eka === false;
+     * </pre>
+     */
+    public void korvaaTaiLisaa(Kauppareissu kauppareissu) throws SailoException {
+        int id = kauppareissu.getTunnus();
+        for (int i = 0; i < lkm; i++) {
+            if ( alkiot[i].getTunnus() == id ) {
+                alkiot[i] = kauppareissu;
+                muutettu = true;
+                return;
+            }
+        }
+        lisaa(kauppareissu);
+    }
+    
+    
+    
     /** Palauttaa kauppareissun viitteen
      * @param i sen kauppareissun indeksi, jonka viite halutaan
      * @return kauppareissun viite 
@@ -86,6 +127,13 @@ public class Kauppareissut implements Iterable<Kauppareissu>{
         return lkm;
         
     }
+    
+    
+
+    public void muokkaa(Kauppareissu valittuKauppareissu, String pvm) {
+        valittuKauppareissu.annaTiedot(pvm);
+        muutettu = true;
+    }  
     
     
     /**
