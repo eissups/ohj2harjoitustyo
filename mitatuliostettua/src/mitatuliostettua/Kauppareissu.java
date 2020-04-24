@@ -23,7 +23,7 @@ public class Kauppareissu implements Cloneable{
      * @example
      * <pre name="test">
      *   Kauppareissu eka = new Kauppareissu();
-     *   eka.annaTiedot();
+     *   eka.annaTiedot("20.01.2018");
      *   eka.getPvm() === "20.01.2018";
      * </pre>
      */
@@ -124,10 +124,6 @@ public class Kauppareissu implements Cloneable{
      * Palauttaa kauppareissub tiedot merkkijonona jonka voi tallentaa tiedostoon.
      * @return kauppareissu tolppaeroteltuna merkkijonona 
      * @example
-     * <pre name="test">
-     *   Kauppareissu kauppareissu = new Kauppareissu();
-     *   kauppareissu.parse("   3  |  30.04.2020");
-     *   kauppareissu.toString().startsWith("3|30.04.2020|") === true;
      * </pre>  
      */
     @Override
@@ -144,18 +140,6 @@ public class Kauppareissu implements Cloneable{
      * Selvitää kauppareissun tiedot | erotellusta merkkijonosta
      * Pitää huolen että seuraavaNro on suurempi kuin tuleva tunnusNro.
      * @param rivi josta kauppareissun tiedot otetaan
-     * @example
-     * <pre name="test">
-     *   Kauppareissu kauppareissu = new Kauppareissu();
-     *   kauppareissu.parse("   3  |  30.04.2020");
-     *   kauppareissu.getTunnus() === 3;
-     *   kauppareissu.toString().startsWith("3|30.04.2020|") === true; // on enemmäkin kuin 3 kenttää, siksi loppu |
-     *   kauppareissu.rekisteroi();
-     *   int n = kauppareissu.getTunnus();
-     *   kauppareissu.parse(""+(n+20));       // Otetaan merkkijonosta vain tunnusnumero
-     *   kauppareissu.rekisteroi();           // ja tarkistetaan että seuraavalla kertaa tulee yhtä isompi
-     *   kauppareissu.getTunnus() === n+20+1;
-     *     
      * </pre>
      */
     public void parse(String rivi) {

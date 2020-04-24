@@ -72,26 +72,6 @@ public class Kauppareissut implements Iterable<Kauppareissu>{
      * niin lisätään uutena kauppareissuna.
      * @param kauppareissu korvattava tai lisättävä kauppareissu
      * @throws SailoException jos tietorakenne on jo täynnä
-     * <pre name="test">
-     * #THROWS SailoException,CloneNotSupportedException
-     * #PACKAGEIMPORT
-     * Kauppareissut kauppareissut = new Kauppareissut();
-     * Kauppareissu eka = new Kauppareissu(), toka = new JKauppareissu();
-     * rka.rekisteroi(); toka.rekisteroi();
-     * kauppareissut.getLkm() === 0;
-     * kauppareissut.korvaaTaiLisaa(eka); kauppareissut.getLkm() === 1;
-     * kauppareissut.korvaaTaiLisaa(toka); kaupparissut.getLkm() === 2;
-     * Kauppareissu kolmas = eka.clone();
-     * kolmas.aseta(3,"kkk");
-     * Iterator<Kauppareissut> it = kauppareissut.iterator();
-     * it.next() == rka === true;
-     * kauppareissut.korvaaTaiLisaa(kolmas); kaupparissut.getLkm() === 2;
-     * it = kauppareissut.iterator();
-     * Kauppareissu j0 = it.next();
-     * j0 === kolmas;
-     * j0 == kolmas === true;
-     * j0 == eka === false;
-     * </pre>
      */
     public void korvaaTaiLisaa(Kauppareissu kauppareissu) throws SailoException {
         int id = kauppareissu.getTunnus();
@@ -313,7 +293,7 @@ public class Kauppareissut implements Iterable<Kauppareissu>{
      * @example 
      * <pre name="test"> 
      * #THROWS SailoException  
-     *   Kauppareisssut kauppareissut = new Kauppareissu(); 
+     *   Kauppareissut kauppareissut = new Kauppareissut(); 
      *   Kauppareissu kauppareissu1 = new Kauppareissu(); kauppareissu1.parse("1|20.03.2020|"); 
      *   Kauppareissu kauppareissu2 = new Kauppareissu(); kauppareissu2.parse("2|20.04.2020|"); 
      *   Kauppareissu kauppareissu3 = new Kauppareissu(); kauppareissu3.parse("3|20.05.2020|"); ; 
@@ -366,13 +346,13 @@ public class Kauppareissut implements Iterable<Kauppareissu>{
      * @return löytyneen jäsenen indeksi tai -1 jos ei löydy 
      * <pre name="test"> 
      * #THROWS SailoException  
-     * Kauppareissut kauppareissut = new KAuppareissut(); 
-     * kauppareissu eka = new Kauppareissu(, toka = new KAuppareissu(), kolmsa = new AKuppareissu(); 
-     * eka.rekisteroi(); toak.rekisteroi(); kolmas.rekisteroi(); 
-     * int id1 = eka.getTunnus); 
+     * Kauppareissut kauppareissut = new Kauppareissut(); 
+     * Kauppareissu eka = new Kauppareissu(), toka = new Kauppareissu(), kolmas = new Kauppareissu(); 
+     * eka.rekisteroi(); toka.rekisteroi(); kolmas.rekisteroi(); 
+     * int id1 = eka.getTunnus(); 
      * kauppareissut.lisaa(eka); kauppareissut.lisaa(toka); kauppareissut.lisaa(kolmas); 
      * kauppareissut.etsiId(id1+1) === 1; 
-     * kauppareissutt.etsiId(id1+2) === 2; 
+     * kauppareissut.etsiId(id1+2) === 2; 
      * </pre> 
      */ 
     public int etsiId(int id) { 

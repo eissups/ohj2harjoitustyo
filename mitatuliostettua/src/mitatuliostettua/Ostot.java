@@ -313,11 +313,8 @@ public class Ostot implements Iterable<Osto> {
 
         
         for( Osto osto : ostot2) {
-            boolean voiko = true;
-            for(Osto ost : alkiot) {
-                if (ost.getTuoteryhma().getTunnus() == osto.getTuoteryhma().getTunnus() voiko = false;
-            }
-                lisaa(osto);
+           
+                 lisaa(osto);
             }
         }
 
@@ -366,6 +363,16 @@ public class Ostot implements Iterable<Osto> {
         if (n > 0) muutettu = true;
         return n;
         
+    }
+
+
+    public void lisaaMuokkaa(String selectedText, Osto ost) {
+        
+        boolean voiko = true;
+        for (Osto osti : alkiot) {
+            if (osti.getTuoteryhma().getNimi().equals(selectedText)) voiko = false;
+        }
+        if (voiko == true) lisaa(ost);
     }
     }
         

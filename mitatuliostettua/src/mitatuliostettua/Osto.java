@@ -54,17 +54,6 @@ public class Osto implements Cloneable {
     /**
      * @param k Minkä kentän sisältö halutaan
      * @return valitun kentän sisältö
-     * @example
-     * <pre name="test">
-     *   Harrastus har = new Harrastus();
-     *   har.parse("   2   |  10  |   Kalastus  | 1949 | 22 t ");
-     *   har.anna(0) === "2";   
-     *   har.anna(1) === "10";   
-     *   har.anna(2) === "Kalastus";   
-     *   har.anna(3) === "1949";   
-     *   har.anna(4) === "22";   
-     *   
-     * </pre>
      */
     public String anna(int k) {
         switch (k) {
@@ -153,6 +142,22 @@ public class Osto implements Cloneable {
         hinta = 30;    
     }
     
+    
+    /**
+     * @param tunnus kauppaid
+     * @param tuote2 tuoteryhma
+     * @param tuotteeenNimi nimi
+     * @param maaraa maara
+     * @param hintaa hinta
+     */
+    public void annaTiedot(int tunnus, Tuoteryhma tuote2, String tuotteeenNimi, int maaraa,
+            int hintaa) {
+        tuote = tuotteeenNimi;
+        tuoteryhmaid = tuoteryhma.getTunnus();
+        kauppaid = tunnus;
+        maara = maaraa;
+        hinta = hintaa;
+    }
     
     /**Liittää oston seuraavan tunnusnumeron
      * @return oston tunnusnumero
@@ -397,6 +402,9 @@ public class Osto implements Cloneable {
             maara = Integer.parseInt(maarasana);
             
         }
+
+
+       
         
         
 }

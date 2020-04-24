@@ -65,7 +65,7 @@
                      </GridPane.margin>
                   </TextField>
                   <Label text="Poista tuoteryhmä" GridPane.rowIndex="1" />
-                  <ComboBoxChooser prefHeight="25.0" prefWidth="110.0" rivit="Valitse tuoteryhmä&#10;alkoholi      &#10;elektroniikka &#10;hedelmät/vihannekset&#10;hygienia  &#10;kuivatuotteet &#10;kahvi ja tee    &#10;liha  &#10;maitotuotteet  &#10;muut&#10;" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                  <ComboBoxChooser prefHeight="25.0" prefWidth="110.0" rivit="Valitse tuoteryhmä&#10;" GridPane.columnIndex="1" GridPane.rowIndex="1">
                      <GridPane.margin>
                         <Insets bottom="5.0" left="5.0" top="5.0" />
                      </GridPane.margin>

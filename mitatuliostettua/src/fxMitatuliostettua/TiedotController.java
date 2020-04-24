@@ -108,8 +108,8 @@ public class TiedotController implements ModalControllerInterface<Ostot>,Initial
         
         int hintaa = Integer.parseInt(hinta.getText());
         int maaraa = Integer.parseInt(maara.getText());
-        ost.annaTiedot(valittuKauppareissu.getTunnus(), chooserValitse.getSelectedText(), maaraa, hintaa);  
-        ostot.lisaa(ost);
+        ost.annaTiedot(valittuKauppareissu.getTunnus(), chooserValitse.getSelectedText() , maaraa, hintaa);  
+        ostot.lisaaMuokkaa(chooserValitse.getSelectedText(), ost);
         naytaOsto(ost);
        
     } 
