@@ -12,6 +12,8 @@ import javafx.scene.control.Button;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 import mitatuliostettua.Mitatuliostettua;
+import mitatuliostettua.Tuoteryhma;
+import mitatuliostettua.Tuoteryhmat;
 
 
 
@@ -20,7 +22,7 @@ import mitatuliostettua.Mitatuliostettua;
  * @author elisa
  * @version 12.2.2020
  */
-public class UusituoteryhmaController implements ModalControllerInterface<Mitatuliostettua>,Initializable{
+public class UusituoteryhmaController implements ModalControllerInterface<Tuoteryhma>,Initializable{
 
 
     @FXML private Button buttonPoista;
@@ -29,6 +31,7 @@ public class UusituoteryhmaController implements ModalControllerInterface<Mitatu
    
     @FXML private TextField tuoteryhma;
     private Mitatuliostettua mitatuliostettua;
+    private Tuoteryhma tuote;
    
     
     @Override
@@ -48,11 +51,19 @@ public class UusituoteryhmaController implements ModalControllerInterface<Mitatu
     
     
     @FXML void tallennaClicked() {
-        Dialogs.showMessageDialog("Tallennetaan, mutta ei toimi vielä");
+        lisaaTuoteryhma();
         poistu();
     }
 
     
+    private void lisaaTuoteryhma() {
+        tuote = new Tuoteryhma();
+        tuote.rekisteroi();
+        tuote.annaTiedot(tuoteryhma.getText());
+        
+    }
+
+
     /**
     * Tekee tarvittavat muut alustukset.
     */
@@ -70,11 +81,6 @@ public class UusituoteryhmaController implements ModalControllerInterface<Mitatu
         
     }
     
-    
-    @Override
-    public Mitatuliostettua getResult() {
-        return mitatuliostettua;
-    }
 
     
     
@@ -85,20 +91,27 @@ public class UusituoteryhmaController implements ModalControllerInterface<Mitatu
 
     
 
-    public static Mitatuliostettua kysyTiedot(Stage modalityStage, Mitatuliostettua mitatuliostettua) {
-        return ModalController.showModal(
+    public static Tuoteryhma kysyTiedot(Stage modalityStage, Tuoteryhma oletus) {
+        return ModalController.<Tuoteryhma, UusituoteryhmaController>showModal(
                 UusituoteryhmaController.class.getResource("Uusituoteryhma.fxml"),
-                "Tiedot",
-                modalityStage, mitatuliostettua, null 
+                "Tuoteryhmat",
+                modalityStage, oletus, null 
             );  
         
     }
 
 
+
     @Override
-    public void setDefault(Mitatuliostettua oletus) {
-        mitatuliostettua = oletus;
+    public Tuoteryhma getResult() {
+        return tuote;
+    }
+
+
+    @Override
+    public void setDefault(Tuoteryhma oletus) {
         
+        tuote = oletus;
     }
 
 

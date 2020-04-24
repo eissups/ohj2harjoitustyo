@@ -15,6 +15,7 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 
+import fi.jyu.mit.ohj2.Mjonot;
 import fxMitatuliostettua.MitatuliostettuaGUIController;
 
 
@@ -32,6 +33,10 @@ public class Ostot implements Iterable<Osto> {
     private int lkm = 0;
     private final Collection<Osto> alkiot = new ArrayList<Osto>();
     private boolean muutettu = false;
+    private int samojenmaara;
+    
+    
+    
     
     
     /**
@@ -41,6 +46,45 @@ public class Ostot implements Iterable<Osto> {
         //
     }
     
+    
+    /**
+    * Palauttaa oston kenttien lukumäärän
+    * @return kenttien lukumäärä
+    */
+   public int getKenttia() {
+       return 13;
+   }
+
+
+   /**
+    * Eka kenttä joka on mielekäs kysyttäväksi
+    * @return eknn kentän indeksi
+    */
+   public int ekaKentta() {
+       return 1;
+   }
+   
+   
+   /**
+    * @param k minkä kentän kysymys halutaan
+    * @return valitun kentän kysymysteksti
+    */
+   public String getKysymys(int k) {
+       switch (k) {
+           case 0:
+               return "id";
+           case 1:
+               return "jäsenId";
+           case 2:
+               return "ala";
+           case 3:
+               return "aloitusvuosi";
+           case 4:
+               return "h/vko";
+           default:
+               return "???";
+       }
+   }
     
     /**
      * Lisää Oston tietorakenteeseen. Tietorakenne omistajaksi.
@@ -225,11 +269,11 @@ public class Ostot implements Iterable<Osto> {
         eka.rekisteroi();
         Tuoteryhma tuoteryhma = new Tuoteryhma();
         tuoteryhma.rekisteroi();
-        tuoteryhma.annaTiedot(); 
+        tuoteryhma.annaTiedot("g"); 
         
         Tuoteryhma tuoteryhma2 = new Tuoteryhma();
         tuoteryhma2.rekisteroi();
-        tuoteryhma2.annaTiedot(); 
+        tuoteryhma2.annaTiedot("h"); 
         
        Ostot ostot = new Ostot();
        Osto osto = new Osto();
@@ -260,4 +304,66 @@ public class Ostot implements Iterable<Osto> {
     public Iterator<Osto> iterator() {
         return alkiot.iterator();
     }
-}
+
+
+    /**
+     * @param ostot2 oostot
+     */
+    public void muokkaa(Ostot ostot2) {
+
+        for( Osto osto : ostot2) {
+            
+                lisaa(osto);
+            }
+        }
+
+
+    /**
+     * @param kaupid kauppareissun id
+     * @return ostettujen kokonaishinta
+     */
+    public int laskeHinta(int kaupid) {
+        List<Osto> loydetyt = new ArrayList<Osto>();
+        loydetyt = annaOstot(kaupid);
+        int summa = 0;
+        for (Osto ost : loydetyt) {
+            summa = summa + ost.getHinta();
+        }
+        return summa;
+    }
+
+
+    /**
+     * @param tunnus tunnus
+     * @return ostot
+     */
+    public Ostot getOstot(int tunnus) {
+        Ostot ostot = new Ostot();
+        for (Osto ost : alkiot)
+            if (ost.getKaupTunnus() == tunnus) ostot.lisaa(ost);
+        return ostot;
+        
+    }
+
+
+    /**
+     * @param tunnus kauppatunnus
+     * @return n
+     */
+    public int poistaKauppareissunTiedot(int tunnus) {
+        int n = 0;
+        for (Iterator<Osto> it = alkiot.iterator(); it.hasNext();) {
+            Osto os = it.next();
+            if ( os.getKaupTunnus() == tunnus ) {
+                it.remove();
+                n++;
+            }
+        }
+        if (n > 0) muutettu = true;
+        return n;
+        
+    }
+    }
+        
+
+        

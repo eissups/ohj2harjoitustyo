@@ -81,6 +81,12 @@ public class Mitatuliostettua {
     } 
 
     
+
+    
+    public void lisaa(Tuoteryhma tuoteryhma) {
+        tuoteryhmat.lisaa(tuoteryhma);
+    }
+    
     /**
      * @param osto osto
      */
@@ -156,7 +162,8 @@ public class Mitatuliostettua {
         ostot = new Ostot();
         setTiedosto(nimi);
         kauppareissut.lueTiedostosta(nimi);
-        ostot.lueTiedostosta(nimi);
+        ostot.lueTiedostosta("ostot.dat");
+        tuoteryhmat.lueTiedostosta("tuoteryhmat.dat");
     }
 
 
@@ -237,11 +244,55 @@ public class Mitatuliostettua {
         } 
     }
 
+    
+    /**
+     * Palauttaa k:tta oston kenttää vastaavan kysymyksen
+     * @param k kuinka monennen kentän kysymys palautetaan (0-alkuinen)
+     * @return k:netta kenttää vastaava kysymys
+     */
+    public String getKysymys(int k) {
+        switch ( k ) {
+        case 0: return "Tuoteryhma";
+        case 1: return "hinta";
+        case 2: return "lukumäärä";
+        default: return "Äääliö";
+        }
+    }
 
     public void muokkaa(Kauppareissu valittuKauppareissu, String pvm) {
        kauppareissut.muokkaa(valittuKauppareissu, pvm);
         
+    }
+
+
+    public void muokkaaOstoja(Ostot ostot2) {
+        ostot.muokkaa(ostot2);
+        
+    }
+
+
+    /**
+     * @param kaupid kauppareissun tunnus
+     * @return kokonaishinta
+     */
+    public int annaHinta(int kaupid) {
+        return ostot.laskeHinta(kaupid);
+    }
+
+
+    public Ostot getOstot(int tunnus) {
+        return ostot.getOstot(tunnus);
+    }
+
+
+    public int poista(Kauppareissu kauppareissu) {
+        if ( kauppareissu == null ) return 0;
+        int ret = kauppareissut.poista(kauppareissu.getTunnus()); 
+        ostot.poistaKauppareissunTiedot(kauppareissu.getTunnus()); 
+        return ret; 
+        
+    }
+        
     }  
-}
 
 

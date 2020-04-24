@@ -122,12 +122,12 @@
                               <Label text="Ostetuin" GridPane.rowIndex="2" />
                               <Label text="Eniten rahaa käytetty" GridPane.rowIndex="3" />
                               <Label text="Eniten rahaa vieneen hinta" GridPane.rowIndex="4" />
-                              <TextField disable="true" editable="false" GridPane.columnIndex="1" GridPane.rowIndex="2" />
-                              <TextField disable="true" editable="false" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+                              <TextField fx:id="ostetuin" disable="true" editable="false" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                              <TextField fx:id="enitenrahaa" disable="true" editable="false" GridPane.columnIndex="1" GridPane.rowIndex="3" />
                               <DatePicker fx:id="datepickertiedot" onAction="#paivavalittu" onMouseDragExited="#paivays" GridPane.columnIndex="1" />
                               <Label text="Kokonaishinta" GridPane.rowIndex="1" />
-                              <TextField disable="true" text="€" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-                              <TextField disable="true" promptText="€" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+                              <TextField fx:id="kokonaishinta" disable="true" text="€" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                              <TextField fx:id="enitenHinta" disable="true" promptText="€" GridPane.columnIndex="1" GridPane.rowIndex="4" />
                            </children>
                            <padding>
                               <Insets left="5.0" right="5.0" />
@@ -180,6 +180,6 @@
       </GridPane>
    </bottom>
    <right>
-      <StringGrid rivit="Tuoteryhmä| hinta| lkm&#10;hygienia| 10| 3      &#10;kuivatuotteet| 5 |8 &#10;liha|10 |2                             &#10;hedelmät/vihannekset | 7 | 5&#10;elektroniikka  &#10;kahvi ja tee    &#10;maitotuotteet  &#10;alkoholi      &#10;muut" style="-fx-background-color: #cfa8f0; -fx-border-width: 2;" BorderPane.alignment="CENTER" />
+      <StringGrid fx:id="ostotnakyviin" rivit="Tuoteryhmä| hinta| lkm&#10;hygienia| 10| 3      &#10;kuivatuotteet| 5 |8 &#10;liha|10 |2                             &#10;hedelmät/vihannekset | 7 | 5&#10;elektroniikka  &#10;kahvi ja tee    &#10;maitotuotteet  &#10;alkoholi      &#10;muut" style="-fx-background-color: #cfa8f0; -fx-border-width: 2;" BorderPane.alignment="CENTER" />
    </right>
 </BorderPane>

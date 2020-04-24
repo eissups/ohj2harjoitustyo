@@ -360,4 +360,39 @@ public class Kauppareissut implements Iterable<Kauppareissu>{
        
     }
     
+    /** 
+     * Etsii kauppareissun id:n perusteella 
+     * @param id tunnusnumero, jonka mukaan etsitään 
+     * @return löytyneen jäsenen indeksi tai -1 jos ei löydy 
+     * <pre name="test"> 
+     * #THROWS SailoException  
+     * Kauppareissut kauppareissut = new KAuppareissut(); 
+     * kauppareissu eka = new Kauppareissu(, toka = new KAuppareissu(), kolmsa = new AKuppareissu(); 
+     * eka.rekisteroi(); toak.rekisteroi(); kolmas.rekisteroi(); 
+     * int id1 = eka.getTunnus); 
+     * kauppareissut.lisaa(eka); kauppareissut.lisaa(toka); kauppareissut.lisaa(kolmas); 
+     * kauppareissut.etsiId(id1+1) === 1; 
+     * kauppareissutt.etsiId(id1+2) === 2; 
+     * </pre> 
+     */ 
+    public int etsiId(int id) { 
+        for (int i = 0; i < lkm; i++) 
+            if (id == alkiot[i].getTunnus()) return i; 
+        return -1; 
+    } 
+    
+
+    public int poista(int tunnus) {
+        int ind = etsiId(tunnus); 
+        if (ind < 0) return 0; 
+        lkm--; 
+        for (int i = ind; i < lkm; i++) 
+            alkiot[i] = alkiot[i + 1]; 
+        alkiot[lkm] = null; 
+        muutettu = true; 
+        return 1; 
+    }
+
+
+    
 }

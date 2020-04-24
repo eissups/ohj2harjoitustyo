@@ -47,22 +47,15 @@
                           </columnConstraints>
                           <rowConstraints>
                             <RowConstraints maxHeight="51.0" minHeight="10.0" prefHeight="36.0" vgrow="SOMETIMES" />
-                            <RowConstraints maxHeight="75.0" minHeight="10.0" prefHeight="54.0" vgrow="SOMETIMES" />
+                            <RowConstraints maxHeight="51.0" minHeight="10.0" prefHeight="36.0" vgrow="SOMETIMES" />
+                              <RowConstraints maxHeight="75.0" minHeight="10.0" prefHeight="54.0" vgrow="SOMETIMES" />
                           </rowConstraints>
                            <children>
-                              <ComboBoxChooser fx:id="chooserValitse" prefHeight="25.0" prefWidth="152.0" rivit="Valitse tuoteryhmä&#10;alkoholi      &#10;elektroniikka &#10;hedelmät/vihannekset&#10;hygienia  &#10;kuivatuotteet &#10;kahvi ja tee    &#10;liha  &#10;maitotuotteet  &#10;muut&#10;" GridPane.rowIndex="1" />
-                              <Button fx:id="buttonLisaaryhmia" mnemonicParsing="false" onMouseClicked="#lisäätiedoissapainettu" text="Lisää " GridPane.columnIndex="3" GridPane.rowIndex="1">
+                              <ComboBoxChooser fx:id="chooserValitse" prefHeight="25.0" prefWidth="152.0" rivit="Valitse tuoteryhmä&#10;alkoholi      &#10;elektroniikka &#10;hedelmät/vihannekset&#10;hygienia  &#10;kuivatuotteet &#10;kahvi ja tee    &#10;liha  &#10;maitotuotteet  &#10;muut&#10;" GridPane.rowIndex="2" />
+                              <Button fx:id="buttonLisaaryhmia" mnemonicParsing="false" onMouseClicked="#lisäätiedoissapainettu" text="Lisää " GridPane.columnIndex="3" GridPane.rowIndex="2">
                                  <GridPane.margin>
                                     <Insets bottom="5.0" right="5.0" top="5.0" />
                                  </GridPane.margin></Button>
-                              <TextField promptText="€" GridPane.columnIndex="1" GridPane.rowIndex="1">
-                                 <GridPane.margin>
-                                    <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
-                                 </GridPane.margin></TextField>
-                              <TextField GridPane.columnIndex="2" GridPane.rowIndex="1">
-                                 <GridPane.margin>
-                                    <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
-                                 </GridPane.margin></TextField>
                               <Label text="Tuoteryhmä">
                                  <GridPane.margin>
                                     <Insets bottom="5.0" left="5.0" right="5.0" top="5.0" />
@@ -87,11 +80,18 @@
                                     <Font name="System Bold" size="12.0" />
                                  </font>
                               </Label>
-                              <Button fx:id="buttonPoistaryhma" mnemonicParsing="false" onMouseClicked="#PoistatuoteryhmaPainettu" prefHeight="25.0" prefWidth="65.0" text="Poista" GridPane.columnIndex="4" GridPane.rowIndex="1">
+                              <Button fx:id="buttonPoistaryhma" mnemonicParsing="false" onMouseClicked="#PoistatuoteryhmaPainettu" prefHeight="25.0" prefWidth="65.0" text="Poista" GridPane.columnIndex="4" GridPane.rowIndex="2">
                                  <GridPane.margin>
                                     <Insets bottom="5.0" left="5.0" top="5.0" />
                                  </GridPane.margin>
                               </Button>
+                              <Label text="Uusi tuoteryhmä" />
+                  <TextField fx:id="maara" prefHeight="25.0" prefWidth="47.0" promptText="Kirjoita nimi" GridPane.columnIndex="1" GridPane.rowIndex="2">
+                     <GridPane.margin>
+                        <Insets bottom="5.0" left="5.0" top="5.0" />
+                     </GridPane.margin>
+                  </TextField>
+                              <TextField fx:id="hinta" GridPane.columnIndex="2" GridPane.rowIndex="2" />
                            </children>
                         </GridPane>
                      </bottom>

@@ -1,11 +1,12 @@
 package fxMitatuliostettua;
-import java.awt.TextField;
+
 import java.net.URL;
 
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.Date;
+import java.util.List;
 import java.util.ResourceBundle;
 
 import fi.jyu.mit.fxgui.ComboBoxChooser;
@@ -17,6 +18,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.DatePicker;
+import javafx.scene.control.TextField;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
@@ -33,16 +35,19 @@ import mitatuliostettua.Tuoteryhma;
  * @author elisa
  * @version 12.2.2020
  */
-public class TiedotController implements ModalControllerInterface<Kauppareissu>,Initializable{
+public class TiedotController implements ModalControllerInterface<Ostot>,Initializable{
    
     @FXML private TextField textTiedot;    
     @FXML private DatePicker paivamaara;
     
-    @FXML private StringGrid<Tuoteryhma> StringGridTiedot;
+    @FXML private StringGrid<Osto> StringGridTiedot;
     
     @FXML private ComboBoxChooser<String> chooserValitse;
-    @FXML private TextField textHinta;
-    @FXML private TextField textMaara;
+    @FXML
+    private TextField maara;
+
+    @FXML
+    private TextField hinta;
     @FXML private Button buttonLisaaryhmia;
     @FXML private Button buttonPoistaryhma;
    
@@ -50,18 +55,6 @@ public class TiedotController implements ModalControllerInterface<Kauppareissu>,
     @FXML private Button buttonValmis;
     private Mitatuliostettua mitatuliostettua;
    
-    
-    @FXML void hintaValittu(KeyEvent event) {
-        this.hinta = Integer.parseInt(textHinta.getText());
-    }
-    
-    
-   
-
-
-    @FXML void lkmValittu(KeyEvent event) {
-      this.maara = Integer.parseInt(textMaara.getText());   
-    }
 
         
     @FXML void Lisauusituoteryhmapainettu() {
@@ -92,12 +85,14 @@ public class TiedotController implements ModalControllerInterface<Kauppareissu>,
 
 
 
-    private Kauppareissu valittuKauppareissu;
-    private Ostot ostot = new Ostot();
-    private int maara = 0;
-    private int hinta = 0;
+    private static Kauppareissu valittuKauppareissu;
+    private static Ostot ostot = new Ostot();
+    private int maara1 = 0;
+    private int hinta1 = 0;
     private String tuoteryhma;
-   
+    private TextField[] edits;
+    private int kentta = 0;
+    
     
     /** 
      * Tekee uuden tyhjän oston editointia varten 
@@ -106,12 +101,13 @@ public class TiedotController implements ModalControllerInterface<Kauppareissu>,
     public void uusiOsto() throws SailoException { 
         if ( valittuKauppareissu  == null ) return;  
         Osto ost = new Osto();  
+        ost.rekisteroi(); 
         
-        int hintaa = Integer.parseInt(textMaara.getText());
-        int maaraa = Integer.parseInt(textHinta.getText());
+        int hintaa = Integer.parseInt(hinta.getText());
+        int maaraa = Integer.parseInt(maara.getText());
         ost.annaTiedot(valittuKauppareissu.getTunnus(), chooserValitse.getSelectedText(), maaraa, hintaa);  
-        ost.rekisteroi();  
-        mitatuliostettua.lisaaOsto(ost); 
+        ostot.lisaa(ost);
+        naytaOsto(ost);
        
     } 
     
@@ -147,38 +143,46 @@ public class TiedotController implements ModalControllerInterface<Kauppareissu>,
     }
 
     @Override
-    public void setDefault(Kauppareissu kauppareissu) {
-        valittuKauppareissu = kauppareissu;
+    public void setDefault(Ostot oletus) {
+        ostot = oletus;
         naytaOstot(valittuKauppareissu);
         
     }
     
     @Override
-    public Kauppareissu getResult() {
-        return valittuKauppareissu;
+    public Ostot getResult() {
+        return ostot;
     }
     
 
     private void naytaOstot(Kauppareissu valittu) {
+        StringGridTiedot.clear();;
         if (valittu == null) return;
         LocalDate paiv = getPvm(valittu);
         paivamaara.setValue(paiv);
         
-        if (ostot == null) tyhjenna();
+        if (ostot == null) return;
         
-        ostot.annaOstot(valittuKauppareissu.getTunnus());
-        StringGridTiedot.set("1", 1, 1);
-        int i = 0; 
-        for (Osto ost : ostot) {
-            this.maara = ost.getHinta();
-            String luku = String.valueOf(this.maara);
-            this.hinta = ost.getMaara();
-            String luku2 = String.valueOf(this.hinta) ;
-            this.tuoteryhma = ost.getTuoteryhma().getNimi();
-            StringGridTiedot.set(this.tuoteryhma, 1, i);
-            StringGridTiedot.set(luku, 2, i);
-            StringGridTiedot.set(luku2, 1, i);
-        }
+        StringGridTiedot.clear();
+        
+        
+            for (Osto osto: ostot)
+                naytaOsto(osto);
+       
+       
+    }
+
+
+
+
+    private void naytaOsto(Osto osto) {
+        
+        int kenttia = osto.getKenttia(); 
+        String[] rivi = new String[kenttia-osto.ekaKentta()]; 
+        for (int i=0, k=osto.ekaKentta(); k < kenttia; i++, k++) 
+            rivi[i] = osto.anna(k); 
+        StringGridTiedot.add(osto,rivi);
+        
     }
 
 
@@ -206,17 +210,17 @@ public class TiedotController implements ModalControllerInterface<Kauppareissu>,
 
     /**
      * @param modalityStage ythj
+     * @param oletus yjrf 
      * @param valittu rdh
      * @return ytdu
      */
-    public static Kauppareissu kysyTiedot(Stage modalityStage, Kauppareissu valittu) {
-        return ModalController.showModal(
+    public static Ostot kysyTiedot(Stage modalityStage, Ostot oletus, Kauppareissu valittu) {
+        valittuKauppareissu = valittu;
+        return ModalController.<Ostot, TiedotController>showModal(
                 TiedotController.class.getResource("Tiedot.fxml"),
                 "Tiedot",
-                modalityStage, valittu, null 
+                modalityStage, oletus, null 
             );  
     }
-
-
 
 }

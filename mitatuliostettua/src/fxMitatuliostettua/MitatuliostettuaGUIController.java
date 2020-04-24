@@ -1,3 +1,4 @@
+   
 package fxMitatuliostettua;
 
 import java.awt.Desktop;
@@ -16,6 +17,7 @@ import fi.jyu.mit.fxgui.ComboBoxChooser;
 import fi.jyu.mit.fxgui.Dialogs;
 import fi.jyu.mit.fxgui.ListChooser;
 import fi.jyu.mit.fxgui.ModalController;
+import fi.jyu.mit.fxgui.StringGrid;
 import fi.jyu.mit.fxgui.TextAreaOutputStream;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
@@ -34,6 +36,7 @@ import javafx.scene.text.Font;
 import mitatuliostettua.Kauppareissu;
 import mitatuliostettua.Mitatuliostettua;
 import mitatuliostettua.Osto;
+import mitatuliostettua.Ostot;
 import mitatuliostettua.SailoException;
 import mitatuliostettua.Tuoteryhma;
 
@@ -62,6 +65,8 @@ public class MitatuliostettuaGUIController implements Initializable{
     @FXML private Button buottonmuokkaa;
     @FXML private Button Buttonuusituoteryhma;
     @FXML private DatePicker paivamaara;
+    @FXML
+    private StringGrid<Osto> ostotnakyviin;
 
     @FXML private ListChooser<Kauppareissu> chooserKauppareissut;
     @FXML private ScrollPane panelKauppareissu;
@@ -125,16 +130,18 @@ public class MitatuliostettuaGUIController implements Initializable{
     
     
     
-    @FXML private void paivavalittu() throws SailoException {
-        muokkaaKauppareissua();
+    @FXML private void paivavalittu() {
+        try {
+            muokkaaKauppareissua();
+        } catch (SailoException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        tallenna();
     }
 
     
     
-   
-
-
-
     @FXML private void paivays() {
         Dialogs.showMessageDialog("Järjestettäisiin haetun päivän mukaan, ei toimi vielä");
     }
@@ -142,16 +149,32 @@ public class MitatuliostettuaGUIController implements Initializable{
     
     
     @FXML private void poista() {
-        Dialogs.showMessageDialog("Poista, ei toimi vielä");
+        try {
+            poistaKauppareissu();
+        } catch (SailoException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
     }
     
     
+
+ 
+
+
 
     @FXML private void uusituoteryhma() {
-        muokkaaaTuoteryhmia();
+        try {
+            uusiTuoteryhma();
+        } catch (SailoException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
     }
     
 
+    
+    
     /**
      * Avataan ohjesivu
      */
@@ -220,6 +243,19 @@ public class MitatuliostettuaGUIController implements Initializable{
         }
      }
 
+    
+    private void poistaKauppareissu() throws SailoException {
+        Kauppareissu kauppareissu = valittuKauppareissu;
+        if ( kauppareissu == null ) return;
+        if ( !Dialogs.showQuestionDialog("Poisto", "Poistetaanko kauppareissu: " + kauppareissu.getPvm(), "Kyllä", "Ei") )
+            return;
+        mitatuliostettua.poista(kauppareissu);
+        int index = chooserKauppareissut.getSelectedIndex();
+        hae(0);
+        chooserKauppareissut.setSelectedIndex(index);
+        
+    }
+    
     /**
      * Näyttää listasta valitun kauppareissun tiedot, tilapäisesti yhteen isoon edit-kenttään
      */
@@ -229,9 +265,38 @@ public class MitatuliostettuaGUIController implements Initializable{
         if (valittuKauppareissu == null)  {
             return;
         }
+        naytaOStot(valittuKauppareissu);
     }
     
     
+    private void naytaOStot(Kauppareissu valittuKauppareissu2) {
+        ostotnakyviin.clear();
+        if ( valittuKauppareissu == null ) return;
+        
+        try {
+            List<Osto> ostot = mitatuliostettua.annaOstot(valittuKauppareissu);
+            if ( ostot.size() == 0 ) return;
+            for (Osto ost: ostot)
+                naytaOSto(ost);
+        } catch (SailoException e) {
+            naytaVirhe(e.getMessage());
+        } 
+        
+    }
+
+
+
+    private void naytaOSto(Osto ost) {
+        int kenttia = ost.getKenttia(); 
+        String[] rivi = new String[kenttia-ost.ekaKentta()]; 
+        for (int i=0, k=ost.ekaKentta(); k < kenttia; i++, k++) 
+            rivi[i] = ost.anna(k); 
+        ostotnakyviin.add(ost,rivi);
+        
+    }
+
+
+
     /**
      * Tekee tarvittavat muut alustukset, nyt vaihdetaan GridPanen tilalle
      * yksi iso tekstikenttä, johon voidaan tulostaa jäsenten tiedot.
@@ -243,6 +308,7 @@ public class MitatuliostettuaGUIController implements Initializable{
         
         chooserKauppareissut.clear();
         chooserKauppareissut.addSelectionListener(e -> naytaKauppareissu());
+        
     }
 
     
@@ -353,12 +419,29 @@ public class MitatuliostettuaGUIController implements Initializable{
     public Tuoteryhma uusiTuoteryhma() throws SailoException {
            Tuoteryhma tuoteryhma = new Tuoteryhma();
            tuoteryhma.rekisteroi();
-           tuoteryhma.annaTiedot();
+           tuoteryhma.annaTiedot("");
            mitatuliostettua.lisaaTuoteryhma(tuoteryhma);
            return tuoteryhma;          
        }
    
- 
+   
+   /** 
+    * Tekee uuden tyhjän oston editointia varten 
+ * @param hinta tuotteiden hinta
+ * @param maara tuotteiden määrä
+ * @param tuoteryhma .
+    * @throws SailoException gd
+    */ 
+   public void uusiOsto(String tuoteryhma, int maara, int hinta) throws SailoException { 
+       if ( valittuKauppareissu  == null ) return;  
+       Osto ost = new Osto();  
+       ost.rekisteroi();  
+       ost.annaTiedot(valittuKauppareissu.getTunnus(), tuoteryhma, maara, hinta);  
+       
+       mitatuliostettua.lisaaOsto(ost); 
+      
+       hae(valittuKauppareissu.getTunnus()); 
+   } 
 
 
    /**
@@ -398,25 +481,35 @@ public class MitatuliostettuaGUIController implements Initializable{
 
    }
 
-
    private void muokkaa() {
-       
+       Ostot ostoot = new Ostot();
+       ostoot = mitatuliostettua.getOstot(valittuKauppareissu.getTunnus());
        if (valittuKauppareissu == null) return;    
        try {
-           Kauppareissu kauppareissu = TiedotController.kysyTiedot(null, valittuKauppareissu.clone());
-           if (kauppareissu == null) return;
-           mitatuliostettua.korvaaTaiLisaa(kauppareissu);
-           hae(kauppareissu.getTunnus());
+           Ostot ostot = TiedotController.kysyTiedot(null, ostoot, valittuKauppareissu.clone());
+           if (ostot == null) return;
+           mitatuliostettua.muokkaaOstoja(ostot);
        } catch (CloneNotSupportedException e) {
            //
-       } catch (SailoException e) {
-           Dialogs.showMessageDialog(e.getMessage());
        }
+       tallenna();
+       naytaOStot(valittuKauppareissu);
+    
    }
    
    
    private void muokkaaaTuoteryhmia() {
-       UusituoteryhmaController.kysyTiedot(null, mitatuliostettua);
+         
+       Tuoteryhma tuoteryhmaa = null;
+       try {
+           Tuoteryhma tuoteryhma =  UusituoteryhmaController.kysyTiedot(null, tuoteryhmaa);
+           if (tuoteryhma == null) return;
+           mitatuliostettua.lisaa(tuoteryhma);
+           hae(tuoteryhma.getTunnus());
+       } catch (SailoException e) {
+           Dialogs.showMessageDialog(e.getMessage());
+       }
+      
        
    }
    
@@ -429,9 +522,7 @@ public class MitatuliostettuaGUIController implements Initializable{
        mitatuliostettua.muokkaa(valittuKauppareissu, pvm);
        valittuKauppareissu.annaTiedot(pvm);
        hae(valittuKauppareissu.getTunnus());
+       naytaOStot(valittuKauppareissu);
        
    }
-
 }
-	
-

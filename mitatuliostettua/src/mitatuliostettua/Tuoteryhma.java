@@ -93,12 +93,13 @@ public class Tuoteryhma {
     
     /**
      * Antaa väliaikaisesti luoduille tuoteryhmille tiedot kun niitä ei vielä oikeasti pysty kirjoittamaan
+     * @param string tuoteryhman nimi
      */
-    public void annaTiedot() {
+    public void annaTiedot(String string) {
         
        tunnusNro = getTunnus();
-       if (tunnusNro < vaihtoehtoja.length) tuoteryhmanNimi = vaihtoehtoja[tunnusNro];
-       else tuoteryhmanNimi = "pitäisi lisätä vaihtoehtoja";     
+       if (string == null) tuoteryhmanNimi = "virhe";
+       else tuoteryhmanNimi = string;
     }
     
     
@@ -135,8 +136,8 @@ public class Tuoteryhma {
         juoma.rekisteroi();
         ruoka.tulosta(System.out);
         juoma.tulosta(System.out);
-        ruoka.annaTiedot();
-        juoma.annaTiedot();
+        ruoka.annaTiedot("moi");
+        juoma.annaTiedot("hei");
         ruoka.tulosta(System.out);
         juoma.tulosta(System.out);
     }

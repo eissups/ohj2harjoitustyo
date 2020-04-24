@@ -293,9 +293,9 @@ public class Tuoteryhmat implements Iterable<Tuoteryhma> {
         Tuoteryhma ruoka = new Tuoteryhma();
         Tuoteryhma juoma = new Tuoteryhma();
         ruoka.rekisteroi();
-        ruoka.annaTiedot();
+        ruoka.annaTiedot("jii");
         juoma.rekisteroi();
-        juoma.annaTiedot();
+        juoma.annaTiedot("jaa");
 
         //try {
             tuoteryhmat.lisaa(ruoka);

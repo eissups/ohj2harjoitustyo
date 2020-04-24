@@ -10,7 +10,7 @@ import fi.jyu.mit.ohj2.Mjonot;
  * @version 19.3.2020
  *
  */
-public class Osto {
+public class Osto implements Cloneable {
     
     private Tuoteryhma tuoteryhma;
     private int kauppaid;
@@ -21,6 +21,7 @@ public class Osto {
     private int hinta;
     private int tunnusNro;
     private String tuote;
+    private String maarassanana;
     // seuraava id
     private static int seuraavaNro = 1;
     
@@ -68,11 +69,13 @@ public class Osto {
     public String anna(int k) {
         switch (k) {
             case 0:
-                return "" + tuote;
+                return "" + kauppaid;
             case 1:
-                return "" + maara;
+                return "" + tuote;
             case 2:
-                return "" + hinta;
+                return "" + maara;
+            case 3:
+                return "" + hinta;    
             default:
                 return "???";
         }
@@ -302,8 +305,8 @@ public class Osto {
         Tuoteryhma juoma = new Tuoteryhma();
         ruoka.rekisteroi();
         juoma.rekisteroi();
-        ruoka.annaTiedot();
-        juoma.annaTiedot();
+        ruoka.annaTiedot("t");
+        juoma.annaTiedot("f");
         
         
         Osto osto = new Osto(eka.getTunnus(), ruoka);
@@ -327,6 +330,73 @@ public class Osto {
     public int getKaupTunnus() {
         return kauppaid;
     }
+
+
+    public int getKenttia() {
+        return 4;
+    }
   
 
+    /**
+     * @return ensimmäinen käyttäjän syötettävän kentän indeksi
+     */
+    public int ekaKentta() {
+        return 1;
+    }
+
+
+    public String getKysymys(int k) {
+        
+        switch (k) {
+        case 0:
+            return "id";
+        case 1:
+            return "jäsenId";
+        case 2:
+            return "ala";
+        case 3:
+            return "aloitusvuosi";
+        case 4:
+            return "h/vko";
+        default:
+            return "???";
+        }
+    }
+    
+        public String aseta(int k, String jono) {
+            String tjono = jono.trim();
+            StringBuffer sb = new StringBuffer(tjono);
+            switch ( k ) {
+            case 0:
+                setTunnus(Mjonot.erota(sb, '§', getTunnus()));
+                return null;
+            case 1:
+                tuote = tjono;
+                return null;
+            case 2:
+                String maarassanana = tjono;
+                maaraksi(maarassanana);
+                return null;
+            case 3:
+                String hintasanana = tjono;
+                hinnaksi(hintasanana);
+                return null;
+            default:
+                return "ÄÄliö";
+            }
+    }
+
+
+        private void hinnaksi(String hintasanana) {
+            hinta = Integer.parseInt(hintasanana);
+            
+        }
+
+
+        private void maaraksi(String maarasana) {
+            maara = Integer.parseInt(maarasana);
+            
+        }
+        
+        
 }
