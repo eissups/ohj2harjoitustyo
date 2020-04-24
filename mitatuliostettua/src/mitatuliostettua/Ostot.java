@@ -311,8 +311,12 @@ public class Ostot implements Iterable<Osto> {
      */
     public void muokkaa(Ostot ostot2) {
 
+        
         for( Osto osto : ostot2) {
-            
+            boolean voiko = true;
+            for(Osto ost : alkiot) {
+                if (ost.getTuoteryhma().getTunnus() == osto.getTuoteryhma().getTunnus() voiko = false;
+            }
                 lisaa(osto);
             }
         }

@@ -164,12 +164,7 @@ public class MitatuliostettuaGUIController implements Initializable{
 
 
     @FXML private void uusituoteryhma() {
-        try {
-            uusiTuoteryhma();
-        } catch (SailoException e) {
-            // TODO Auto-generated catch block
-            e.printStackTrace();
-        }
+        muokkaaaTuoteryhmia();
     }
     
 
@@ -484,6 +479,7 @@ public class MitatuliostettuaGUIController implements Initializable{
    private void muokkaa() {
        Ostot ostoot = new Ostot();
        ostoot = mitatuliostettua.getOstot(valittuKauppareissu.getTunnus());
+       //Tuoteryhma[] alkiot = mitatuliostettua.getTuoteryhmat();
        if (valittuKauppareissu == null) return;    
        try {
            Ostot ostot = TiedotController.kysyTiedot(null, ostoot, valittuKauppareissu.clone());

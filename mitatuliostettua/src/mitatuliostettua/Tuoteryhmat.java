@@ -313,6 +313,12 @@ public class Tuoteryhmat implements Iterable<Tuoteryhma> {
         //    System.out.println(ex.getMessage());
           //}
     }
+
+
+    public Tuoteryhma[] getTuoteryhmat() {
+        return alkiot;
+        
+    }
     
 }
 

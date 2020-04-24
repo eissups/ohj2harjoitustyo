@@ -28,6 +28,7 @@ import mitatuliostettua.Osto;
 import mitatuliostettua.Ostot;
 import mitatuliostettua.SailoException;
 import mitatuliostettua.Tuoteryhma;
+import mitatuliostettua.Tuoteryhmat;
 
 
 /**
@@ -42,7 +43,7 @@ public class TiedotController implements ModalControllerInterface<Ostot>,Initial
     
     @FXML private StringGrid<Osto> StringGridTiedot;
     
-    @FXML private ComboBoxChooser<String> chooserValitse;
+    @FXML private ComboBoxChooser<Tuoteryhma> chooserValitse;
     @FXML
     private TextField maara;
 
@@ -92,6 +93,8 @@ public class TiedotController implements ModalControllerInterface<Ostot>,Initial
     private String tuoteryhma;
     private TextField[] edits;
     private int kentta = 0;
+    private Tuoteryhmat tuoteryhmat;
+    private Tuoteryhma tuote;
     
     
     /** 
@@ -124,10 +127,23 @@ public class TiedotController implements ModalControllerInterface<Ostot>,Initial
      * Tekee tarvittavat muut alustukset.
      */
     protected void alusta() {
-        //
+        etsiTuoteryhmat();
     }
 
     
+
+    private void etsiTuoteryhmat() {
+        tuoteryhmat = new Tuoteryhmat();
+        try {
+            tuoteryhmat.lueTiedostosta("tuoteryhmat.dat");
+        } catch (SailoException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
+        
+    }
+
+
 
     @Override
     public void initialize(URL url, ResourceBundle bundle) {
@@ -146,13 +162,24 @@ public class TiedotController implements ModalControllerInterface<Ostot>,Initial
     public void setDefault(Ostot oletus) {
         ostot = oletus;
         naytaOstot(valittuKauppareissu);
+        naytaTuoteryhmat();
         
     }
     
+    private void naytaTuoteryhmat() {
+        for(Tuoteryhma tuoter : tuoteryhmat ) {
+            chooserValitse.add(tuoter.getTuoteryhma(), tuoter);
+        }      
+    }
+
+
+
     @Override
     public Ostot getResult() {
         return ostot;
     }
+    
+    
     
 
     private void naytaOstot(Kauppareissu valittu) {

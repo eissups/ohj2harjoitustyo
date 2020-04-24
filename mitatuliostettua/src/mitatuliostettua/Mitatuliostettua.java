@@ -292,6 +292,12 @@ public class Mitatuliostettua {
         return ret; 
         
     }
+
+
+    public Tuoteryhma[] getTuoteryhmat() {
+        return tuoteryhmat.getTuoteryhmat();
+       
+    }
         
     }  
 
