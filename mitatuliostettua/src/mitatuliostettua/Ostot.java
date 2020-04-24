@@ -312,11 +312,11 @@ public class Ostot implements Iterable<Osto> {
     public void muokkaa(Ostot ostot2) {
 
         
-        for( Osto osto : ostot2) {
-           
-                 lisaa(osto);
-            }
-        }
+       alkiot.clear();
+       for(Osto e : ostot2) {
+           alkiot.add(e);
+       }
+     }
 
 
     /**
@@ -368,11 +368,7 @@ public class Ostot implements Iterable<Osto> {
 
     public void lisaaMuokkaa(String selectedText, Osto ost) {
         
-        boolean voiko = true;
-        for (Osto osti : alkiot) {
-            if (osti.getTuoteryhma().getNimi().equals(selectedText)) voiko = false;
-        }
-        if (voiko == true) lisaa(ost);
+        lisaa(ost);
     }
     }
         
