@@ -56,6 +56,7 @@ public class TiedotController implements ModalControllerInterface<Ostot>,Initial
    
     @FXML private Button ButtonLisaauusituoteryma;
     @FXML private Button buttonValmis;
+    @SuppressWarnings("unused")
     private Mitatuliostettua mitatuliostettua;
    
  
@@ -84,12 +85,18 @@ public class TiedotController implements ModalControllerInterface<Ostot>,Initial
 
     private static Kauppareissu valittuKauppareissu;
     private static Ostot ostot = new Ostot();
+    @SuppressWarnings("unused")
     private int maara1 = 0;
+    @SuppressWarnings("unused")
     private int hinta1 = 0;
+    @SuppressWarnings("unused")
     private String tuoteryhma;
+    @SuppressWarnings("unused")
     private TextField[] edits;
+    @SuppressWarnings("unused")
     private int kentta = 0;
     private Tuoteryhmat tuoteryhmat;
+    @SuppressWarnings("unused")
     private Tuoteryhma tuote;
     
     
@@ -104,8 +111,8 @@ public class TiedotController implements ModalControllerInterface<Ostot>,Initial
         
         int hintaa = Integer.parseInt(hinta.getText());
         int maaraa = Integer.parseInt(maara.getText());
-        SingleSelectionModel<StringAndObject<Tuoteryhma>> tuote = chooserValitse.getSelectionModel();
-        StringAndObject<Tuoteryhma> joku = tuote.getSelectedItem();
+        SingleSelectionModel<StringAndObject<Tuoteryhma>> tuote1 = chooserValitse.getSelectionModel();
+        StringAndObject<Tuoteryhma> joku = tuote1.getSelectedItem();
         Tuoteryhma tuotery = joku.getObject();
         ost.annaTiedot(valittuKauppareissu.getTunnus(), tuotery , maaraa, hintaa);  
         ostot.lisaaMuokkaa(chooserValitse.getSelectedText(), ost);
@@ -130,7 +137,6 @@ public class TiedotController implements ModalControllerInterface<Ostot>,Initial
     }
 
     
-
     private void etsiTuoteryhmat() {
         tuoteryhmat = new Tuoteryhmat();
         try {
@@ -143,7 +149,6 @@ public class TiedotController implements ModalControllerInterface<Ostot>,Initial
     }
 
 
-
     @Override
     public void initialize(URL url, ResourceBundle bundle) {
         alusta();  
@@ -151,12 +156,12 @@ public class TiedotController implements ModalControllerInterface<Ostot>,Initial
     }
     
     
-
     @Override
     public void handleShown() {
         paivamaara.requestFocus();   
     }
 
+    
     @Override
     public void setDefault(Ostot oletus) {
         ostot = oletus;
@@ -164,6 +169,7 @@ public class TiedotController implements ModalControllerInterface<Ostot>,Initial
         naytaTuoteryhmat();
         
     }
+    
     
     private void naytaTuoteryhmat() {
         for(Tuoteryhma tuoter : tuoteryhmat ) {
@@ -178,9 +184,7 @@ public class TiedotController implements ModalControllerInterface<Ostot>,Initial
         return ostot;
     }
     
-    
-    
-
+ 
     private void naytaOstot(Kauppareissu valittu) {
         StringGridTiedot.clear();;
         if (valittu == null) return;
@@ -194,13 +198,10 @@ public class TiedotController implements ModalControllerInterface<Ostot>,Initial
         
             for (Osto osto: ostot)
                 naytaOsto(osto);
-       
-       
+
     }
 
-
-
-
+    
     private void naytaOsto(Osto osto) {
         
         int kenttia = osto.getKenttia(); 
@@ -212,7 +213,6 @@ public class TiedotController implements ModalControllerInterface<Ostot>,Initial
     }
 
 
-
     private LocalDate getPvm(Kauppareissu valittu) {
         String muodossa = "yyyy-MM-dd";
         DateTimeFormatter dtFormatter = DateTimeFormatter.ofPattern(muodossa);
@@ -220,7 +220,6 @@ public class TiedotController implements ModalControllerInterface<Ostot>,Initial
         LocalDate paiv = LocalDate.parse(paiva, dtFormatter );
         return paiv;
     }
-
 
 
     /**
@@ -231,7 +230,6 @@ public class TiedotController implements ModalControllerInterface<Ostot>,Initial
     private void tallenna() throws SailoException {
         ostot.tallennaOsto();
     }
-
 
 
     /**
@@ -248,5 +246,4 @@ public class TiedotController implements ModalControllerInterface<Ostot>,Initial
                 modalityStage, oletus, null 
             );  
     }
-
 }

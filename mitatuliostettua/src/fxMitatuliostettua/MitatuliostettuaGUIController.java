@@ -103,7 +103,6 @@ public class MitatuliostettuaGUIController implements Initializable{
         }
     }
     
-
     
     @FXML private void muokkaaostettujaClicked() {
         
@@ -121,12 +120,14 @@ public class MitatuliostettuaGUIController implements Initializable{
         
     }
     
+   
+    /**Lopetetaan ja tallennetaan sitä ennen
+     * @return true
+     */
     @FXML public boolean lopeta() {
         tallenna();
-        return true;
-        
+        return true;    
     }
-    
     
     
     @FXML private void paivavalittu() {
@@ -156,11 +157,6 @@ public class MitatuliostettuaGUIController implements Initializable{
         }
     }
     
-    
-
- 
-
-
 
     @FXML private void uusituoteryhma() {
         muokkaaaTuoteryhmia();
@@ -247,9 +243,9 @@ public class MitatuliostettuaGUIController implements Initializable{
         int index = chooserKauppareissut.getSelectedIndex();
         hae(0);
         chooserKauppareissut.setSelectedIndex(index);
-        hae(valittuKauppareissu.getTunnus());
-        
+        hae(valittuKauppareissu.getTunnus()); 
     }
+    
     
     /**
      * Näyttää listasta valitun kauppareissun tiedot, tilapäisesti yhteen isoon edit-kenttään
@@ -276,10 +272,8 @@ public class MitatuliostettuaGUIController implements Initializable{
         } catch (SailoException e) {
             naytaVirhe(e.getMessage());
         } 
-        naytaLisatiedot();
-        
+        naytaLisatiedot();        
     }
-
 
 
     private void naytaLisatiedot() {

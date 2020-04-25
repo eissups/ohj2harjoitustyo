@@ -2,8 +2,6 @@ package mitatuliostettua;
 
 import java.io.File;
 import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
@@ -118,7 +116,6 @@ public class Mitatuliostettua {
      * @example
      * <pre name="test">
      * Mitatuliostettua mitatuliostettua = new Mitatuliostettua();
-     * Tuoteryhmat tuoteryhmat = new Tuoteryhmat();
      * Tuoteryhma eka = new Tuoteryhma();
      * Tuoteryhma toka = new Tuoteryhma();
      * mitatuliostettua.lisaa(eka);
@@ -140,7 +137,6 @@ public class Mitatuliostettua {
      * #import java.util.ArrayList;
      * #import java.util.List;
      * Mitatuliostettua mitatuliostettua = new Mitatuliostettua();
-     * Ostot ostot = new Ostot();
      * Osto eka = new Osto();
      * Osto toka = new Osto();
      * mitatuliostettua.lisaaOsto(eka);
@@ -162,7 +158,6 @@ public class Mitatuliostettua {
      * #import java.util.ArrayList;
      * #import java.util.List;
      * Mitatuliostettua mitatuliostettua = new Mitatuliostettua();
-     * Ostot ostot = new Ostot();
      * Osto eka = new Osto();
      * Osto toka = new Osto();
      * mitatuliostettua.lisaaOsto(eka);
@@ -183,25 +178,6 @@ public class Mitatuliostettua {
      * @param kauppareissu kauppareissu jonka ostot halutaan
      * @return viite i:nteen ostoon
      * @throws SailoException jos ei onnistu
-     * @example
-     * <pre name="test">
-     * Mitatuliostettua mitatuliostettua = new Mitatuliostettua();
-     * Kauppareissut kauppareissut = new Kauppareissut();
-     * Kauppareissu eka = new Kauppareissu();
-     * kauppareissut.lisaa(eka);
-     * Ostot ostot = new Ostot();
-     * Osto ekao = new Osto();
-     * Osto tokao = new Osto();
-     * mitatuliostettua.lisaaOsto(ekao);
-     * mitatuliostettua.lisaaOsto(tokao);
-     * ekao.annaTiedot(eka.getTunnus(), "joku");
-     * tokao.annaTiedot(eka.getTunnus(), "jaku");  
-     * List<Osto> ostot3 = new ArrayList<Osto>();
-     * ostot3.add(ekao);
-     * ostot3.add(tokao);
-     * List<Osto> ostot2 = ostot.annaOstot(1);
-     * ostot2 === ostot3;
-     * </pre>
      */
     public List<Osto> annaOstot(Kauppareissu kauppareissu) throws SailoException{ 
         
@@ -212,14 +188,7 @@ public class Mitatuliostettua {
     /**
      * Palauttaa i:n kauppareissun
      * @param i kauppareissun indeksi
-     * @return viite i:nteen kauppareissuun
-     * @example
-     * <pre name="test">
-     * Kauppareissut kauppareissut = new Kauppareissut();
-     * Kauppareissu eka = new Kauppareissu();
-     * kauppareissut.lisaa(eka);
-     * annaKauppareissu(1) === eka;
-     * </pre>
+     * @return kauppareissut
      */
     public Kauppareissu annaKauppareissu(int i) { 
         return kauppareissut.annaViite(i);
@@ -244,45 +213,6 @@ public class Mitatuliostettua {
      * Lukee mitatuliostettua:n tiedot tiedostosta
      * @param nimi jota käyteään lukemisessa
      * @throws SailoException jos lukeminen epäonnistuu
-     * @example
-     * <pre name="test">
-     * #THROWS SailoException 
-     * #import java.io.*;
-     * #import java.util.*;
-     * 
-     * Mitatuliostettua mitatuliostettua = new Mitatuliostettua();
-     * Kauppareissu eka = new Kauppareissu();
-     * Kauppareissu toka = new Kauppareissu();
-     * Osto osto1 = new Osto(); osto1.annaTiedot(eka.getTunnus());
-     * Osto osto2 = new Osto(); osto2.annaTiedot(toka.getTunnus());
-     * Osto osto3 = new Osto(); osto3.annaTiedot(eka.getTunnus());
-     * Osto osto4 = new Osto(); osto4.annaTiedot(toka.getTunnus());
-     * 
-     * String hakemisto = "lukutesti";
-     * File dir = new File(hakemisto);
-     *  File ftied  = new File(hakemisto+"/kauppareissut.dat");
-     *  File fhtied = new File(hakemisto+"/ostot.dat");
-     *  dir.mkdir();  
-     *  ftied.delete();
-     *  fhtied.delete();
-     *  mitatuliostettua.lueTiedostosta(hakemisto); #THROWS SailoException
-     *  mitatuliostettua.lisaa(eka);
-     *  mitatuliostettua.lisaa(toka);
-     *  mitatuliostettua.lisaaOsto(osto1);
-     *  mitatuliostettua.lisaaOsto(osto2);
-     *  mitatuliostettua.lisaaOsto(osto3);
-     *  mitatuliostettua.lisaaOsto(osto4);
-     *  mitatuliostettua.talleta();
-     *  mitatuliostettua = new Mitatuliostettua();
-     *  mitatuliostettua.lueTiedostosta(hakemisto);
-     *  List<Osto> loydetyt = new ArrayList<Osto>();
-     *  loydetyt.add(osto1);
-     *  loydetyt.add(osto2);
-     *  loydetyt.add(osto3);
-     *  loydetyt.add(osto4);
-     *  mitatuliostettua.annaKaikkiOstot() === loydetyt; 
-     *  
-     * </pre>
      */
     public void lueTiedostosta(String nimi) throws SailoException {
         
@@ -377,7 +307,6 @@ public class Mitatuliostettua {
      * <pre name="test">
      * #THROWS SailoException
      * Mitatuliostettua mitatuliostettua = new Mitatuliostettua();
-     * Kauppareissut kauppareissut = new Kauppareissut();
      * Kauppareissu eka = new Kauppareissu();
      * Kauppareissu toka = new Kauppareissu();
      * eka.rekisteroi();
@@ -417,7 +346,6 @@ public class Mitatuliostettua {
      * <pre name="test">
      * #THROWS SailoException
      * Mitatuliostettua mitatuliostettua = new Mitatuliostettua();
-     * Kauppareissut kauppareissut = new Kauppareissut();
      * Kauppareissu eka = new Kauppareissu();
      * eka.rekisteroi();
      * mitatuliostettua.lisaa(eka);

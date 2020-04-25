@@ -13,7 +13,6 @@ import javafx.scene.control.TextField;
 import javafx.stage.Stage;
 import mitatuliostettua.Mitatuliostettua;
 import mitatuliostettua.Tuoteryhma;
-import mitatuliostettua.Tuoteryhmat;
 
 
 
@@ -30,6 +29,7 @@ public class UusituoteryhmaController implements ModalControllerInterface<Tuoter
     @FXML private Button buttonTallenna;
    
     @FXML private TextField tuoteryhma;
+    @SuppressWarnings("unused")
     private Mitatuliostettua mitatuliostettua;
     private Tuoteryhma tuote;
    
@@ -91,6 +91,11 @@ public class UusituoteryhmaController implements ModalControllerInterface<Tuoter
 
     
 
+    /**Tullaan tänne, muokataan ja palautetaan ostot
+     * @param modalityStage stage
+     * @param oletus tuoteryhmä jok tuodaan
+     * @return ostot
+     */
     public static Tuoteryhma kysyTiedot(Stage modalityStage, Tuoteryhma oletus) {
         return ModalController.<Tuoteryhma, UusituoteryhmaController>showModal(
                 UusituoteryhmaController.class.getResource("Uusituoteryhma.fxml"),
@@ -99,7 +104,6 @@ public class UusituoteryhmaController implements ModalControllerInterface<Tuoter
             );  
         
     }
-
 
 
     @Override
@@ -113,8 +117,4 @@ public class UusituoteryhmaController implements ModalControllerInterface<Tuoter
         
         tuote = oletus;
     }
-
-
- 
-
 }

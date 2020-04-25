@@ -65,26 +65,6 @@ public class Ostot implements Iterable<Osto> {
    }
    
    
-   /**
-    * @param k minkä kentän kysymys halutaan
-    * @return valitun kentän kysymysteksti
-    */
-   public String getKysymys(int k) {
-       switch (k) {
-           case 0:
-               return "id";
-           case 1:
-               return "jäsenId";
-           case 2:
-               return "ala";
-           case 3:
-               return "aloitusvuosi";
-           case 4:
-               return "h/vko";
-           default:
-               return "???";
-       }
-   }
     
     /**
      * Lisää Oston tietorakenteeseen. Tietorakenne omistajaksi.
@@ -218,6 +198,18 @@ public class Ostot implements Iterable<Osto> {
     /**
      * Palauttaa ostojen lukumäärän
      * @return ostojen lukumäärä
+     * @example
+     * <pre name="test">
+     * Ostot ostot = new Ostot();
+     * Osto osto = new Osto();
+     * Osto esto = new Osto();
+     * osto.rekisteroi();
+     * esto.rekisteroi();
+     * ostot.lisaa(osto);
+     * ostot.lisaa(esto);
+     * ostot.getLkm() === 2;
+     * 
+     * </pre>
      */
     public int getLkm() {
         return alkiot.size();
@@ -312,8 +304,7 @@ public class Ostot implements Iterable<Osto> {
      * @param tunnus kauppareissun tunnus
      */
     public void muokkaa(Ostot ostot2, int tunnus) {
-
-        
+ 
        poistaKauppareissunTiedot(tunnus);
        for(Osto e : ostot2) {
            lisaa(e); 
@@ -324,6 +315,21 @@ public class Ostot implements Iterable<Osto> {
     /**
      * @param kaupid kauppareissun id
      * @return ostettujen kokonaishinta
+     * @example
+     * <pre name="test">
+     * Kauppareissut kauppareissut = new Kauppareissut();
+     * Kauppareissu eka = new Kauppareissu();
+     * eka.rekisteroi();
+     * kauppareissut.lisaa(eka);
+     * Osto osto = new Osto();
+     * Ostot ostot = new Ostot(); 
+     * osto.annaTiedot(eka.getTunnus(), "tuote", 3, 5);
+     * Osto osto2 = new Osto();
+     * osto2.annaTiedot(eka.getTunnus(), "tuote2", 6, 7);
+     * ostot.lisaa(osto);
+     * ostot.lisaa(osto2);
+     * ostot.laskeHinta(eka.getTunnus()) === 12;
+     * </pre>
      */
     public int laskeHinta(int kaupid) {
         List<Osto> loydetyt = new ArrayList<Osto>();
@@ -349,7 +355,7 @@ public class Ostot implements Iterable<Osto> {
     }
 
 
-    /**
+    /**Poistetaan kauppareissun ostojen tiedot
      * @param tunnus kauppatunnus
      * @return n
      */
@@ -368,12 +374,21 @@ public class Ostot implements Iterable<Osto> {
     }
 
 
+    /**Tällä hetkellä lisätään ostoja
+     * @param selectedText turha
+     * @param ost osto, joka lisätään
+     */
     public void lisaaMuokkaa(String selectedText, Osto ost) {
         
         lisaa(ost);
     }
 
 
+    /**Etsitään sopivat kauppareissut ja palautetaan listana
+     * @param kauppareissui kauppareissut joista etsitään
+     * @param ehto hakuehto
+     * @return lytyneet kauppariessut
+     */
     public Collection<Kauppareissu> etsiSopivat(Kauppareissu[] kauppareissui, String ehto) {
         Collection<Kauppareissu> loytyneet = new ArrayList<Kauppareissu>(); 
         for (Kauppareissu kauppareissu : kauppareissui) { 
@@ -393,6 +408,9 @@ public class Ostot implements Iterable<Osto> {
     }
 
 
+    /**Palautetaan kaikki ostot
+     * @return ostot
+     */
     public Collection<Osto> annaKaikkiOstot() {
         return alkiot;
         
