@@ -86,17 +86,17 @@
                                  </GridPane.margin>
                               </Button>
                               <Label text="Uusi tuoteryhmä" />
-                  <TextField fx:id="maara" prefHeight="25.0" prefWidth="47.0" promptText="Kirjoita nimi" GridPane.columnIndex="1" GridPane.rowIndex="2">
+                  <TextField fx:id="hinta" prefHeight="25.0" prefWidth="47.0" promptText="€" GridPane.columnIndex="1" GridPane.rowIndex="2">
                      <GridPane.margin>
                         <Insets bottom="5.0" left="5.0" top="5.0" />
                      </GridPane.margin>
                   </TextField>
-                              <TextField fx:id="hinta" GridPane.columnIndex="2" GridPane.rowIndex="2" />
+                              <TextField fx:id="maara" GridPane.columnIndex="2" GridPane.rowIndex="2" />
                            </children>
                         </GridPane>
                      </bottom>
                      <center>
-                        <StringGrid fx:id="StringGridTiedot" prefHeight="206.0" prefWidth="437.0" rivit="Tuoteryhmä| Hinta | Lukmäärä &#10;hygienia | 10 | 3&#10;kuivatuotteet| 5 | 8   &#10;liha |10 | 2               &#10;hedelmät/vihannekset | 7 | 5">
+                        <StringGrid fx:id="StringGridTiedot" prefHeight="206.0" prefWidth="437.0" rivit="Tuoteryhmä| Lukumäärä | Hinta &#10;hygienia | 10 | 3&#10;kuivatuotteet| 5 | 8   &#10;liha |10 | 2               &#10;hedelmät/vihannekset | 7 | 5">
                            <columnResizePolicy>
                               <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
                            </columnResizePolicy></StringGrid>

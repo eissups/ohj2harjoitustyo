@@ -1,14 +1,17 @@
 package mitatuliostettua;
 
 import java.io.File;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+
 
 /**
  * Mtatuliostettua-luokka, joka huolehtii Tuoteryhmät ja Kauppareissut - luokista
  * @author elisa
  * @version 18.3.2020
- *
  */
 public class Mitatuliostettua {
 
@@ -20,6 +23,22 @@ public class Mitatuliostettua {
     /**
      * Palauttaa kauppareissujen lukumäärän
      * @return kauppareissujen lukumäärä
+     * @example
+     * <pre name="test">
+     * #import mitatuliostettua.SailoException;
+     * Mitatuliostettua mitatuliostettua = new Mitatuliostettua();
+     * Kauppareissut kauppareissut = new Kauppareissut();
+     * Kauppareissu eka = new Kauppareissu();
+     * try {
+     *      mitatuliostettua.lisaa(eka);
+     * } catch (SailoException e) {
+     *      e.printStackTrace();
+     *      } 
+     * eka.rekisteroi();
+     * eka.annaTiedot("20.03.2020");
+     * kauppareissut.lisaa(eka);
+     * mitatuliostettua.getMaara() === 1;
+     * </pre>
      */
     public int getMaara() {
         return kauppareissut.getLkm();
@@ -27,13 +46,21 @@ public class Mitatuliostettua {
     
     
     /** 
-     * Palauttaa "taulukossa" hakuehtoon vastaavien jäsenten viitteet 
+     * Palauttaa "taulukossa" hakuehtoon vastaavien kauppreissun viitteet 
      * @param ehto hakuehto  
      * @param k etsittävän kentän indeksi  
-     * @return tietorakenteen löytyneistä jäsenistä 
+     * @param localDate päiva, jolla voidaan etsiä
+     * @return tietorakenteen löytyneistä kauppareissuista 
      */ 
-    public Collection<Kauppareissu> etsi(String ehto, int k)  { 
-        return kauppareissut.etsi(ehto, k); 
+    public Collection<Kauppareissu> etsi(String ehto, int k, LocalDate localDate)  { 
+        Collection<Kauppareissu> kaikkiKauppareissut = kauppareissut.etsi(ehto, k, localDate);
+        if (ehto.length() < 1) return kaikkiKauppareissut;
+            
+        Kauppareissu[] kauppareissui = kauppareissut.etsiOikeat();
+        kaikkiKauppareissut = ostot.etsiSopivat(kauppareissui, ehto);
+        
+        return kaikkiKauppareissut; 
+        
     } 
     
     
@@ -61,57 +88,93 @@ public class Mitatuliostettua {
     }
     
     
-    /** 
-     * Korvaa kauppareissun tietorakenteessa.  Ottaa kauppareissun omistukseensa. 
-     * Etsitään samalla tunnusnumerolla oleva kauppareissu.  Jos ei löydy, 
-     * niin lisätään uutena kauppareissun. 
-     * @param kauppareissu etsittävä kauppareissu
-     * @throws SailoException jos tietorakenne on jo täynnä 
+  
+    /**Korvaa kauppareissun tietorakenteessa
+     * @param kauppareissu kauppareissu jota korvataan tai lisätään
+     * @throws SailoException jos tietorakenne on jo täynnä
      * @example
      * <pre name="test">
-     * #THROWS SailoException  
-     *  alustaMitatuliostettua();
-     *  mitatuliostettua.etsi("*",0).size() === 2;
-     *  mitatuliostettua.korvaaTaiLisaa(aku1);
-     *  mitatuliostettua.etsi("*",0).size() === 2;
+     * #THROWS SailoException
+     * Mitatuliostettua mitatuliostettua = new Mitatuliostettua();
+     * Kauppareissut kauppareissut = new Kauppareissut();
+     * Kauppareissu eka = new Kauppareissu();
+     * kauppareissut.lisaa(eka);
+     * mitatuliostettua.korvaaTaiLisaa(eka);
+     * mitatuliostettua.getMaara() === 1;
+     * Kauppareissu toka = new Kauppareissu();
+     * kauppareissut.lisaa(toka);
+     * mitatuliostettua.korvaaTaiLisaa(toka);
+     * mitatuliostettua.getMaara() === 1;
      * </pre>
-     */ 
+     */
     public void korvaaTaiLisaa(Kauppareissu kauppareissu) throws SailoException { 
         kauppareissut.korvaaTaiLisaa(kauppareissu); 
     } 
 
     
-
     
+    /** Lisataan uusi tuoteryhma
+     * @param tuoteryhma lisättävä tuoteryhmä
+     * @example
+     * <pre name="test">
+     * Mitatuliostettua mitatuliostettua = new Mitatuliostettua();
+     * Tuoteryhmat tuoteryhmat = new Tuoteryhmat();
+     * Tuoteryhma eka = new Tuoteryhma();
+     * Tuoteryhma toka = new Tuoteryhma();
+     * mitatuliostettua.lisaa(eka);
+     * Tuoteryhma[] alkiot = new Tuoteryhma[20];
+     * alkiot[0] = eka;
+     * alkiot[1] = toka;
+     * mitatuliostettua.lisaa(toka);
+     * mitatuliostettua.getTuoteryhmat() === alkiot; 
+     * </pre>
+     */
     public void lisaa(Tuoteryhma tuoteryhma) {
         tuoteryhmat.lisaa(tuoteryhma);
     }
     
-    /**
-     * @param osto osto
+    
+    /**Lisätään uusi osto
+     * @param osto lisättävä osto
+     * <pre name="test">
+     * #import java.util.ArrayList;
+     * #import java.util.List;
+     * Mitatuliostettua mitatuliostettua = new Mitatuliostettua();
+     * Ostot ostot = new Ostot();
+     * Osto eka = new Osto();
+     * Osto toka = new Osto();
+     * mitatuliostettua.lisaaOsto(eka);
+     * List<Osto> loydetyt = new ArrayList<Osto>();
+     * loydetyt.add(eka);
+     * loydetyt.add(toka);
+     * mitatuliostettua.lisaaOsto(toka);
+     * mitatuliostettua.annaKaikkiOstot() === loydetyt; 
+     * </pre>
      */
     public void lisaaOsto(Osto osto) {
         ostot.lisaa(osto);   
     }
     
     
-    /**Lisätään tuoteryhmä
-     * @param tuoteryhma tuoteryhmä joka lisätään
+    /** Antaa kaikki lisätyt ostot
+     * @return kaikki ostot
+     * <pre name="test">
+     * #import java.util.ArrayList;
+     * #import java.util.List;
+     * Mitatuliostettua mitatuliostettua = new Mitatuliostettua();
+     * Ostot ostot = new Ostot();
+     * Osto eka = new Osto();
+     * Osto toka = new Osto();
+     * mitatuliostettua.lisaaOsto(eka);
+     * List<Osto> loydetyt = new ArrayList<Osto>();
+     * loydetyt.add(eka);
+     * loydetyt.add(toka);
+     * mitatuliostettua.lisaaOsto(toka);
+     * mitatuliostettua.annaKaikkiOstot() === loydetyt; 
+     * </pre>
      */
-    public void lisaaTuoteryhma(Tuoteryhma tuoteryhma) {
-        tuoteryhmat.lisaa(tuoteryhma);
-        
-    }
-    
-
-    /**
-     * Tulee poistamaan muista luokista kaikki ne alkiot, joilla on viitenumero nro
-     * @param nro viitenumero
-     * @return poistettujen jäsenten määrä
-     */
-    public int poista(@SuppressWarnings("unused") int nro) {
-        return 0;
-        
+    public Collection<Osto> annaKaikkiOstot() {
+        return ostot.annaKaikkiOstot();
     }
     
     
@@ -119,7 +182,26 @@ public class Mitatuliostettua {
      * Palauttaa i:n oston
      * @param kauppareissu kauppareissu jonka ostot halutaan
      * @return viite i:nteen ostoon
-     * @throws SailoException v
+     * @throws SailoException jos ei onnistu
+     * @example
+     * <pre name="test">
+     * Mitatuliostettua mitatuliostettua = new Mitatuliostettua();
+     * Kauppareissut kauppareissut = new Kauppareissut();
+     * Kauppareissu eka = new Kauppareissu();
+     * kauppareissut.lisaa(eka);
+     * Ostot ostot = new Ostot();
+     * Osto ekao = new Osto();
+     * Osto tokao = new Osto();
+     * mitatuliostettua.lisaaOsto(ekao);
+     * mitatuliostettua.lisaaOsto(tokao);
+     * ekao.annaTiedot(eka.getTunnus(), "joku");
+     * tokao.annaTiedot(eka.getTunnus(), "jaku");  
+     * List<Osto> ostot3 = new ArrayList<Osto>();
+     * ostot3.add(ekao);
+     * ostot3.add(tokao);
+     * List<Osto> ostot2 = ostot.annaOstot(1);
+     * ostot2 === ostot3;
+     * </pre>
      */
     public List<Osto> annaOstot(Kauppareissu kauppareissu) throws SailoException{ 
         
@@ -131,6 +213,13 @@ public class Mitatuliostettua {
      * Palauttaa i:n kauppareissun
      * @param i kauppareissun indeksi
      * @return viite i:nteen kauppareissuun
+     * @example
+     * <pre name="test">
+     * Kauppareissut kauppareissut = new Kauppareissut();
+     * Kauppareissu eka = new Kauppareissu();
+     * kauppareissut.lisaa(eka);
+     * annaKauppareissu(1) === eka;
+     * </pre>
      */
     public Kauppareissu annaKauppareissu(int i) { 
         return kauppareissut.annaViite(i);
@@ -155,6 +244,29 @@ public class Mitatuliostettua {
      * Lukee mitatuliostettua:n tiedot tiedostosta
      * @param nimi jota käyteään lukemisessa
      * @throws SailoException jos lukeminen epäonnistuu
+     * @example
+     * <pre name="test">
+     * #THROWS SailoException 
+     * #import java.io.*;
+     * #import java.util.*;
+     * 
+     * Mitatuliostettua mitatuliostettua = new Mitatuliostettua();
+     * Kauppareissu eka = new Kauppareissu();
+     * Kauppareissu toka = new Kauppareissu();
+     * Osto osto1 = new Osto; osto.annaTiedot(eka,getTunnus();
+     * Osto osto2 = new Osto; osto.annaTiedot(toka,getTunnus();
+     * Osto osto3 = new Osto; osto.annaTiedot(eka,getTunnus();
+     * Osto osto4 = new Osto; osto.annaTiedot(toka,getTunnus();
+     * 
+     * String hakemisto = "lukutesti";
+     * File dir = new File(hakemisto);
+     *  File ftied  = new File(hakemisto+"/kauppareissut.dat");
+     *  File fhtied = new File(hakemisto+"/ostot.dat");
+     *  dir.mkdir();  
+     *  ftied.delete();
+     *  fhtied.delete();
+     *  mitatuliostettua.lueTiedostosta(hakemisto);
+     * </pre>
      */
     public void lueTiedostosta(String nimi) throws SailoException {
         
@@ -162,8 +274,9 @@ public class Mitatuliostettua {
         ostot = new Ostot();
         setTiedosto(nimi);
         kauppareissut.lueTiedostosta(nimi);
-        ostot.lueTiedostosta("ostot.dat");
-        tuoteryhmat.lueTiedostosta("tuoteryhmat.dat");
+        tuoteryhmat.lueTiedostosta();
+        ostot.lueTiedostosta(tuoteryhmat);
+        
     }
 
 
@@ -196,11 +309,118 @@ public class Mitatuliostettua {
 
     }
     
+    /**
+     * Palauttaa k:tta oston kenttää vastaavan kysymyksen
+     * @param k kuinka monennen kentän kysymys palautetaan (0-alkuinen)
+     * @return k:netta kenttää vastaava kysymys
+     */
+    public String getKysymys(int k) {
+        switch ( k ) {
+        case 0: return "Tuoteryhma";
+        case 1: return "hinta";
+        case 2: return "lukumäärä";
+        default: return "Äääliö";
+        }
+    }
+
+    
+    /**Muokataan kauppareissun päivämäärää
+     * @param valittuKauppareissu kauppareissu, jonka päivää muokataan
+     * @param pvm päivämäärä joksi vaihdetaan
+     */
+    public void muokkaa(Kauppareissu valittuKauppareissu, String pvm) {
+       kauppareissut.muokkaa(valittuKauppareissu, pvm);
+        
+    }
+
+
+    /**Muutetaan ostoja
+     * @param ostot2 uudet ostot
+     * @param tunnus kauppareissun tunnus
+     */
+    public void muokkaaOstoja(Ostot ostot2, int tunnus) {
+        ostot.muokkaa(ostot2, tunnus);
+        
+    }
+
+
+
+    /**Haetan ostot
+     * @param tunnus kauppareissun tunnus, jonka ostot annetaan
+     * @return ostot
+     */
+    public Ostot getOstot(int tunnus) {
+        return ostot.getOstot(tunnus);
+    }
+
+
+    /**Poistetaan kauppareissu ja sen tiedot
+     * @param kauppareissu kauppareissu jonka tiedot poistetaan
+     * @return numero kun poistettu
+     * @example
+     * <pre name="test">
+     * #THROWS SailoException
+     * Mitatuliostettua mitatuliostettua = new Mitatuliostettua();
+     * Kauppareissut kauppareissut = new Kauppareissut();
+     * Kauppareissu eka = new Kauppareissu();
+     * Kauppareissu toka = new Kauppareissu();
+     * eka.rekisteroi();
+     * toka.rekisteroi();
+     * mitatuliostettua.lisaa(eka);
+     * mitatuliostettua.lisaa(toka);
+     * mitatuliostettua.poista(eka);
+     * mitatuliostettua.getMaara() === 1;
+     * </pre>
+     */
+    public int poista(Kauppareissu kauppareissu) {
+        if ( kauppareissu == null ) return 0;
+        int ret = kauppareissut.poista(kauppareissu.getTunnus()); 
+        ostot.poistaKauppareissunTiedot(kauppareissu.getTunnus()); 
+        return ret; 
+        
+    }
+
+
+    
+    /**
+     * Palauttaa kaikki tuoteryhmat
+     * @return tuoteryhmat
+     */
+    public Tuoteryhma[] getTuoteryhmat() {
+        return tuoteryhmat.getTuoteryhmat();
+       
+    }
+
+
+    
+    /**
+     * Palauttaa kauppareissun ostojen kokonasihinnan
+     * @param tunnus kuppareissun tunnus
+     * @return kokonaishinta
+     * @example
+     * <pre name="test">
+     * #THROWS SailoException
+     * Mitatuliostettua mitatuliostettua = new Mitatuliostettua();
+     * Kauppareissut kauppareissut = new Kauppareissut();
+     * Kauppareissu eka = new Kauppareissu();
+     * eka.rekisteroi();
+     * mitatuliostettua.lisaa(eka);
+     * Osto osto = new Osto();
+     * osto.annaTiedot(eka.getTunnus(), "tuote", 3, 5);
+     * Osto osto2 = new Osto();
+     * osto2.annaTiedot(eka.getTunnus(), "tuote2", 6, 7);
+     * mitatuliostettua.lisaaOsto(osto);
+     * mitatuliostettua.lisaaOsto(osto2);
+     * mitatuliostettua.LaskeHinta(eka.getTunnus()) === 12;
+     * </pre>
+     */
+    public int LaskeHinta(int tunnus) {
+        return ostot.laskeHinta(tunnus);
+    }
+    
    
     /**Testohjelma Mitatuliostettua-luokalle
-     * @param args ei käytössä
-     * 
-     *    
+     * @param args ei käytössä  
      */
     public static void main(String[] args) {
         
@@ -244,61 +464,8 @@ public class Mitatuliostettua {
         } 
     }
 
+
     
-    /**
-     * Palauttaa k:tta oston kenttää vastaavan kysymyksen
-     * @param k kuinka monennen kentän kysymys palautetaan (0-alkuinen)
-     * @return k:netta kenttää vastaava kysymys
-     */
-    public String getKysymys(int k) {
-        switch ( k ) {
-        case 0: return "Tuoteryhma";
-        case 1: return "hinta";
-        case 2: return "lukumäärä";
-        default: return "Äääliö";
-        }
-    }
-
-    public void muokkaa(Kauppareissu valittuKauppareissu, String pvm) {
-       kauppareissut.muokkaa(valittuKauppareissu, pvm);
-        
-    }
-
-
-    public void muokkaaOstoja(Ostot ostot2) {
-        ostot.muokkaa(ostot2);
-        
-    }
-
-
-    /**
-     * @param kaupid kauppareissun tunnus
-     * @return kokonaishinta
-     */
-    public int annaHinta(int kaupid) {
-        return ostot.laskeHinta(kaupid);
-    }
-
-
-    public Ostot getOstot(int tunnus) {
-        return ostot.getOstot(tunnus);
-    }
-
-
-    public int poista(Kauppareissu kauppareissu) {
-        if ( kauppareissu == null ) return 0;
-        int ret = kauppareissut.poista(kauppareissu.getTunnus()); 
-        ostot.poistaKauppareissunTiedot(kauppareissu.getTunnus()); 
-        return ret; 
-        
-    }
-
-
-    public Tuoteryhma[] getTuoteryhmat() {
-        return tuoteryhmat.getTuoteryhmat();
-       
-    }
-        
-    }  
+}
 
 

@@ -7,6 +7,7 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -16,7 +17,7 @@ import java.util.NoSuchElementException;
 /**
  * @author elisa
  * @version 17.3.2020
- *
+ * Kauppareissut, kauppareissujen hallinta
  */
 public class Kauppareissut implements Iterable<Kauppareissu>{
     
@@ -27,14 +28,14 @@ public class Kauppareissut implements Iterable<Kauppareissu>{
     private int lkm = 0;
     private Kauppareissu[] alkiot = new Kauppareissu[MAX_KAUPPAREISSUJA];
     
-    
-    
+   
     /**
      * Oletusmuodostaja
      */
     public Kauppareissut( ) {
         //
     }
+    
     
     /**
      * Lisää kauppareissun tietorakenteeseen. Tietorakenne omistajaksi.
@@ -55,14 +56,13 @@ public class Kauppareissut implements Iterable<Kauppareissu>{
      * kauppareissut.getLkm() === 3;  
      * </pre>
      */
-    public void lisaa(Kauppareissu kauppareissu) {
+    public void lisaa(Kauppareissu kauppareissu) {       
         if ( lkm >= alkiot.length ) {
             alkiot = Arrays.copyOf(alkiot, alkiot.length+1);
         }
         this.alkiot[lkm] = kauppareissu;
         lkm++;
-        muutettu = true;
-        
+        muutettu = true;   
     }
     
     
@@ -86,30 +86,52 @@ public class Kauppareissut implements Iterable<Kauppareissu>{
     }
     
     
-    
     /** Palauttaa kauppareissun viitteen
      * @param i sen kauppareissun indeksi, jonka viite halutaan
      * @return kauppareissun viite 
      * @throws IndexOutOfBoundsException jos i menee alkiot-taulukon ulkopuolelle
+     * </pre>
      */
     public Kauppareissu annaViite(int i) throws IndexOutOfBoundsException{
         if (i < 0 || lkm <= i)
             throw new IndexOutOfBoundsException("Laiton indeksi" + i);
-        return alkiot[i];
-        
-          
+        return alkiot[i];     
     }
+    
     
     /**Palauttaa kauppareissujen määräm
      * @return kauppareissujen määrän
+     * @example
+     * <pre name="test">
+     * Kauppareissut kauppareissut = new Kauppareissut();
+     * Kauppareissu eka = new Kauppareissu();
+     * kauppareissut.lisaa(eka);
+     * kauppareissut.getLkm() === 1;
+     * Kauppareissu toka= new Kauppareissu();
+     * kauppareissut.lisaa(toka);
+     * kauppareissut.getLkm() === 2; 
+     * </pre>
      */
     public int getLkm() {
-        return lkm;
-        
+        return lkm; 
     }
-    
-    
+     
 
+    /**
+     * @param valittuKauppareissu kauppareissu jota muokataan
+     * @param pvm päivämäärä, joksi muutetaan
+     * @example
+     * <pre name="test">
+     * Kauppareissut kauppareissut = new Kauppareissut();
+     * Kauppareissu kauppareissu = new Kauppareissu();
+     * kauppareissu.rekisteroi();
+     * kauppareissu.annaTiedot("20.03.2020");
+     * kauppareissut.lisaa(kauppareissu);
+     * kauppareissu.getPvm() === "20.03.2020";
+     * kauppareissut.muokkaa(kauppareissu, "11.03.2020");
+     * kauppareissu.getPvm() === "11.03.2020";
+     * </pre>
+     */
     public void muokkaa(Kauppareissu valittuKauppareissu, String pvm) {
         valittuKauppareissu.annaTiedot(pvm);
         muutettu = true;
@@ -289,6 +311,7 @@ public class Kauppareissut implements Iterable<Kauppareissu>{
      * Palauttaa "taulukossa" hakuehtoon vastaavien kauppareissujen viitteet 
      * @param hakuehto hakuehto 
      * @param k etsittävän kentän indeksi  
+     * @param localDate paiva
      * @return tietorakenteen löytyneistä jäsenistä 
      * @example 
      * <pre name="test"> 
@@ -301,14 +324,83 @@ public class Kauppareissut implements Iterable<Kauppareissu>{
      *   // TODO: toistaiseksi palauttaa kaikki kauppareissut 
      * </pre> 
      */ 
-    public Collection<Kauppareissu> etsi(@SuppressWarnings("unused") String hakuehto, int k) { 
+    public Collection<Kauppareissu> etsi(@SuppressWarnings("unused") String hakuehto, int k, LocalDate localDate) { 
         Collection<Kauppareissu> loytyneet = new ArrayList<Kauppareissu>(); 
-        for (Kauppareissu kauppareissu : this) { 
-            loytyneet.add(kauppareissu);  
+        
+        if(localDate != null) {
+            String paiva = localDate.toString();
+            for (Kauppareissu kauppareissu : this) { 
+                if (kauppareissu.getPvm().equals(paiva)) loytyneet.add(kauppareissu) ;  
+            }
+        }
+        
+        else if (k < 1) {
+            Kauppareissu[] kaannetty = new Kauppareissu[alkiot.length];
+            for(int i = 0, j = alkiot.length-1; i < kaannetty.length; i++,j--) {
+                kaannetty[i] = alkiot[j];
+              
+            }
+            for (Kauppareissu kauppareissu : kaannetty) { 
+                 loytyneet.add(kauppareissu);  
+            }
+        }
+        
+        else {
+            for (Kauppareissu kauppareissu : this) { 
+                loytyneet.add(kauppareissu);  
+            }
         } 
-        return loytyneet; 
+        return loytyneet;
+    
+    }
+     
+   
+    /** 
+     * Etsii kauppareissun id:n perusteella 
+     * @param id tunnusnumero, jonka mukaan etsitään 
+     * @return löytyneen jäsenen indeksi tai -1 jos ei löydy 
+     * <pre name="test"> 
+     * #THROWS SailoException  
+     * Kauppareissut kauppareissut = new Kauppareissut(); 
+     * Kauppareissu eka = new Kauppareissu(), toka = new Kauppareissu(), kolmas = new Kauppareissu(); 
+     * eka.rekisteroi(); toka.rekisteroi(); kolmas.rekisteroi(); 
+     * int id1 = eka.getTunnus(); 
+     * kauppareissut.lisaa(eka); kauppareissut.lisaa(toka); kauppareissut.lisaa(kolmas); 
+     * kauppareissut.etsiId(id1+1) === 1; 
+     * kauppareissut.etsiId(id1+2) === 2; 
+     * </pre> 
+     */ 
+    public int etsiId(int id) { 
+        for (int i = 0; i < lkm; i++) 
+            if (id == alkiot[i].getTunnus()) return i; 
+        return -1; 
+    } 
+    
+    
+    
+    /** Poistetaan kauppareissu
+     * @param tunnus poistettavan kauppareissun tunnus
+     * @return numero 1
+     */
+    public int poista(int tunnus) {
+        int ind = etsiId(tunnus); 
+        if (ind < 0) return 0; 
+        lkm--; 
+        for (int i = ind; i < lkm; i++) 
+            alkiot[i] = alkiot[i + 1]; 
+        alkiot[lkm] = null; 
+        muutettu = true; 
+        return 1; 
     }
     
+    
+    /** Haetaan alkiot etsimistä varten
+     * @return kaikki alkiot
+     */
+    public Kauppareissu[] etsiOikeat() {
+        
+        return alkiot;
+    }
 
 
     /**
@@ -337,42 +429,5 @@ public class Kauppareissut implements Iterable<Kauppareissu>{
            System.out.println("Kauppareissu: " + i);
            kauppareissu.tulosta(System.out);
        }
-       
     }
-    
-    /** 
-     * Etsii kauppareissun id:n perusteella 
-     * @param id tunnusnumero, jonka mukaan etsitään 
-     * @return löytyneen jäsenen indeksi tai -1 jos ei löydy 
-     * <pre name="test"> 
-     * #THROWS SailoException  
-     * Kauppareissut kauppareissut = new Kauppareissut(); 
-     * Kauppareissu eka = new Kauppareissu(), toka = new Kauppareissu(), kolmas = new Kauppareissu(); 
-     * eka.rekisteroi(); toka.rekisteroi(); kolmas.rekisteroi(); 
-     * int id1 = eka.getTunnus(); 
-     * kauppareissut.lisaa(eka); kauppareissut.lisaa(toka); kauppareissut.lisaa(kolmas); 
-     * kauppareissut.etsiId(id1+1) === 1; 
-     * kauppareissut.etsiId(id1+2) === 2; 
-     * </pre> 
-     */ 
-    public int etsiId(int id) { 
-        for (int i = 0; i < lkm; i++) 
-            if (id == alkiot[i].getTunnus()) return i; 
-        return -1; 
-    } 
-    
-
-    public int poista(int tunnus) {
-        int ind = etsiId(tunnus); 
-        if (ind < 0) return 0; 
-        lkm--; 
-        for (int i = ind; i < lkm; i++) 
-            alkiot[i] = alkiot[i + 1]; 
-        alkiot[lkm] = null; 
-        muutettu = true; 
-        return 1; 
-    }
-
-
-    
 }

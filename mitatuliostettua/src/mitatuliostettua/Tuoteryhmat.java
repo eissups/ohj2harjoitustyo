@@ -104,12 +104,11 @@ public class Tuoteryhmat implements Iterable<Tuoteryhma> {
     
     /**
      * Lukee kauppareissut tiedostosta.  Kesken.
-     * @param tuotutiedosto tiedoston nimi
      * @throws SailoException jos lukeminen epäonnistuu
      */
-    public void lueTiedostosta(String tuotutiedosto) throws SailoException {
-        setTiedostonNimi(tuotutiedosto);
-        try ( BufferedReader fi = new BufferedReader(new FileReader(getTiedostonNimi())) ) {
+    public void lueTiedostosta() throws SailoException {
+        setTiedostonNimi("tuoteryhmat.dat");
+        try ( BufferedReader fi = new BufferedReader(new FileReader("tuoteryhmat.dat")) ) {
             tiedosto = fi.readLine();
             String rivi = fi.readLine();
             if ( rivi == null ) throw new SailoException("Maksimikoko puuttuu");
@@ -124,7 +123,7 @@ public class Tuoteryhmat implements Iterable<Tuoteryhma> {
             }
             muutettu = false;
         } catch ( FileNotFoundException e ) {
-            throw new SailoException("Tiedosto " + getTiedostonNimi() + " ei aukea");
+            throw new SailoException("Tiedosto " + "tuoteryhmat.dat" + " ei aukea");
         } catch ( IOException e ) {
             throw new SailoException("Ongelmia tiedoston kanssa: " + e.getMessage());
         }
@@ -135,8 +134,8 @@ public class Tuoteryhmat implements Iterable<Tuoteryhma> {
      * Luetaan aikaisemmin annetun nimisestä tiedostosta
      * @throws SailoException jos tulee poikkeus
      */
-    public void lueTiedostosta() throws SailoException {
-        lueTiedostosta(getTiedostonNimi());
+    public void lueTiedostostaa() throws SailoException {
+        lueTiedostosta();
     }
     
     

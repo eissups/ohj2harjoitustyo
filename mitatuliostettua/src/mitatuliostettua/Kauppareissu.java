@@ -25,6 +25,9 @@ public class Kauppareissu implements Cloneable{
      *   Kauppareissu eka = new Kauppareissu();
      *   eka.annaTiedot("20.01.2018");
      *   eka.getPvm() === "20.01.2018";
+     *   Kauppareissu toka = new Kauppareissu();
+     *   toka.annaTiedot("15.03.2020");
+     *   toka.getPvm() === "15.03.2020";
      * </pre>
      */
     public String getPvm() {
@@ -59,6 +62,8 @@ public class Kauppareissu implements Cloneable{
     
     
     /**Palauttaa kauppareissun tunnusnumeron
+     * Kauppareissu eka = new Kauppareissu();
+     * eka.getTunnus() === 0;
      * @return tunnusnumero
      */
     public int getTunnus() {
@@ -77,7 +82,7 @@ public class Kauppareissu implements Cloneable{
     }
     
     /**
-     * Antaa väliaikaisesti luoduille kauppareissujen tiedot kun niitä ei vielä oikeasti pysty kirjoittamaan
+     * Antaa kauppareissun tiedot
      * @param paiva kauppareissun päivämäärä
      */
     public void annaTiedot(String paiva) {
@@ -112,8 +117,15 @@ public class Kauppareissu implements Cloneable{
      * Asettaa tunnusnumeron ja samalla varmistaa että
      * seuraava numero on aina suurempi kuin tähän mennessä suurin.
      * @param nr asetettava tunnusnumero
+     * @example
+     * <pre name="test">
+     * Kauppareissu eka = new Kauppareissu();
+     * eka.getTunnus() === 0;
+     * eka.setTunnusNro(2);
+     * eka.getTunnus() === 2;
+     * </pre>
      */
-    private void setTunnusNro(int nr) {
+    public void setTunnusNro(int nr) {
         
         tunnusNro = nr;
         if (tunnusNro >= seuraavaNro) seuraavaNro = tunnusNro + 1;
@@ -124,7 +136,14 @@ public class Kauppareissu implements Cloneable{
      * Palauttaa kauppareissub tiedot merkkijonona jonka voi tallentaa tiedostoon.
      * @return kauppareissu tolppaeroteltuna merkkijonona 
      * @example
-     * </pre>  
+     * <pre name="test">
+     * Kauppareissu kauppareissu = new Kauppareissu();
+     * kauppareissu.annaTiedot("20.03.2020");
+     * kauppareissu.toString() === "0|20.03.2020";
+     * Kauppareissu rissu = new Kauppareissu();
+     * rissu.annaTiedot("06.05.2019");
+     * rissu.toString() === "0|06.05.2019";
+     * </pre>
      */
     @Override
     public String toString() {
@@ -138,8 +157,19 @@ public class Kauppareissu implements Cloneable{
 
     /**
      * Selvitää kauppareissun tiedot | erotellusta merkkijonosta
-     * Pitää huolen että seuraavaNro on suurempi kuin tuleva tunnusNro.
      * @param rivi josta kauppareissun tiedot otetaan
+     * @example
+     * <pre name="test">
+     * Kauppareissu kauppareissu = new Kauppareissu();
+     * kauppareissu.rekisteroi();
+     * kauppareissu.parse("1|06.05.2019");
+     * kauppareissu.getPvm() === "06.05.2019";
+     * kauppareissu.getTunnus() === 1;
+     * Kauppareissu rissu = new Kauppareissu();
+     * rissu.rekisteroi();
+     * rissu.parse("0|20.03.2020");
+     * rissu.getPvm() === "20.03.2020";
+     * rissu.getTunnus() === 0;
      * </pre>
      */
     public void parse(String rivi) {
@@ -149,13 +179,6 @@ public class Kauppareissu implements Cloneable{
         paivamaara = Mjonot.erota(sb, '|', paivamaara);
     }
     
-    
-    @Override
-    public boolean equals(Object jasen) {
-        
-        if ( jasen == null ) return false;
-        return this.toString().equals(jasen.toString());
-    }
 
 
     @Override
@@ -165,12 +188,29 @@ public class Kauppareissu implements Cloneable{
     }
 
 
+    /**
+     * Tehdään klooni kauppareissusta
+     * @return kloonattu kauppareissu
+     * @example
+     * <pre name="test">
+     * #THROWS CloneNotSupportedException 
+     *   Kauppareissu kauppareissu = new Kauppareissu();
+     *   kauppareissu.parse("0|10.02.2012");
+     *   Kauppareissu kopio = kauppareissu.clone();
+     *   Object olio = kauppareissu.clone();
+     *   kopio.toString() === kauppareissu.toString();
+     *   kauppareissu.parse("4|03.12.2020");
+     *   kopio.toString().equals(kauppareissu.toString()) === false;
+     *   olio instanceof Kauppareissu === true;
+     * </pre>
+     */
     @Override
     public Kauppareissu clone() throws CloneNotSupportedException {
         Kauppareissu uusiKauppareissu;
         uusiKauppareissu = (Kauppareissu)super.clone();
         return uusiKauppareissu;
     }
+    
     
     /**
      * Testiohjelma kauppareissulle.

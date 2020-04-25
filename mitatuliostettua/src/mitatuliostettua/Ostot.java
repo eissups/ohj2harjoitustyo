@@ -114,12 +114,12 @@ public class Ostot implements Iterable<Osto> {
     
     /**
      * Lukee ostot tiedostosta.  Kesken.
-     * @param tuotutiedosto tiedoston hakemisto
-     * @throws SailoException jos lukeminen epäonnistuu
+     * @param tuoteryhmat tuoteryhmat
+     * @throws SailoException jos ei onnaa
      */
-    public void lueTiedostosta(String tuotutiedosto) throws SailoException {
+    public void lueTiedostosta1(Tuoteryhmat tuoteryhmat) throws SailoException {
         
-        setTiedostonNimi(tuotutiedosto);
+        setTiedostonNimi("ostot.dat");
         
         try ( BufferedReader fi = new BufferedReader(new FileReader("ostot.dat")) ) {
 
@@ -128,7 +128,7 @@ public class Ostot implements Iterable<Osto> {
                 rivi = rivi.trim();
                 if ( "".equals(rivi) || rivi.charAt(0) == ';' ) continue;
                 Osto osto = new Osto();
-                osto.parse(rivi); // voisi olla virhekäsittely
+                osto.parse(rivi, tuoteryhmat); // voisi olla virhekäsittely
                 lisaa(osto);
             }
             muutettu = false;
@@ -143,11 +143,12 @@ public class Ostot implements Iterable<Osto> {
     
     /**
      * Luetaan aikaisemmin annetun nimisestä tiedostosta
+     * @param tuoteryhmat tuoteryhmat
      * @throws SailoException jos tulee poikkeus
      */
-    public void lueTiedostosta() throws SailoException {
+    public void lueTiedostosta(Tuoteryhmat tuoteryhmat) throws SailoException {
         
-        lueTiedostosta(getTiedostonNimi());
+        lueTiedostosta1(tuoteryhmat);
     }
 
     
@@ -308,13 +309,14 @@ public class Ostot implements Iterable<Osto> {
 
     /**
      * @param ostot2 oostot
+     * @param tunnus kauppareissun tunnus
      */
-    public void muokkaa(Ostot ostot2) {
+    public void muokkaa(Ostot ostot2, int tunnus) {
 
         
-       alkiot.clear();
+       poistaKauppareissunTiedot(tunnus);
        for(Osto e : ostot2) {
-           alkiot.add(e);
+           lisaa(e); 
        }
      }
 
@@ -369,6 +371,31 @@ public class Ostot implements Iterable<Osto> {
     public void lisaaMuokkaa(String selectedText, Osto ost) {
         
         lisaa(ost);
+    }
+
+
+    public Collection<Kauppareissu> etsiSopivat(Kauppareissu[] kauppareissui, String ehto) {
+        Collection<Kauppareissu> loytyneet = new ArrayList<Kauppareissu>(); 
+        for (Kauppareissu kauppareissu : kauppareissui) { 
+            Ostot osot = getOstot(kauppareissu.getTunnus());
+            if (etsiloytyyko(osot, ehto) == true) loytyneet.add(kauppareissu);  
+        } 
+        return loytyneet; 
+    }
+
+
+    private boolean etsiloytyyko(Ostot osot, String ehto) {
+        boolean onko = false;
+        for (Osto os : osot) { 
+            if (os.getTuoteryhma().getNimi().contains(ehto)) onko = true;
+        } 
+        return onko;
+    }
+
+
+    public Collection<Osto> annaKaikkiOstot() {
+        return alkiot;
+        
     }
     }
         

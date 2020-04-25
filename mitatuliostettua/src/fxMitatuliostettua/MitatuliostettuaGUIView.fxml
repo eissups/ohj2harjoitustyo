@@ -55,13 +55,13 @@
                      <center>
                         <SplitPane dividerPositions="0.5" prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
                            <items>
-                              <TextField fx:id="texthakukentta" onAction="#aloitahaku" onKeyReleased="#aloitahaku" prefHeight="25.0" prefWidth="189.0" promptText="Etsi hakusanalla" />
-                              <ComboBoxChooser fx:id="chooserhakutapavalinta" onAction="#aloitahaku" prefHeight="25.0" prefWidth="97.0" rivit="uusin &#10;halvin&#10;kallein" />
+                              <TextField fx:id="texthakukentta" onAction="#aloitahaku" onKeyReleased="#aloitahaku" prefHeight="25.0" prefWidth="160.0" promptText="Etsi tuoteryhmällä" />
+                              <ComboBoxChooser fx:id="chooserhakutapavalinta" onAction="#aloitahaku" prefHeight="25.0" prefWidth="97.0" rivit="uusin &#10;vanhin" />
                            </items>
                         </SplitPane>
                      </center>
                      <top>
-                        <DatePicker fx:id="hakupaiva" onAction="#aloitahaku" onKeyReleased="#hakupaivavalittu" onMouseClicked="#hakupaivavalittu" prefHeight="25.0" prefWidth="235.0" promptText="Etsi päivän mukaan" style="-fx-background-color: white;" BorderPane.alignment="CENTER" />
+                        <DatePicker fx:id="hakupaiva" onAction="#aloitahaku" prefHeight="25.0" prefWidth="235.0" promptText="Etsi päivän mukaan" style="-fx-background-color: white;" BorderPane.alignment="CENTER" />
                      </top>
                   </BorderPane>
                </top>
@@ -180,6 +180,6 @@
       </GridPane>
    </bottom>
    <right>
-      <StringGrid fx:id="ostotnakyviin" rivit="Tuoteryhmä| hinta| lkm&#10;hygienia| 10| 3      &#10;kuivatuotteet| 5 |8 &#10;liha|10 |2                             &#10;hedelmät/vihannekset | 7 | 5&#10;elektroniikka  &#10;kahvi ja tee    &#10;maitotuotteet  &#10;alkoholi      &#10;muut" style="-fx-background-color: #cfa8f0; -fx-border-width: 2;" BorderPane.alignment="CENTER" />
+      <StringGrid fx:id="ostotnakyviin" rivit="Tuoteryhmä| lkm| hinta&#10;hygienia| 10| 3      &#10;kuivatuotteet| 5 |8 &#10;liha|10 |2                             &#10;hedelmät/vihannekset | 7 | 5&#10;elektroniikka  &#10;kahvi ja tee    &#10;maitotuotteet  &#10;alkoholi      &#10;muut" style="-fx-background-color: #cfa8f0; -fx-border-width: 2;" BorderPane.alignment="CENTER" />
    </right>
 </BorderPane>

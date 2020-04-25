@@ -1,4 +1,3 @@
-   
 package fxMitatuliostettua;
 
 import java.awt.Desktop;
@@ -65,9 +64,9 @@ public class MitatuliostettuaGUIController implements Initializable{
     @FXML private Button buottonmuokkaa;
     @FXML private Button Buttonuusituoteryhma;
     @FXML private DatePicker paivamaara;
-    @FXML
-    private StringGrid<Osto> ostotnakyviin;
+    @FXML private StringGrid<Osto> ostotnakyviin;
 
+    @FXML private TextField kokonaishinta;
     @FXML private ListChooser<Kauppareissu> chooserKauppareissut;
     @FXML private ScrollPane panelKauppareissu;
     
@@ -81,7 +80,7 @@ public class MitatuliostettuaGUIController implements Initializable{
     
     @FXML private void aloitahaku() throws SailoException {
         if ( valittuKauppareissu != null )
-            hae(valittuKauppareissu.getTunnus()); 
+             hae(valittuKauppareissu.getTunnus()); 
 
     }
     
@@ -89,7 +88,7 @@ public class MitatuliostettuaGUIController implements Initializable{
     
     @FXML private void hakupaivavalittu() throws SailoException {
         if ( valittuKauppareissu != null )
-            hae(valittuKauppareissu.getTunnus()); 
+           hae(valittuKauppareissu.getTunnus()); 
     }
     
     
@@ -248,6 +247,7 @@ public class MitatuliostettuaGUIController implements Initializable{
         int index = chooserKauppareissut.getSelectedIndex();
         hae(0);
         chooserKauppareissut.setSelectedIndex(index);
+        hae(valittuKauppareissu.getTunnus());
         
     }
     
@@ -276,7 +276,17 @@ public class MitatuliostettuaGUIController implements Initializable{
         } catch (SailoException e) {
             naytaVirhe(e.getMessage());
         } 
+        naytaLisatiedot();
         
+    }
+
+
+
+    private void naytaLisatiedot() {
+        
+        int kokhinta = mitatuliostettua.LaskeHinta(valittuKauppareissu.getTunnus());
+        String hintakirjoitettuna = String.valueOf(kokhinta);
+        kokonaishinta.setText(hintakirjoitettuna);
     }
 
 
@@ -368,16 +378,14 @@ public class MitatuliostettuaGUIController implements Initializable{
    protected void hae(int jnro) throws SailoException { 
        int k = chooserhakutapavalinta.getSelectionModel().getSelectedIndex();
        String ehto = texthakukentta.getText(); 
-       if (k > 0 || ehto.length() > 0)
-           naytaVirhe(String.format("Ei osata hakea (kenttä: %d, ehto: %s)", k, ehto));
-       else
-           naytaVirhe(null);
+       
        
        chooserKauppareissut.clear();
 
        int index = 0;
        Collection<Kauppareissu> kauppareissut;
-       kauppareissut = mitatuliostettua.etsi(ehto, k);
+       LocalDate date = hakupaiva.getValue();
+       kauppareissut = mitatuliostettua.etsi(ehto, k, date);
        int i = 0;
        for (Kauppareissu kauppareissu :kauppareissut) {
            if (kauppareissu.getTunnus() == jnro) index = i;
@@ -467,7 +475,7 @@ public class MitatuliostettuaGUIController implements Initializable{
    public void tulostaValitut(TextArea text) throws SailoException {
        try (PrintStream os = TextAreaOutputStream.getTextPrintStream(text)) {
            os.println("Tulostetaan kaikki kauppareissut");
-           Collection<Kauppareissu> kauppareissut = mitatuliostettua.etsi("", -1); 
+           Collection<Kauppareissu> kauppareissut = mitatuliostettua.etsi("", -1, null); 
            for (Kauppareissu kauppareissu : kauppareissut) { 
                tulosta(os, kauppareissu);
                os.println("\n\n");
@@ -484,7 +492,7 @@ public class MitatuliostettuaGUIController implements Initializable{
        try {
            Ostot ostot = TiedotController.kysyTiedot(null, ostoot, valittuKauppareissu.clone());
            if (ostot == null) return;
-           mitatuliostettua.muokkaaOstoja(ostot);
+           mitatuliostettua.muokkaaOstoja(ostot, valittuKauppareissu.getTunnus());
        } catch (CloneNotSupportedException e) {
            //
        }
@@ -505,6 +513,7 @@ public class MitatuliostettuaGUIController implements Initializable{
        } catch (SailoException e) {
            Dialogs.showMessageDialog(e.getMessage());
        }
+       tallenna();
       
        
    }
@@ -519,6 +528,7 @@ public class MitatuliostettuaGUIController implements Initializable{
        valittuKauppareissu.annaTiedot(pvm);
        hae(valittuKauppareissu.getTunnus());
        naytaOStot(valittuKauppareissu);
+       tallenna();
        
    }
 }

@@ -116,7 +116,7 @@ public class Osto implements Cloneable {
     
     /**
      * Antaa väliaikaisesti luoduille ostoille tiedot kun niitä ei vielä oikeasti pysty kirjoittamaan
-     * @param nro tunnusnumero
+     * @param nro kauppareissun tunnusnumero
      * @param tuotee tuoteryhman nimi, jonka osto lisätään
      * @param maara maara
      * @param hinta hinta
@@ -145,15 +145,15 @@ public class Osto implements Cloneable {
     
     /**
      * @param tunnus kauppaid
-     * @param tuote2 tuoteryhma
-     * @param tuotteeenNimi nimi
+     * @param tuoter tuote
      * @param maaraa maara
      * @param hintaa hinta
      */
-    public void annaTiedot(int tunnus, Tuoteryhma tuote2, String tuotteeenNimi, int maaraa,
-            int hintaa) {
-        tuote = tuotteeenNimi;
-        tuoteryhmaid = tuoteryhma.getTunnus();
+    public void annaTiedot(int tunnus, Tuoteryhma tuoter, int maaraa, int hintaa) {
+        
+        tuote = tuoter.getNimi();
+        tuoteryhmaid = tuoter.getTunnus();
+        tuoteryhma = tuoter;
         kauppaid = tunnus;
         maara = maaraa;
         hinta = hintaa;
@@ -263,7 +263,7 @@ public class Osto implements Cloneable {
     */
    @Override
    public String toString() {
-       return "" + getTunnus() + "|" + kauppaid + "|" + tuote + "|" + maara + "|" + hinta;
+       return "" + getTunnus() + "|" + tuoteryhmaid + "|" + kauppaid + "|" + tuote + "|" + maara + "|" + hinta;
        // tuoteryhman paikalla tulee myöhemmin olemaan tuoteryhmäid, mutta nyt siinä ei ole järkeä, koska tuoteryhmiä luodaan
        // myös oston lisäämiskohdassa vain siksi, että saadaan ruudulle jotakin
    }
@@ -271,17 +271,29 @@ public class Osto implements Cloneable {
    
     /**
      * @param rivi rivi, jolta tiedot luetaan
+     * @param tuoteryhmat tuoteryhmat
      */
-    public void parse(String rivi) {
+    public void parse(String rivi, Tuoteryhmat tuoteryhmat) {
            StringBuffer sb = new StringBuffer(rivi);
            setTunnus(Mjonot.erota(sb, '|', getTunnus()));
+           tuoteryhmaid = Mjonot.erota(sb, '|', tuoteryhmaid);
            kauppaid = Mjonot.erota(sb, '|', kauppaid);
            tuote = Mjonot.erota(sb, '|', tuote);
            maara = Mjonot.erota(sb, '|', maara);
            hinta = Mjonot.erota(sb, '|', hinta);
+           tuoteryhma = annaRyhma(tuoteryhmat);
        }
     
     
+    private Tuoteryhma annaRyhma(Tuoteryhmat tuoteryhmat) {
+        Tuoteryhma tuote = new Tuoteryhma();
+        for(Tuoteryhma tuoter : tuoteryhmat) {
+            if(tuoter.getTunnus() == tuoteryhmaid) tuote = tuoter;
+        }
+        return tuote;
+    }
+
+
     @Override
     public boolean equals(Object obj) {
         if ( obj == null ) return false;

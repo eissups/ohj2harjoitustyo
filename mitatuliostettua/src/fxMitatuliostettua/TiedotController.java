@@ -13,11 +13,13 @@ import fi.jyu.mit.fxgui.ComboBoxChooser;
 import fi.jyu.mit.fxgui.Dialogs;
 import fi.jyu.mit.fxgui.ModalController;
 import fi.jyu.mit.fxgui.ModalControllerInterface;
+import fi.jyu.mit.fxgui.StringAndObject;
 import fi.jyu.mit.fxgui.StringGrid;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.DatePicker;
+import javafx.scene.control.SingleSelectionModel;
 import javafx.scene.control.TextField;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
@@ -56,13 +58,7 @@ public class TiedotController implements ModalControllerInterface<Ostot>,Initial
     @FXML private Button buttonValmis;
     private Mitatuliostettua mitatuliostettua;
    
-
-        
-    @FXML void Lisauusituoteryhmapainettu() {
-        ModalController.showModal(TiedotController.class.getResource("Uusituoteryhma.fxml"), "Uusi tuoteryhmä", null, "");
-    }
-
-    
+ 
     
     @FXML void PoistatuoteryhmaPainettu() {
         Dialogs.showMessageDialog("Tyhjennetään valitun tuoteryhmän tiedot ja poistetaan tuoteryhmä listalta, ei toimi vielä");
@@ -78,13 +74,13 @@ public class TiedotController implements ModalControllerInterface<Ostot>,Initial
 
     @FXML void lisäätiedoissapainettu() throws SailoException {
         
+        if (chooserValitse.getSelectedIndex() == 0) {
+            return;
+        }
         uusiOsto();
         //Dialogs.showMessageDialog("Lisätään tuoteryhmä listaan ja tyhjennetään kirjoituskentät, ei toimi vielä");
     }
     
-
-
-
 
     private static Kauppareissu valittuKauppareissu;
     private static Ostot ostot = new Ostot();
@@ -108,7 +104,10 @@ public class TiedotController implements ModalControllerInterface<Ostot>,Initial
         
         int hintaa = Integer.parseInt(hinta.getText());
         int maaraa = Integer.parseInt(maara.getText());
-        ost.annaTiedot(valittuKauppareissu.getTunnus(), chooserValitse.getSelectedText() , maaraa, hintaa);  
+        SingleSelectionModel<StringAndObject<Tuoteryhma>> tuote = chooserValitse.getSelectionModel();
+        StringAndObject<Tuoteryhma> joku = tuote.getSelectedItem();
+        Tuoteryhma tuotery = joku.getObject();
+        ost.annaTiedot(valittuKauppareissu.getTunnus(), tuotery , maaraa, hintaa);  
         ostot.lisaaMuokkaa(chooserValitse.getSelectedText(), ost);
         naytaOsto(ost);
        
@@ -135,7 +134,7 @@ public class TiedotController implements ModalControllerInterface<Ostot>,Initial
     private void etsiTuoteryhmat() {
         tuoteryhmat = new Tuoteryhmat();
         try {
-            tuoteryhmat.lueTiedostosta("tuoteryhmat.dat");
+            tuoteryhmat.lueTiedostosta();
         } catch (SailoException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();
@@ -168,7 +167,7 @@ public class TiedotController implements ModalControllerInterface<Ostot>,Initial
     
     private void naytaTuoteryhmat() {
         for(Tuoteryhma tuoter : tuoteryhmat ) {
-            chooserValitse.add(tuoter.getTuoteryhma(), tuoter);
+            chooserValitse.add(tuoter.getTuoteryhma(), tuoter); 
         }      
     }
 
