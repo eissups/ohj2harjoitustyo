@@ -134,7 +134,7 @@ public class TiedotController implements ModalControllerInterface<Ostot>,Initial
     private void etsiTuoteryhmat() {
         tuoteryhmat = new Tuoteryhmat();
         try {
-            tuoteryhmat.lueTiedostosta();
+            tuoteryhmat.lueTiedostosta("tuoteryhmat.dat");
         } catch (SailoException e) {
             // TODO Auto-generated catch block
             e.printStackTrace();

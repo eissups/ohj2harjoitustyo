@@ -17,7 +17,7 @@ public class Tuoteryhma {
     private int tunnusNro;
     private String tuoteryhmanNimi;
     private static int seuraavaNro    = 1;
-    String[] vaihtoehtoja = { "alkoholi", "elektroniikka", "hygienia" };
+    String[] vaihtoehtoja = { "alkoholi" };
     
      
     /**
@@ -25,7 +25,7 @@ public class Tuoteryhma {
      * @example
      * <pre name="test">
      *  Tuoteryhma ruoka  = new Tuoteryhma();
-     *  ruoka.annaTiedot();
+     *  ruoka.annaTiedot("alkoholi");
      *  ruoka.getTuoteryhma() === "alkoholi";
      * </pre>
      */
@@ -85,6 +85,17 @@ public class Tuoteryhma {
     
     /**Palauttaa tuotteen tunnusnumeron
      * @return tunnusnumero
+     * @example
+     * <pre name="test">
+     * Tuoteryhma ruoka= new Tuoteryhma();
+     *   ruoka.getTunnus() === 0;
+     *   ruoka.rekisteroi();
+     *   Tuoteryhma juoma = new Tuoteryhma();
+     *   juoma.rekisteroi();
+     *   int tunnus1 = ruoka.getTunnus();
+     *   int tunnus2 = juoma.getTunnus();
+     *   tunnus1 === tunnus2-1;
+     * </pre>
      */
     public int getTunnus() {
         return tunnusNro;
@@ -94,6 +105,17 @@ public class Tuoteryhma {
     /**
      * Antaa väliaikaisesti luoduille tuoteryhmille tiedot kun niitä ei vielä oikeasti pysty kirjoittamaan
      * @param string tuoteryhman nimi
+     * @example
+     * <pre name="test">
+     * Tuoteryhma tuoteryhma = new Tuoteryhma();
+     * tuoteryhma.rekisteroi();
+     * tuoteryhma.annaTiedot("ruoka");
+     * tuoteryhma.getNimi() === "ruoka";
+     * Tuoteryhma tuoteryhma1 = new Tuoteryhma();
+     * tuoteryhma1.rekisteroi();
+     * tuoteryhma1.annaTiedot("juoma");
+     * tuoteryhma1.getNimi() === "juoma";
+     * </pre>
      */
     public void annaTiedot(String string) {
         
@@ -145,6 +167,7 @@ public class Tuoteryhma {
     
     /**
      * @return tuoteryhmän nimen
+     * 
      */
     public String getNimi() {
         return this.tuoteryhmanNimi;

@@ -253,10 +253,10 @@ public class Mitatuliostettua {
      * Mitatuliostettua mitatuliostettua = new Mitatuliostettua();
      * Kauppareissu eka = new Kauppareissu();
      * Kauppareissu toka = new Kauppareissu();
-     * Osto osto1 = new Osto; osto.annaTiedot(eka,getTunnus();
-     * Osto osto2 = new Osto; osto.annaTiedot(toka,getTunnus();
-     * Osto osto3 = new Osto; osto.annaTiedot(eka,getTunnus();
-     * Osto osto4 = new Osto; osto.annaTiedot(toka,getTunnus();
+     * Osto osto1 = new Osto(); osto1.annaTiedot(eka.getTunnus());
+     * Osto osto2 = new Osto(); osto2.annaTiedot(toka.getTunnus());
+     * Osto osto3 = new Osto(); osto3.annaTiedot(eka.getTunnus());
+     * Osto osto4 = new Osto(); osto4.annaTiedot(toka.getTunnus());
      * 
      * String hakemisto = "lukutesti";
      * File dir = new File(hakemisto);
@@ -265,7 +265,23 @@ public class Mitatuliostettua {
      *  dir.mkdir();  
      *  ftied.delete();
      *  fhtied.delete();
+     *  mitatuliostettua.lueTiedostosta(hakemisto); #THROWS SailoException
+     *  mitatuliostettua.lisaa(eka);
+     *  mitatuliostettua.lisaa(toka);
+     *  mitatuliostettua.lisaaOsto(osto1);
+     *  mitatuliostettua.lisaaOsto(osto2);
+     *  mitatuliostettua.lisaaOsto(osto3);
+     *  mitatuliostettua.lisaaOsto(osto4);
+     *  mitatuliostettua.talleta();
+     *  mitatuliostettua = new Mitatuliostettua();
      *  mitatuliostettua.lueTiedostosta(hakemisto);
+     *  List<Osto> loydetyt = new ArrayList<Osto>();
+     *  loydetyt.add(osto1);
+     *  loydetyt.add(osto2);
+     *  loydetyt.add(osto3);
+     *  loydetyt.add(osto4);
+     *  mitatuliostettua.annaKaikkiOstot() === loydetyt; 
+     *  
      * </pre>
      */
     public void lueTiedostosta(String nimi) throws SailoException {
@@ -274,7 +290,7 @@ public class Mitatuliostettua {
         ostot = new Ostot();
         setTiedosto(nimi);
         kauppareissut.lueTiedostosta(nimi);
-        tuoteryhmat.lueTiedostosta();
+        tuoteryhmat.lueTiedostosta(nimi);
         ostot.lueTiedostosta(tuoteryhmat);
         
     }
@@ -462,6 +478,12 @@ public class Mitatuliostettua {
         } catch (SailoException ex) {
             System.out.println(ex.getMessage());
         } 
+    }
+
+
+    public void lisaaTuoteryhma(Tuoteryhma tuoteryhma) {
+        lisaa(tuoteryhma);
+        
     }
 
 

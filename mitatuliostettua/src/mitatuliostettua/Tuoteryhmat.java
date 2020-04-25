@@ -84,6 +84,10 @@ public class Tuoteryhmat implements Iterable<Tuoteryhma> {
      * @param i sen ktuoteryhman indeksi, jonka viite halutaan
      * @return tuoteryhman viite 
      * @throws IndexOutOfBoundsException jos i menee alkiot-taulukon ulkopuolelle
+     * @example
+     * <pre name="test">
+     * 
+     * </pre>
      */
     public Tuoteryhma annaViite(int i) throws IndexOutOfBoundsException{
         
@@ -104,10 +108,41 @@ public class Tuoteryhmat implements Iterable<Tuoteryhma> {
     
     /**
      * Lukee kauppareissut tiedostosta.  Kesken.
+     * @param nimi tiedoston nimi
      * @throws SailoException jos lukeminen epäonnistuu
+     * @example
+     * <pre name="test">
+     * #THROWS SailoException 
+     * #import java.io.File;
+     * #import java.util.Iterator;
+     *  Tuoteryhmat tuoteryhmat = new Tuoteryhmat();
+     *  Tuoteryhma eka = new Tuoteryhma(), toka = new Tuoteryhma();
+     *  eka.annaTiedot("moi");
+     *  toka.annaTiedot("hei");
+     *  String hakemisto = "testiii";
+     *  String tiedNimi = hakemisto+"/tuoteryhmt";
+     *  File ftied = new File(tiedNimi+".dat");
+     *  File dir = new File(hakemisto);
+     *  dir.mkdir();
+     *  ftied.delete();
+     *  tuoteryhmat.lueTiedostosta(tiedNimi);
+     *  tuoteryhmat.lisaa(eka);
+     *  tuoteryhmat.lisaa(toka);
+     *  tuoteryhmat.tallennaTuoteryhma();
+     *  tuoteryhmat = new Tuoteryhmat();            // Poistetaan vanhat luomalla uusi
+     *  tuoteryhmat.lueTiedostosta(tiedNimi);  // johon ladataan tiedot tiedostosta.
+     *  Iterator<Tuoteryhma> i = tuoteryhmat.iterator();
+     *  i.hasNext() === true;
+     *  tuoteryhmat.lisaa(toka);
+     *  tuoteryhmat.tallennaTuoteryhma();
+     *  ftied.delete() === false;
+     *  File fbak = new File(tiedNimi+".bak");
+     *  fbak.delete() === false;
+     *  dir.delete() === true;
+     * </pre>
      */
-    public void lueTiedostosta() throws SailoException {
-        setTiedostonNimi("tuoteryhmat.dat");
+    public void lueTiedostosta(String nimi) throws SailoException {
+        setTiedostonNimi(nimi);
         try ( BufferedReader fi = new BufferedReader(new FileReader("tuoteryhmat.dat")) ) {
             tiedosto = fi.readLine();
             String rivi = fi.readLine();
@@ -132,10 +167,11 @@ public class Tuoteryhmat implements Iterable<Tuoteryhma> {
     
     /**
      * Luetaan aikaisemmin annetun nimisestä tiedostosta
+     * @param nimi tiedoston nimi
      * @throws SailoException jos tulee poikkeus
      */
-    public void lueTiedostostaa() throws SailoException {
-        lueTiedostosta();
+    public void lueTiedostostaa(String nimi) throws SailoException {
+        lueTiedostosta(nimi);
     }
     
     
@@ -271,6 +307,18 @@ public class Tuoteryhmat implements Iterable<Tuoteryhma> {
      * @param hakuehto ehto
      * @param k tunnusnymero
      * @return löytyneet tuoteryhmät uutena 
+     * @example
+     * <pre name="test">
+     * Tuoteryhmat tuoteryhmat = new Tuoteryhmat();
+     * Tuoteryhma tuoteryhma = new Tuoteryhma();
+     * Tuoteryhma tuote = new Tuoteryhma();
+     * tuoteryhmat.lisaa(tuoteryhma):
+     * tuoteryhmat.lisaa(tuote);
+     * Collection<Tuoteryhma> loytyneet = new ArrayList<Tuoteryhma>();
+     * loytyneet.add(tuoteryhma);
+     * loytyneet,add(tuote);
+     * tuoteryhmat.etsi() === loytyneet;
+     * </pre>
      */
     public Collection<Tuoteryhma> etsi(String hakuehto, int k) { 
         

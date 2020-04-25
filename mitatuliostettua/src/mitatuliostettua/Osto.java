@@ -54,6 +54,15 @@ public class Osto implements Cloneable {
     /**
      * @param k Minkä kentän sisältö halutaan
      * @return valitun kentän sisältö
+     * @example
+     * <pre name="test">
+     * Osto osto = new Osto();
+     * Tuoteryhma tuote = new Tuoteryhma();
+     * osto.annaTiedot(1, tuote, 2, 1);
+     * osto.anna(0) === "1";
+     * osto.anna(2) === "2";
+     * osto.anna(3) === "1";
+     * </pre>
      */
     public String anna(int k) {
         switch (k) {
@@ -71,6 +80,7 @@ public class Osto implements Cloneable {
     }
     
     /**
+     * Palauttaa vain tuoteryhmän
      * @return ostettu tuoteryhmä
      * </pre>
      */
@@ -80,8 +90,16 @@ public class Osto implements Cloneable {
     }
     
     
-    /**
+    /**Palauttaa ostettujen määräm
      * @return ostettu tuoteryhmä
+     * @example
+     * <pre name="test">
+     * Kauppareissu kauppareissu = new Kauppareissu();
+     * kauppareissu.rekisteroi();
+     * kauppareissu.annaTiedot("20.02.2020");
+     * Osto eka = new Osto();
+     * eka.annaTiedot(1, "juu", 3, 2);
+     * eka.getMaara() === 3;
      * </pre>
      */
     public int getMaara() {
@@ -118,15 +136,15 @@ public class Osto implements Cloneable {
      * Antaa väliaikaisesti luoduille ostoille tiedot kun niitä ei vielä oikeasti pysty kirjoittamaan
      * @param nro kauppareissun tunnusnumero
      * @param tuotee tuoteryhman nimi, jonka osto lisätään
-     * @param maara maara
-     * @param hinta hinta
+     * @param maara1 maara
+     * @param hinta1 hinta
      */
-    public void annaTiedot(int nro, String tuotee, int maara, int hinta ) {
+    public void annaTiedot(int nro, String tuotee, int maara1, int hinta1 ) {
         
         tuote = tuotee;
         kauppaid = nro;
-        this.maara = maara;
-        this.hinta = hinta;   
+        maara = maara1;
+        hinta = hinta1;   
     }
     
     /**
@@ -159,15 +177,16 @@ public class Osto implements Cloneable {
         hinta = hintaa;
     }
     
+    
     /**Liittää oston seuraavan tunnusnumeron
      * @return oston tunnusnumero
      * @example
      * <pre name="test">
      * Osto eka = new Osto();
+     * Osto toka = new Osto();
      * eka.getTunnus() === 0;
      * eka.rekisteroi();
      * eka.rekisteroi();
-     * Osto toka = new Osto();
      * toka.rekisteroi();
      * int tunnus1 = eka.getTunnus();
      * int tunnus2 = toka.getTunnus();
@@ -185,6 +204,16 @@ public class Osto implements Cloneable {
     
     /**Palauttaa oston tunnusnumeron
      * @return tunnusnumero
+     * <pre name="test">
+     * Kauppareissu kauppareissu = new Kauppareissu();
+     * kauppareissu.rekisteroi();
+     * kauppareissu.annaTiedot("20.02.2020");
+     * Tuoteryhma tuote = new Tuoteryhma();
+     * tuote.rekisteroi();
+     * Osto eka = new Osto();
+     * eka.annaTiedot(1, tuote, 3, 2);
+     * eka.getTunnus() === 0;
+     * </pre>
      */
     public int getTunnus() {
         
@@ -256,22 +285,39 @@ public class Osto implements Cloneable {
     * @return osto tolppaeroteltuna merkkijonona 
     * @example
     * <pre name="test">
+    *   Tuoteryhma tuote = new Tuoteryhma();
+    *   Tuoteryhmat tuoteryhmat = new Tuoteryhmat();
+    *   tuoteryhmat.lisaa(tuote);
     *   Osto osto = new Osto();
-    *   osto.parse("   1   |  2  |   alkoholi  | 6 | 10 ");
-    *   osto.toString()    === "1|2|alkoholi|6|10";
+    *   osto.annaTiedot(1, tuote, 5, 3);
+    *   osto.toString()    === "0|0|1|null|5|3";
     * </pre>
     */
    @Override
    public String toString() {
        return "" + getTunnus() + "|" + tuoteryhmaid + "|" + kauppaid + "|" + tuote + "|" + maara + "|" + hinta;
-       // tuoteryhman paikalla tulee myöhemmin olemaan tuoteryhmäid, mutta nyt siinä ei ole järkeä, koska tuoteryhmiä luodaan
-       // myös oston lisäämiskohdassa vain siksi, että saadaan ruudulle jotakin
+
    }
 
    
     /**
      * @param rivi rivi, jolta tiedot luetaan
      * @param tuoteryhmat tuoteryhmat
+     * @example
+     * <pre name="test">
+     * Tuoteryhmat tuoteryhmat = new Tuoteryhmat();
+     * Osto osto = new Osto();
+     * osto.rekisteroi();
+     * osto.parse("0|0|1|null|5|3", tuoteryhmat);
+     * osto.getMaara() === 5;
+     * osto.getHinta() === 3;
+     * Osto rissu = new Osto();
+     * rissu.rekisteroi();
+     * rissu.parse("1|2|1|null|4|5", tuoteryhmat);
+     * rissu.getHinta() === 5;
+     * rissu.getMaara() === 4
+     * rissu.getTunnus() === 1;
+     * </pre>
      */
     public void parse(String rivi, Tuoteryhmat tuoteryhmat) {
            StringBuffer sb = new StringBuffer(rivi);
@@ -285,14 +331,19 @@ public class Osto implements Cloneable {
        }
     
     
-    private Tuoteryhma annaRyhma(Tuoteryhmat tuoteryhmat) {
-        Tuoteryhma tuote = new Tuoteryhma();
+    /**Annetaan jokin tuoteryhmä
+     * @param tuoteryhmat tuoteryhmät
+     * @return tuote
+     */
+    public Tuoteryhma annaRyhma(Tuoteryhmat tuoteryhmat) {
+        Tuoteryhma tuote1 = new Tuoteryhma();
         for(Tuoteryhma tuoter : tuoteryhmat) {
-            if(tuoter.getTunnus() == tuoteryhmaid) tuote = tuoter;
+            if(tuoter.getTunnus() == tuoteryhmaid) tuote1 = tuoter;
         }
-        return tuote;
+        return tuote1;
     }
 
+    
 
     @Override
     public boolean equals(Object obj) {
@@ -332,16 +383,12 @@ public class Osto implements Cloneable {
         osto.annaTiedot(1, ruoka.getNimi());
         osto2.annaTiedot(2, juoma.getNimi());
         
-       
-        
-
         osto.tulosta(System.out);
         osto2.tulosta(System.out);
-
     }
 
-
-    /**
+    
+    /**Annetaan kauppareissun tunnus
      * @return kauppareissun tunnusnumeron
      */
     public int getKaupTunnus() {
@@ -349,74 +396,60 @@ public class Osto implements Cloneable {
     }
 
 
+    /** Annetaan kenttien lukumäärä
+     * @return kenttien määrä
+     */
     public int getKenttia() {
         return 4;
     }
   
 
-    /**
-     * @return ensimmäinen käyttäjän syötettävän kentän indeksi
+    /**Annetaan ensimmäinen kenttä, johon tulee jotakin
+     * @return ensimmäinen kenttä
      */
     public int ekaKentta() {
         return 1;
     }
 
 
-    public String getKysymys(int k) {
-        
-        switch (k) {
+   
+    /** Asetetaan tiedot
+     * @param k mitkä tiedot halutn asettaa
+     * @param jono tiedot jonossa
+     * @return null
+     */
+    public String aseta(int k, String jono) {
+        String tjono = jono.trim();
+        StringBuffer sb = new StringBuffer(tjono);
+        switch ( k ) {
         case 0:
-            return "id";
+            setTunnus(Mjonot.erota(sb, '§', getTunnus()));
+            return null;
         case 1:
-            return "jäsenId";
+            tuote = tjono;
+            return null;
         case 2:
-            return "ala";
+            String maarassanana = tjono;
+            maaraksi(maarassanana);
+            return null;
         case 3:
-            return "aloitusvuosi";
-        case 4:
-            return "h/vko";
+            String hintasanana = tjono;
+            hinnaksi(hintasanana);
+            return null;
         default:
-            return "???";
+            return "ei mikään";
         }
     }
-    
-        public String aseta(int k, String jono) {
-            String tjono = jono.trim();
-            StringBuffer sb = new StringBuffer(tjono);
-            switch ( k ) {
-            case 0:
-                setTunnus(Mjonot.erota(sb, '§', getTunnus()));
-                return null;
-            case 1:
-                tuote = tjono;
-                return null;
-            case 2:
-                String maarassanana = tjono;
-                maaraksi(maarassanana);
-                return null;
-            case 3:
-                String hintasanana = tjono;
-                hinnaksi(hintasanana);
-                return null;
-            default:
-                return "ÄÄliö";
-            }
+
+
+    private void hinnaksi(String hintasanana) {
+        hinta = Integer.parseInt(hintasanana);
+        
     }
 
 
-        private void hinnaksi(String hintasanana) {
-            hinta = Integer.parseInt(hintasanana);
-            
-        }
-
-
-        private void maaraksi(String maarasana) {
-            maara = Integer.parseInt(maarasana);
-            
-        }
-
-
-       
+    private void maaraksi(String maarasana) {
+        maara = Integer.parseInt(maarasana);
         
-        
+    }        
 }
