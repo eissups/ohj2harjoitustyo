@@ -142,6 +142,38 @@ public class Kauppareissut implements Iterable<Kauppareissu>{
      * Lukee kauppareissut tiedostosta.  Kesken.
      * @param tuotutiedosto tiedoston nimi
      * @throws SailoException jos lukeminen epäonnistuu
+     * @example
+     * <pre name="test">
+     * #THROWS SailoException 
+     * #import java.io.File;
+     * #import java.util.Iterator;
+     *  Kauppareissut kauppareissut = new Kauppareissut();
+     *  Kauppareissu reissu1 = new Kauppareissu(), reissu2 = new Kauppareissu();
+     *  reissu1.rekisteroi();
+     *  reissu2.rekisteroi();
+     *  reissu1.annaTiedot("paiva1");
+     *  reissu2.annaTiedot("paiva2");
+     *  String hakemisto = "testikauppareissut1";
+     *  String tiedNimi = hakemisto+"/reissut1";
+     *  File ftied = new File(tiedNimi+".dat");
+     *  File dir = new File(hakemisto);
+     *  dir.mkdir();
+     *  ftied.delete();
+     *  kauppareissut.lueTiedostosta(tiedNimi); 
+     *  kauppareissut.lisaa(reissu1);
+     *  kauppareissut.lisaa(reissu2);
+     *  kauppareissut.tallennaReissu();
+     *  kauppareissut = new Kauppareissut();            // Poistetaan vanhat luomalla uusi
+     *  kauppareissut.lueTiedostosta(tiedNimi);  // johon ladataan tiedot tiedostosta.
+     *  Iterator<Kauppareissu> i = kauppareissut.iterator();
+     *  i.next().toString() === reissu1.toString();
+     *  i.next().toString() === reissu2.toString();
+     *  kauppareissut.lisaa(reissu2);
+     *  ftied.delete() === false;
+     *  File fbak = new File(tiedNimi+".bak");
+     *  fbak.delete() === true;
+     *  dir.delete() === false;
+     * </pre>
      */
     public void lueTiedostosta(String tuotutiedosto) throws SailoException {
         setTiedostonNimi(tuotutiedosto);
@@ -167,6 +199,7 @@ public class Kauppareissut implements Iterable<Kauppareissu>{
 
     }
     
+    
     /**
      * Luetaan aikaisemmin annetun nimisestä tiedostosta
      * @throws SailoException jos tulee poikkeus
@@ -175,11 +208,17 @@ public class Kauppareissut implements Iterable<Kauppareissu>{
         lueTiedostosta(getTiedostonNimi());
     }
 
-    
-    
+      
     /**
      * Tulee tallentamaan kauppareissut tiedostoon sitten kun toimii
      * @throws SailoException jos talletus epäonnistuu
+     * <pre>
+     * Kauppareissut
+     * 20
+     * ; kommenttirivi
+     * 1|paiva1
+     * 2|paiva2
+     * </pre>
      */
     public void tallennaReissu() throws SailoException {
         if ( !muutettu ) return;
@@ -252,6 +291,7 @@ public class Kauppareissut implements Iterable<Kauppareissu>{
 
     }
 
+    
     /**
      * @author elisa
      * @version 2.4.2020
@@ -351,7 +391,6 @@ public class Kauppareissut implements Iterable<Kauppareissu>{
             }
         } 
         return loytyneet;
-    
     }
      
    

@@ -56,7 +56,7 @@
                         <SplitPane dividerPositions="0.5" prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
                            <items>
                               <TextField fx:id="texthakukentta" onAction="#aloitahaku" onKeyReleased="#aloitahaku" prefHeight="25.0" prefWidth="160.0" promptText="Etsi tuoteryhmällä" />
-                              <ComboBoxChooser fx:id="chooserhakutapavalinta" onAction="#aloitahaku" prefHeight="25.0" prefWidth="97.0" rivit="uusin &#10;vanhin" />
+                              <ComboBoxChooser fx:id="chooserhakutapavalinta" onAction="#aloitahaku" prefHeight="25.0" prefWidth="97.0" rivit="uusin&#10;vanhin" />
                            </items>
                         </SplitPane>
                      </center>

@@ -2,13 +2,10 @@ package fxMitatuliostettua;
 
 import java.net.URL;
 
-import java.text.SimpleDateFormat;
+
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.Date;
-import java.util.List;
 import java.util.ResourceBundle;
-
 import fi.jyu.mit.fxgui.ComboBoxChooser;
 import fi.jyu.mit.fxgui.Dialogs;
 import fi.jyu.mit.fxgui.ModalController;
@@ -21,8 +18,6 @@ import javafx.scene.control.Button;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.SingleSelectionModel;
 import javafx.scene.control.TextField;
-import javafx.scene.input.KeyEvent;
-import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
 import mitatuliostettua.Kauppareissu;
 import mitatuliostettua.Mitatuliostettua;
@@ -60,19 +55,25 @@ public class TiedotController implements ModalControllerInterface<Ostot>,Initial
     private Mitatuliostettua mitatuliostettua;
    
  
-    
+    /**
+     * Poistettaisiin tuoteryhmä jos toimisi
+     */
     @FXML void PoistatuoteryhmaPainettu() {
         Dialogs.showMessageDialog("Tyhjennetään valitun tuoteryhmän tiedot ja poistetaan tuoteryhmä listalta, ei toimi vielä");
     }
     
   
-
+    /**
+     * Suljetaan
+     */
     @FXML void Valmisklikattu() {
         ModalController.closeStage(buttonValmis);  
     }
     
     
-
+    /**
+     * Lisätään uusi osto
+     */
     @FXML void lisäätiedoissapainettu() throws SailoException {
         
         if (chooserValitse.getSelectedIndex() == 0) {
@@ -85,19 +86,7 @@ public class TiedotController implements ModalControllerInterface<Ostot>,Initial
 
     private static Kauppareissu valittuKauppareissu;
     private static Ostot ostot = new Ostot();
-    @SuppressWarnings("unused")
-    private int maara1 = 0;
-    @SuppressWarnings("unused")
-    private int hinta1 = 0;
-    @SuppressWarnings("unused")
-    private String tuoteryhma;
-    @SuppressWarnings("unused")
-    private TextField[] edits;
-    @SuppressWarnings("unused")
-    private int kentta = 0;
     private Tuoteryhmat tuoteryhmat;
-    @SuppressWarnings("unused")
-    private Tuoteryhma tuote;
     
     
     /** 
@@ -137,6 +126,9 @@ public class TiedotController implements ModalControllerInterface<Ostot>,Initial
     }
 
     
+    /**
+     * Etsitään kaikki tuoteryhmät tiedostosta
+     */
     private void etsiTuoteryhmat() {
         tuoteryhmat = new Tuoteryhmat();
         try {
@@ -171,6 +163,9 @@ public class TiedotController implements ModalControllerInterface<Ostot>,Initial
     }
     
     
+    /**
+     * Näytetään kaikki tuoteryhmät chooserissa
+     */
     private void naytaTuoteryhmat() {
         for(Tuoteryhma tuoter : tuoteryhmat ) {
             chooserValitse.add(tuoter.getTuoteryhma(), tuoter); 
@@ -185,6 +180,9 @@ public class TiedotController implements ModalControllerInterface<Ostot>,Initial
     }
     
  
+    /**
+     * Näytetään ostot StrinGridiin
+     */
     private void naytaOstot(Kauppareissu valittu) {
         StringGridTiedot.clear();;
         if (valittu == null) return;
@@ -198,10 +196,13 @@ public class TiedotController implements ModalControllerInterface<Ostot>,Initial
         
             for (Osto osto: ostot)
                 naytaOsto(osto);
-
     }
 
     
+    /**
+     * Näytetään osto StringGridiin
+     * 
+     */
     private void naytaOsto(Osto osto) {
         
         int kenttia = osto.getKenttia(); 
@@ -213,6 +214,9 @@ public class TiedotController implements ModalControllerInterface<Ostot>,Initial
     }
 
 
+    /**
+     * Muunnetaan päivämäärä local dateksi
+     */
     private LocalDate getPvm(Kauppareissu valittu) {
         String muodossa = "yyyy-MM-dd";
         DateTimeFormatter dtFormatter = DateTimeFormatter.ofPattern(muodossa);

@@ -29,7 +29,7 @@ import fxMitatuliostettua.MitatuliostettuaGUIController;
 @SuppressWarnings("unused")
 public class Ostot implements Iterable<Osto> {
 
-    private String tiedostonNimi = "ostot.dat";
+    private String tiedostonNimi = "ostot";
     private int lkm = 0;
     private final Collection<Osto> alkiot = new ArrayList<Osto>();
     private boolean muutettu = false;
@@ -95,13 +95,52 @@ public class Ostot implements Iterable<Osto> {
     /**
      * Lukee ostot tiedostosta.  Kesken.
      * @param tuoteryhmat tuoteryhmat
+     * @param nimi tiedoston nimi
      * @throws SailoException jos ei onnaa
+     * @example
+     * <pre name="test">
+     * #THROWS SailoException 
+     * #import java.io.File;
+     * #import java.util.Iterator;
+     * Tuoteryhmat tuoteryhmat = new Tuoteryhmat();
+     * Tuoteryhma ruoka = new Tuoteryhma();
+     * ruoka.rekisteroi();
+     * ruoka.annaTiedot("jii");
+     * tuoteryhmat.lisaa(ruoka);
+     *  Ostot ostot = new Ostot();
+     *  Osto osto1 = new Osto(), osto2 = new Osto();
+     *  osto1.rekisteroi();
+     *  osto2.rekisteroi();
+     *  osto1.annaTiedot(1, "tuote1", 2,  10); 
+     *  osto2.annaTiedot(2, "tuote2", 3, 6);
+     *  String hakemisto = "testiostot";
+     *  String tiedNimi = hakemisto+"/ostot";
+     *  File ftied = new File(tiedNimi+".dat");
+     *  File dir = new File(hakemisto);
+     *  dir.mkdir();
+     *  ftied.delete();
+     *  ostot.lueTiedostosta(tuoteryhmat, tiedNimi); 
+     *  ostot.lisaa(osto1);
+     *  ostot.lisaa(osto2);
+     *  ostot.tallennaOsto();
+     *  ostot = new Ostot();            // Poistetaan vanhat luomalla uusi
+     *  ostot.lueTiedostosta1(tuoteryhmat, tiedNimi );  // johon ladataan tiedot tiedostosta.
+     *  Iterator<Osto> i = ostot.iterator();
+     *  i.next().toString() === osto1.toString();
+     *  i.next().toString() === osto2.toString();
+     *  ostot.lisaa(osto2);
+     *  ostot.tallennaOsto();
+     *  ftied.delete() === false;
+     *  File fbak = new File(tiedNimi+".bak");
+     *  fbak.delete() === true;
+     *  dir.delete() === false;
+     * </pre>
      */
-    public void lueTiedostosta1(Tuoteryhmat tuoteryhmat) throws SailoException {
+    public void lueTiedostosta1(Tuoteryhmat tuoteryhmat, String nimi) throws SailoException {
         
-        setTiedostonNimi("ostot.dat");
+        setTiedostonNimi(nimi);
         
-        try ( BufferedReader fi = new BufferedReader(new FileReader("ostot.dat")) ) {
+        try ( BufferedReader fi = new BufferedReader(new FileReader(getTiedostonNimi())) ) {
 
             String rivi;
             while ( (rivi = fi.readLine()) != null ) {
@@ -114,7 +153,7 @@ public class Ostot implements Iterable<Osto> {
             muutettu = false;
 
             } catch ( FileNotFoundException e ) {
-                throw new SailoException("Tiedosto " + getTiedosto() + " ei aukea");
+                throw new SailoException("Tiedosto " + getTiedostonNimi() + " ei aukea");
             } catch ( IOException e ) {
                 throw new SailoException("Ongelmia tiedoston kanssa: " + e.getMessage());
             }
@@ -124,24 +163,32 @@ public class Ostot implements Iterable<Osto> {
     /**
      * Luetaan aikaisemmin annetun nimisestä tiedostosta
      * @param tuoteryhmat tuoteryhmat
+     * @param nimi tiedoston nimi
      * @throws SailoException jos tulee poikkeus
      */
-    public void lueTiedostosta(Tuoteryhmat tuoteryhmat) throws SailoException {
+    public void lueTiedostosta(Tuoteryhmat tuoteryhmat, String nimi) throws SailoException {
         
-        lueTiedostosta1(tuoteryhmat);
+        lueTiedostosta1(tuoteryhmat, nimi);
     }
 
     
     /**
      * Tallentaa ostot tiedostoon.
      * @throws SailoException jos talletus epäonnistuu
+     * * <pre>
+     * Kelmien kerho
+     * 20
+     * ; kommenttirivi
+     * 1|0|1|tuote1|2|10
+     * 1|0|1|tuote1|2|10
+     * </pre>
      */
     public void tallennaOsto() throws SailoException {
         
         if ( !muutettu ) return;
 
-        File fbak = new File("ostot.bak");
-        File ftied = new File("ostot.dat");
+        File fbak = new File(getBakNimi());
+        File ftied = new File(getTiedostonNimi());
         fbak.delete(); //  if ... System.err.println("Ei voi tuhota");
         ftied.renameTo(fbak); //  if ... System.err.println("Ei voi nimetä");
 

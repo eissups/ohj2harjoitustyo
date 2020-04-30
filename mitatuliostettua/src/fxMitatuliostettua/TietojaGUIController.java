@@ -6,7 +6,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 
 /**
- * Tietoja "Mitä tuli ostettua?":sta
+ * controlleri jossa näkyy tietoja "Mitä tuli ostettua?":sta
  * @author elisa
  * @version 12.2.2020
  */
@@ -14,6 +14,9 @@ public class TietojaGUIController implements ModalControllerInterface<String>{
 
     @FXML private Button buttonOk;
 
+    /**
+     * Suljetaan
+     */
     @FXML void OkClicked() {
         ModalController.closeStage(buttonOk);
     }
@@ -26,15 +29,11 @@ public class TietojaGUIController implements ModalControllerInterface<String>{
 
     @Override
     public void handleShown() {
-        // TODO Auto-generated method stub
-        
+        // TODO Auto-generated method stub    
     }
 
     @Override
     public void setDefault(String oletus) {
-        // TODO Auto-generated method stub
-        
+        // TODO Auto-generated method stub    
     }
-    
-    
 }

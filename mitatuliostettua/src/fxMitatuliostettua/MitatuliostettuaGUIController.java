@@ -18,7 +18,6 @@ import fi.jyu.mit.fxgui.ListChooser;
 import fi.jyu.mit.fxgui.ModalController;
 import fi.jyu.mit.fxgui.StringGrid;
 import fi.jyu.mit.fxgui.TextAreaOutputStream;
-import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Alert;
@@ -31,7 +30,6 @@ import javafx.scene.control.MenuItem;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
-import javafx.scene.text.Font;
 import mitatuliostettua.Kauppareissu;
 import mitatuliostettua.Mitatuliostettua;
 import mitatuliostettua.Osto;
@@ -77,7 +75,9 @@ public class MitatuliostettuaGUIController implements Initializable{
     }
     
     
-    
+    /**
+     * Aloitetaan haku
+     */
     @FXML private void aloitahaku() throws SailoException {
         if ( valittuKauppareissu != null )
              hae(valittuKauppareissu.getTunnus()); 
@@ -85,7 +85,9 @@ public class MitatuliostettuaGUIController implements Initializable{
     }
     
 
-    
+    /**
+     * Haetaan hakupäivän mukaan
+     */
     @FXML private void hakupaivavalittu() throws SailoException {
         if ( valittuKauppareissu != null )
            hae(valittuKauppareissu.getTunnus()); 
@@ -93,6 +95,9 @@ public class MitatuliostettuaGUIController implements Initializable{
     
     
 
+    /**
+     * Lisätään uusi kauppareissu
+     */
     @FXML private void lisaauusi() {
         //Dialogs.showMessageDialog("Lisäys ei vielä toimi");
         try {
@@ -104,20 +109,12 @@ public class MitatuliostettuaGUIController implements Initializable{
     }
     
     
+    /**
+     * Muokataan ostettuja
+     */
     @FXML private void muokkaaostettujaClicked() {
         
-        muokkaa();
-        //ModalController.showModal(MitatuliostettuaGUIController.class.getResource("Tiedot.fxml"), "Uusi tuoteryhmä", null, "");
-        
-        /**Tuoteryhma tuoteryhma = null;
-        try {
-            tuoteryhma = uusiTuoteryhma();
-            uusiOsto(tuoteryhma);
-        } catch (SailoException e1) {
-            // TODO Auto-generated catch block
-            e1.printStackTrace(); 
-        }**/
-        
+        muokkaa();      
     }
     
    
@@ -130,6 +127,9 @@ public class MitatuliostettuaGUIController implements Initializable{
     }
     
     
+    /**
+     * Muokataan kauppareissun päivämäärää
+     */
     @FXML private void paivavalittu() {
         try {
             muokkaaKauppareissua();
@@ -141,13 +141,17 @@ public class MitatuliostettuaGUIController implements Initializable{
     }
 
     
-    
+    /**
+     * Järjestettäisiin haetun päivän mukaan
+     */
     @FXML private void paivays() {
         Dialogs.showMessageDialog("Järjestettäisiin haetun päivän mukaan, ei toimi vielä");
     }
 
     
-    
+    /**
+     * Poistetaan kauppareissun tiedot
+     */
     @FXML private void poista() {
         try {
             poistaKauppareissu();
@@ -158,6 +162,9 @@ public class MitatuliostettuaGUIController implements Initializable{
     }
     
 
+    /**
+     * Mennään tuoteryhmän muokkaukseen
+     */
     @FXML private void uusituoteryhma() {
         muokkaaaTuoteryhmia();
     }
@@ -234,6 +241,9 @@ public class MitatuliostettuaGUIController implements Initializable{
      }
 
     
+    /**
+     * Poistetaan kauppareissu
+     */
     private void poistaKauppareissu() throws SailoException {
         Kauppareissu kauppareissu = valittuKauppareissu;
         if ( kauppareissu == null ) return;
@@ -260,12 +270,15 @@ public class MitatuliostettuaGUIController implements Initializable{
     }
     
     
-    private void naytaOStot(Kauppareissu valittuKauppareissu2) {
+    /**
+     * Näytetään ostot 
+     */
+    private void naytaOStot(Kauppareissu valittu) {
         ostotnakyviin.clear();
         if ( valittuKauppareissu == null ) return;
         
         try {
-            List<Osto> ostot = mitatuliostettua.annaOstot(valittuKauppareissu);
+            List<Osto> ostot = mitatuliostettua.annaOstot(valittu);
             if ( ostot.size() == 0 ) return;
             for (Osto ost: ostot)
                 naytaOSto(ost);
@@ -276,6 +289,9 @@ public class MitatuliostettuaGUIController implements Initializable{
     }
 
 
+    /**
+     * Näytetään kauppareissun ostojen lisätiedot keskelle
+     */
     private void naytaLisatiedot() {
         
         int kokhinta = mitatuliostettua.LaskeHinta(valittuKauppareissu.getTunnus());
@@ -284,7 +300,9 @@ public class MitatuliostettuaGUIController implements Initializable{
     }
 
 
-
+    /**
+     * Näytetään osto StringGridiin
+     */
     private void naytaOSto(Osto ost) {
         int kenttia = ost.getKenttia(); 
         String[] rivi = new String[kenttia-ost.ekaKentta()]; 
@@ -311,6 +329,9 @@ public class MitatuliostettuaGUIController implements Initializable{
     }
 
     
+    /**
+     * Näyrttäisiin virhe
+     */
     private void naytaVirhe(String virhe) {
         //
     }
@@ -478,6 +499,10 @@ public class MitatuliostettuaGUIController implements Initializable{
 
    }
 
+   
+   /**
+    * Muokataan ostoja
+    */
    private void muokkaa() {
        Ostot ostoot = new Ostot();
        ostoot = mitatuliostettua.getOstot(valittuKauppareissu.getTunnus());
@@ -495,7 +520,9 @@ public class MitatuliostettuaGUIController implements Initializable{
     
    }
    
-   
+   /**
+    * Lisätään tuoteryhmä
+    */
    private void muokkaaaTuoteryhmia() {
          
        Tuoteryhma tuoteryhmaa = null;
@@ -512,7 +539,9 @@ public class MitatuliostettuaGUIController implements Initializable{
        
    }
    
-   
+   /**
+    * Muokataan ostoja
+    */
    private void muokkaaKauppareissua() throws SailoException {
      
        

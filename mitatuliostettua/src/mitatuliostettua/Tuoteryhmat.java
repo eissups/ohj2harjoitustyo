@@ -74,7 +74,6 @@ public class Tuoteryhmat implements Iterable<Tuoteryhma> {
     /**Tähän tulee tuoteryhman poisto
      * @param tuoteryhma poistettava tuoteryhma
      */
-    @SuppressWarnings("unused")
     public void poista(Tuoteryhma tuoteryhma) {
         //
     }
@@ -362,6 +361,9 @@ public class Tuoteryhmat implements Iterable<Tuoteryhma> {
     }
 
 
+    /**Paluttaa kaikki tuoteryhmät taulukkona
+     * @return kaikki tuoteryhmät
+     */
     public Tuoteryhma[] getTuoteryhmat() {
         return alkiot;
         

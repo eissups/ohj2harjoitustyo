@@ -221,7 +221,7 @@ public class Mitatuliostettua {
         setTiedosto(nimi);
         kauppareissut.lueTiedostosta(nimi);
         tuoteryhmat.lueTiedostosta(nimi);
-        ostot.lueTiedostosta(tuoteryhmat);
+        ostot.lueTiedostosta(tuoteryhmat, "ostot.dat");
         
     }
 
@@ -290,6 +290,14 @@ public class Mitatuliostettua {
     }
 
 
+    /**Lisätään tuoteryhmät
+     * @param tuoteryhma tuoteryhma jok lisätään
+     */
+    public void lisaaTuoteryhma(Tuoteryhma tuoteryhma) {
+       lisaa(tuoteryhma);
+        
+    }  
+    
 
     /**Haetan ostot
      * @param tunnus kauppareissun tunnus, jonka ostot annetaan
@@ -407,15 +415,7 @@ public class Mitatuliostettua {
             System.out.println(ex.getMessage());
         } 
     }
-
-
-    public void lisaaTuoteryhma(Tuoteryhma tuoteryhma) {
-        lisaa(tuoteryhma);
-        
-    }
-
-
-    
+   
 }
 
 

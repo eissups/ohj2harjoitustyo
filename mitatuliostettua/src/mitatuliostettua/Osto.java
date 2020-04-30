@@ -14,15 +14,11 @@ public class Osto implements Cloneable {
     
     private Tuoteryhma tuoteryhma;
     private int kauppaid;
-    @SuppressWarnings("unused")
     private int tuoteryhmaid;
-    // attribuutit
     private int maara;
     private int hinta;
     private int tunnusNro;
     private String tuote;
-    private String maarassanana;
-    // seuraava id
     private static int seuraavaNro = 1;
     
     /**

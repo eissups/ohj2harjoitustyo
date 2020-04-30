@@ -17,7 +17,7 @@ import mitatuliostettua.Tuoteryhma;
 
 
 /**
- * Tuoteryhmien lisääminen ja poistaminen
+ * Tuoteryhmien lisäämisen ja poistamisen controller
  * @author elisa
  * @version 12.2.2020
  */
@@ -40,27 +40,38 @@ public class UusituoteryhmaController implements ModalControllerInterface<Tuoter
     }
     
     
+    /**
+     * Poistutaan
+     */
     @FXML void peruutaClicked() {
         poistu();
     }
     
     
+    /**
+     * Poistettaisiin, jos se olisi tehty
+     */
     @FXML void poistaCllicked() {
         Dialogs.showMessageDialog("Poistetaan, muttei toimi vielä");
     }
     
     
+    /**
+     * Tallennetaan
+     */
     @FXML void tallennaClicked() {
         lisaaTuoteryhma();
         poistu();
     }
 
     
+    /**
+     * Lisätään tuoteryhmä
+     */
     private void lisaaTuoteryhma() {
         tuote = new Tuoteryhma();
         tuote.rekisteroi();
-        tuote.annaTiedot(tuoteryhma.getText());
-        
+        tuote.annaTiedot(tuoteryhma.getText());      
     }
 
 
@@ -71,17 +82,14 @@ public class UusituoteryhmaController implements ModalControllerInterface<Tuoter
        //
    }
     
-    
-   
+  
     /**
-     * Suljetaan ikkuna, eikä tallenneta mitään
+     * Suljetaan ikkunan
      */
     private void poistu() {
         ModalController.closeStage(buttonPeruuta);
         
     }
-    
-
     
     
     @Override
@@ -90,7 +98,6 @@ public class UusituoteryhmaController implements ModalControllerInterface<Tuoter
     }
 
     
-
     /**Tullaan tänne, muokataan ja palautetaan ostot
      * @param modalityStage stage
      * @param oletus tuoteryhmä jok tuodaan
